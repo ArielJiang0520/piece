@@ -1,16 +1,14 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import LogoutButton from '../components/LogoutButton'
+import LogoutButton from '@/components/ui/button/LogoutButton'
 
 export default async function NavBar() {
-    // const supabase = createServerComponentClient({ cookies })
+    const supabase = createServerComponentClient({ cookies })
 
-    // const {
-    //     data: { user },
-    // } = await supabase.auth.getUser()
-
-    const user = null
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
 
     return (
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 py-3 sticky top-0 bg-background z-50">

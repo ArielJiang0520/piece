@@ -17,6 +17,7 @@ module.exports = {
           background: 'hsl(var(--btn-background))',
           'background-hover': 'hsl(var(--btn-background-hover))',
         },
+        brand: 'hsl(var(--brand))'
       },
     },
   },

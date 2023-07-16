@@ -6,8 +6,8 @@ import { RiPencilFill } from 'react-icons/ri'
 import { useState, useEffect } from 'react'
 
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
-import { DropDownMenuOptions, DropDownMenu } from '@/components/form/DropDownMenu';
-import { InputDialog } from '@/components/form/InputDialog';
+import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/DropDownMenu';
+import { InputDialog } from '@/components/ui/input/InputDialog';
 import { NewSectionCard, SectionCard } from './SectionCard';
 
 

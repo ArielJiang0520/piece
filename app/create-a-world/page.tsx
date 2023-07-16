@@ -2,13 +2,14 @@
 // create-a-world
 import { Formik, Field, Form, ErrorMessage, FieldProps } from 'formik';
 
-import TextInput from '@/components/form/TextInput';
-import { InputTitle } from '@/components/form/Title';
-import AutocompleteBox from '@/components/form/AutoCompleteBar';
-import TagsBar from '@/components/form/TagsBar';
-import DescriptionSections from '@/components/form/description/DescriptionSections';
+import TextInput from '@/components/ui/input/TextInput';
+import { InputTitle } from '@/components/ui/display/Title';
+import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
+import TagsBar from '@/components/ui/button/TagsBar';
+import DescriptionSections from '@/components/ui/description/DescriptionSections';
+import SettingGroup from '@/components/ui/display/SettingGroup';
 
-import { WorldPayload } from '@/types/types.world';
+import { WorldPayload, WorldSettingsAsks } from '@/types/types.world';
 
 
 const initValues: WorldPayload = {
@@ -38,7 +39,11 @@ Personality: Intellectually curious, introverted, genuine, and dedicated, with a
         }
     ],
     coverImage: '',
-    setting: null
+    settings: {
+        NSFW: false,
+        allowContribution: true,
+        allowSuggestion: true,
+    }
 }
 
 export default function Page() {
@@ -88,6 +93,7 @@ export default function Page() {
 
                         <div id="settings-group" className='w-full flex flex-col'>
                             <InputTitle label={"privacy settings"} />
+                            <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
                         </div>
 
 

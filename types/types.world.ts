@@ -15,11 +15,17 @@ export type WorldSettings = {
     allowSuggestion: boolean,
 }
 
+export const WorldSettingsAsks = {
+    NSFW: "NSFW Content",
+    allowContribution: "Allow contribution from other users",
+    allowSuggestion: "Allow suggestions from other users",
+}
+
 export type WorldPayload = {
     title: string,
     logline: string,
     tags: string[],
     description: WorldDescriptionSection[],
     coverImage: string,
-    setting: WorldSettings | null
+    settings: WorldSettings
 }

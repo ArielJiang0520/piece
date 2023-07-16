@@ -1,5 +1,5 @@
 import './globals.css'
-import NavBar from '@/components/NavBar'
+import NavBar from '@/components/ui/navbar/NavBar'
 import { Alike, Montserrat } from 'next/font/google'
 
 const alike = Alike({
