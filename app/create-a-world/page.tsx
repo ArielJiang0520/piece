@@ -1,55 +1,30 @@
 'use client'
 // create-a-world
 import { Formik, Field, Form, ErrorMessage, FieldProps } from 'formik';
-
 import TextInput from '@/components/ui/input/TextInput';
 import { InputTitle } from '@/components/ui/display/Title';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import TagsBar from '@/components/ui/button/TagsBar';
 import DescriptionSections from '@/components/ui/description/DescriptionSections';
 import SettingGroup from '@/components/ui/display/SettingGroup';
+import { postData } from '@/utils/helpers';
+import { WorldPayload, initValues, WorldSettingsAsks } from '@/types/types.world';
+import { MyRadioGroup } from '@/components/ui/button/RadioButton';
 
-import { WorldPayload, WorldSettingsAsks } from '@/types/types.world';
-
-
-const initValues: WorldPayload = {
-    title: 'Silicon Valley Psychos',
-    logline: `The resilient yet financially struggling Linus, grappling with his uncompromising principles against corporate greed,  was faced with an offer from Wynn - the man who once betrayed him`,
-    tags: ["BL", "Tech", "Power Dynamics"],
-    description: [
-        {
-            sectionTitle: "Backdrop",
-            sectionCards: []
-        },
-        {
-            sectionTitle: "Characters",
-            sectionCards: [
-                {
-                    cardTitle: 'Linus',
-                    cardContent: `Background: High school computer science teacher in a Fremont suburb, co-founder of WinLin, and a Stanford graduate. Previously a tech entrepreneur, he chose a simpler life due to disillusionment with corporate greed.
-Appearance: Medium height with unkempt dark curly hair, big eyes, and an often rugged appearance due to his simple and functional clothing. But underneath his scruffiness is a cute face and a pale, fragile yet appealing body
-Personality: Intellectually curious, introverted, genuine, and dedicated, with a strong ethical stand against commercial exploitation of knowledge and technology. Has a tendency to suppress emotions and desires and play coy
-`
-                }
-            ]
-        },
-        {
-            sectionTitle: "Story Premise",
-            sectionCards: []
-        }
-    ],
-    coverImage: '',
-    settings: {
-        NSFW: false,
-        allowContribution: true,
-        allowSuggestion: true,
-    }
-}
 
 export default function Page() {
-
     const handleSubmit = async (values: WorldPayload) => {
         console.log('form submitted', values)
+        try {
+            const response = await postData({
+                url: '/api/create-a-world',
+                data: values
+            });
+            console.log('Response:', response);
+        } catch (error) {
+            console.error('Error:', (error as Error).message);
+            alert((error as Error).message);
+        }
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -66,6 +41,10 @@ export default function Page() {
             >
                 {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setErrors }) => (
                     <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
+                        {/* <div>
+                            <InputTitle label={'origin'} />
+                            <MyRadioGroup />
+                        </div> */}
 
                         <div id="title-group" className='w-full flex flex-col'>
                             <InputTitle label={"title"} />
@@ -96,8 +75,6 @@ export default function Page() {
                             <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
                         </div>
 
-
-
                         <div className='h-40 block'></div>
                         <div id="submit-group" className='mx-auto w-full lg:w-2/3 flex flex-col space-y-3'>
                             <button className="w-full p-3 primaryButton text-2xl" type="submit">
@@ -107,10 +84,8 @@ export default function Page() {
                                 Save as Draft
                             </button>
                         </div>
-
                     </Form>
                 )}
-
             </Formik>
         </div>
     );
