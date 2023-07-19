@@ -47,3 +47,7 @@ export async function getWorldDetailsById(id: string) {
         return null;
     }
 }
+
+export type Worlds = Database['public']['Tables']['worlds']['Row']
+export type WorldsResponse = Awaited<ReturnType<typeof getWorldDetailsById>>
+

@@ -2,15 +2,14 @@
 // create-a-world
 import { Formik, Field, Form, ErrorMessage, FieldProps } from 'formik';
 import TextInput from '@/components/ui/input/TextInput';
-import { InputTitle } from '@/components/ui/display/Title';
+import { FieldTitleDisplay } from '@/components/ui/display/displays';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
-import TagsBar from '@/components/ui/button/TagsBar';
+import { TagsBar } from '@/components/ui/button/TagsBar';
 import DescriptionSections from '@/components/ui/description/DescriptionSections';
-import SettingGroup from '@/components/ui/display/SettingGroup';
+import SettingGroup from '@/components/ui/button/SettingGroup';
 import { postData } from '@/utils/helpers';
 import { WorldPayload, initValues, WorldSettingsAsks } from '@/types/types.world';
 import { MyRadioGroup } from '@/components/ui/button/RadioButton';
-
 
 export default function Page() {
     const handleSubmit = async (values: WorldPayload) => {
@@ -34,7 +33,7 @@ export default function Page() {
     }
 
     return (
-        <div className="w-full md:w-2/3 flex flex-col gap-14 px-5 py-16 lg:py-24 text-foreground">
+        <div className="w-full md:w-2/3 flex flex-col gap-14 px-5 py-16 lg:py-24 text-foreground font-mono">
             <Formik
                 initialValues={initValues}
                 onSubmit={handleSubmit}
@@ -47,17 +46,17 @@ export default function Page() {
                         </div> */}
 
                         <div id="title-group" className='w-full flex flex-col'>
-                            <InputTitle label={"title"} />
+                            <FieldTitleDisplay label={"title"} />
                             <TextInput name={"title"} placeholder={"My World..."} textSize={"text-4xl"} multiline={1} />
                         </div>
 
                         <div id="logline-group" className='w-full flex flex-col'>
-                            <InputTitle label={"logline"} />
+                            <FieldTitleDisplay label={"logline"} />
                             <TextInput name={"logline"} placeholder={"My World..."} textSize={"text-base"} multiline={2} />
                         </div>
 
                         <div id="tags-group" className='w-full flex flex-col'>
-                            <InputTitle label={"tags"} />
+                            <FieldTitleDisplay label={"tags"} />
                             <AutocompleteBox
                                 value={values.tags}
                                 setFieldValue={setFieldValue}
@@ -66,12 +65,12 @@ export default function Page() {
                         </div>
 
                         <div id="description-group" className='w-full flex flex-col'>
-                            <InputTitle label={"description"} />
+                            <FieldTitleDisplay label={"description"} />
                             <DescriptionSections formSections={values.description} setFieldValue={setFieldValue} />
                         </div>
 
                         <div id="settings-group" className='w-full flex flex-col'>
-                            <InputTitle label={"privacy settings"} />
+                            <FieldTitleDisplay label={"privacy settings"} />
                             <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
                         </div>
 

@@ -1,14 +1,11 @@
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { getURL } from '@/utils/helpers';
 import { Database } from '@/types/supabase';
 import { WorldPayload } from '@/types/types.world';
 
 export async function POST(req: Request) {
     if (req.method === 'POST') {
-
         const { title, logline, tags, description, settings } = await req.json() as WorldPayload;
-
         try {
             const supabase = createRouteHandlerClient<Database>({ cookies });
             const {

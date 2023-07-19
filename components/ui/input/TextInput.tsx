@@ -6,15 +6,13 @@ type TextInputProps = {
     placeholder: string,
     textSize: string,
     multiline: number,
+    bold?: string,
 };
 
-const TextInput: React.FC<TextInputProps> = ({ name, placeholder, textSize, multiline }) => {
-
+const TextInput: React.FC<TextInputProps> = ({ name, placeholder, textSize, multiline, bold = "font-normal" }) => {
     return (
-        <div className={`${textSize}`}>
-
+        <div className={`${textSize} ${bold}`}>
             {multiline === 1 ?
-
                 <Field
                     name={name}
                     type="text"
@@ -28,7 +26,6 @@ const TextInput: React.FC<TextInputProps> = ({ name, placeholder, textSize, mult
                     className="multiLineInput"
                     placeholder={placeholder}
                 />}
-
         </div>
     );
 };
