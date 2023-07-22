@@ -16,7 +16,7 @@ export async function POST(req: Request) {
                 throw Error("User not found")
 
             const { status, statusText } = await supabase
-                .from('worlds')
+                .from('drafts')
                 .insert({
                     origin: origin,
                     images: images,

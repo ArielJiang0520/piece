@@ -5,18 +5,11 @@ import { AccordionDisplay } from "@/components/ui/display/displays";
 import { WorldDescriptionSection } from "@/types/types.world";
 
 export default async function WorldDisplay({ params }: { params: { id: string } }) {
-    const worldDetails = await getWorldDetailsById(params.id)
-
-    if (!worldDetails)
-        return (<>Loading...</>)
-    if (worldDetails.length !== 1)
-        return (<>Error!</>)
-
-    const world = worldDetails[0]
+    const world = await getWorldDetailsById(params.id)
 
     return (
         <>
-            <div className="w-full md:w-2/3 flex flex-col gap-14 px-5 py-16 lg:py-24 text-foreground font-mono">
+            {world && <div className="w-full md:w-2/3 flex flex-col gap-14 px-5 py-16 lg:py-24 text-foreground font-mono">
                 <div className='flex flex-col space-y-6 items-start'>
                     <div id="creator-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"creator"} />
@@ -46,9 +39,8 @@ export default async function WorldDisplay({ params }: { params: { id: string } 
                     <div id="asset-group" className='w-full flex flex-col'>
 
                     </div>
-
                 </div>
-            </div>
+            </div>}
         </>
     )
 

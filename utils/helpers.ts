@@ -33,3 +33,40 @@ export const postData = async ({
 
     return res.json();
 };
+
+export function renameKeyInObjectsArray(
+    objectsArray: any[],
+    existingKey: string,
+    newKey: string
+): any[] {
+    return objectsArray.map((obj) => {
+        if (existingKey in obj) {
+            const { [existingKey]: value, ...rest } = obj;
+            return { ...rest, [newKey]: value };
+        }
+        return obj;
+    });
+}
+
+
+export function formatTimestamp(timestamp: string | null): string {
+    if (!timestamp)
+        return ""
+    // Parse the timestamp into a Date object.
+    const date = new Date(timestamp);
+
+    // Define a helper function to pad single digit numbers with a leading zero.
+    const padNumber = (num: number) => num < 10 ? '0' + num : num;
+
+    // Extract the components of the date and time.
+    const year = date.getUTCFullYear();
+    const month = padNumber(date.getUTCMonth() + 1); // Months are 0-based in JavaScript.
+    const day = padNumber(date.getUTCDate());
+    const hours = padNumber(date.getUTCHours());
+    const minutes = padNumber(date.getUTCMinutes());
+
+    // Format the date and time.
+    const formattedDate = `${month}/${day} ${hours}:${minutes}`;
+
+    return formattedDate;
+}

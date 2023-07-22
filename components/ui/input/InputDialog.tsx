@@ -88,7 +88,7 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
             <div className="fixed inset-0 flex items-center justify-center p-4">
                 <Dialog.Panel className="w-2/3 max-w-sm rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500">
                     <Dialog.Title className="text-base font-semibold text-foreground">{dialogTitle}</Dialog.Title>
-                    <Dialog.Description>
+                    <Dialog.Description className="text-foreground">
                         {dialogContent}
                     </Dialog.Description>
 

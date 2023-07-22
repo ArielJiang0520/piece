@@ -1,7 +1,8 @@
 import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge"
 import type { NextRequest } from 'next/server'
 import { worldPrompt } from "@/utils/prompt"
-import { Worlds, getWorldDetailsById } from "@/app/supabase-server"
+import { getWorldDetailsById } from "@/app/supabase-server"
+import { World } from "@/types/types.world"
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         const worldDetails = await getWorldDetailsById(worldId)
         if (!worldDetails)
             throw Error('Unable to fetch world')
-        const world = (worldDetails as Worlds[])[0]
+        const world = worldDetails as World
 
         try {
             const response = await openai.createChatCompletion({

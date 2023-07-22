@@ -4,13 +4,13 @@ import { Alike, Montserrat } from 'next/font/google'
 import SupabaseProvider from './supabase-provider';
 
 const alike = Alike({
-  weight: '400',
+  weight: ['400'],
   subsets: ['latin'],
   variable: '--font-alike'
 })
 
 const montserrat = Montserrat({
-  weight: '400',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   variable: '--font-montserrat'
 })

@@ -22,6 +22,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/typography')
+    require('@tailwindcss/typography'),
+    require('@headlessui/tailwindcss')
   ],
 }

@@ -24,7 +24,7 @@ export async function getUserDetails() {
     const supabase = createServerSupabaseClient();
     try {
         const { data: userDetails } = await supabase
-            .from('users')
+            .from('profiles')
             .select('*')
             .single();
         return userDetails;
@@ -40,7 +40,9 @@ export async function getWorldDetailsById(id: string) {
         const { data: worldDetails } = await supabase
             .from('worlds')
             .select()
-            .eq('id', id);
+            .eq('id', id)
+            .limit(1)
+            .single();
         return worldDetails;
     } catch (error) {
         console.error('Error:', error);
@@ -48,6 +50,6 @@ export async function getWorldDetailsById(id: string) {
     }
 }
 
-export type Worlds = Database['public']['Tables']['worlds']['Row']
+
 export type WorldsResponse = Awaited<ReturnType<typeof getWorldDetailsById>>
 

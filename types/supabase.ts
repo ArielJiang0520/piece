@@ -7,17 +7,207 @@ export type Json =
   | Json[]
 
 export interface Database {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          piece_id: string | null
+          upvotes: number
+          user_id: string | null
+        }
+        Insert: {
+          content?: string
+          created_at?: string | null
+          id: string
+          piece_id?: string | null
+          upvotes?: number
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          piece_id?: string | null
+          upvotes?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_piece_id_fkey"
+            columns: ["piece_id"]
+            referencedRelation: "pieces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      contributions: {
+        Row: {
+          created_at: string | null
+          id: number
+          user_id: string | null
+          world_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          user_id?: string | null
+          world_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          user_id?: string | null
+          world_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contributions_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contributions_world_id_fkey"
+            columns: ["world_id"]
+            referencedRelation: "worlds"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      drafts: {
+        Row: {
+          allow_contribution: boolean
+          allow_suggestion: boolean
+          created_at: string
+          creator_id: string | null
+          description: Json
+          id: string
+          images: string[]
+          logline: string
+          modified_at: string | null
+          nsfw: boolean
+          origin: string | null
+          public: boolean
+          tags: string[]
+          world_name: string
+        }
+        Insert: {
+          allow_contribution?: boolean
+          allow_suggestion?: boolean
+          created_at?: string
+          creator_id?: string | null
+          description?: Json
+          id?: string
+          images?: string[]
+          logline?: string
+          modified_at?: string | null
+          nsfw?: boolean
+          origin?: string | null
+          public?: boolean
+          tags?: string[]
+          world_name: string
+        }
+        Update: {
+          allow_contribution?: boolean
+          allow_suggestion?: boolean
+          created_at?: string
+          creator_id?: string | null
+          description?: Json
+          id?: string
+          images?: string[]
+          logline?: string
+          modified_at?: string | null
+          nsfw?: boolean
+          origin?: string | null
+          public?: boolean
+          tags?: string[]
+          world_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drafts_creator_id_fkey"
+            columns: ["creator_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          piece_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          piece_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          piece_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_piece_id_fkey"
+            columns: ["piece_id"]
+            referencedRelation: "pieces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       pieces: {
         Row: {
           content: string
           created_at: string
           creator_id: string
           id: string
-          logline: string
-          name: string
           nsfw: boolean
+          prompt: string
           tags: string[]
           world_id: string | null
         }
@@ -26,9 +216,8 @@ export interface Database {
           created_at?: string
           creator_id: string
           id?: string
-          logline?: string
-          name?: string
           nsfw?: boolean
+          prompt?: string
           tags?: string[]
           world_id?: string | null
         }
@@ -37,9 +226,8 @@ export interface Database {
           created_at?: string
           creator_id?: string
           id?: string
-          logline?: string
-          name?: string
           nsfw?: boolean
+          prompt?: string
           tags?: string[]
           world_id?: string | null
         }
@@ -92,6 +280,74 @@ export interface Database {
           }
         ]
       }
+      stars: {
+        Row: {
+          created_at: string | null
+          id: string
+          piece_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          piece_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          piece_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stars_piece_id_fkey"
+            columns: ["piece_id"]
+            referencedRelation: "pieces"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stars_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          id: string
+          user_id: string | null
+          world_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          user_id?: string | null
+          world_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+          world_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_world_id_fkey"
+            columns: ["world_id"]
+            referencedRelation: "worlds"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       worlds: {
         Row: {
           allow_contribution: boolean
@@ -100,8 +356,11 @@ export interface Database {
           creator_id: string | null
           description: Json
           id: string
+          images: string[]
           logline: string
           nsfw: boolean
+          origin: string | null
+          public: boolean
           tags: string[]
           world_name: string
         }
@@ -112,8 +371,11 @@ export interface Database {
           creator_id?: string | null
           description?: Json
           id?: string
+          images?: string[]
           logline?: string
           nsfw?: boolean
+          origin?: string | null
+          public?: boolean
           tags?: string[]
           world_name: string
         }
@@ -124,8 +386,11 @@ export interface Database {
           creator_id?: string | null
           description?: Json
           id?: string
+          images?: string[]
           logline?: string
           nsfw?: boolean
+          origin?: string | null
+          public?: boolean
           tags?: string[]
           world_name?: string
         }
@@ -144,6 +409,191 @@ export interface Database {
     }
     Functions: {
       [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+  storage: {
+    Tables: {
+      buckets: {
+        Row: {
+          allowed_mime_types: string[] | null
+          avif_autodetection: boolean | null
+          created_at: string | null
+          file_size_limit: number | null
+          id: string
+          name: string
+          owner: string | null
+          public: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          allowed_mime_types?: string[] | null
+          avif_autodetection?: boolean | null
+          created_at?: string | null
+          file_size_limit?: number | null
+          id: string
+          name: string
+          owner?: string | null
+          public?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          allowed_mime_types?: string[] | null
+          avif_autodetection?: boolean | null
+          created_at?: string | null
+          file_size_limit?: number | null
+          id?: string
+          name?: string
+          owner?: string | null
+          public?: boolean | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buckets_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      migrations: {
+        Row: {
+          executed_at: string | null
+          hash: string
+          id: number
+          name: string
+        }
+        Insert: {
+          executed_at?: string | null
+          hash: string
+          id: number
+          name: string
+        }
+        Update: {
+          executed_at?: string | null
+          hash?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
+      objects: {
+        Row: {
+          bucket_id: string | null
+          created_at: string | null
+          id: string
+          last_accessed_at: string | null
+          metadata: Json | null
+          name: string | null
+          owner: string | null
+          path_tokens: string[] | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          bucket_id?: string | null
+          created_at?: string | null
+          id?: string
+          last_accessed_at?: string | null
+          metadata?: Json | null
+          name?: string | null
+          owner?: string | null
+          path_tokens?: string[] | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          bucket_id?: string | null
+          created_at?: string | null
+          id?: string
+          last_accessed_at?: string | null
+          metadata?: Json | null
+          name?: string | null
+          owner?: string | null
+          path_tokens?: string[] | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "objects_bucketId_fkey"
+            columns: ["bucket_id"]
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "objects_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      can_insert_object: {
+        Args: {
+          bucketid: string
+          name: string
+          owner: string
+          metadata: Json
+        }
+        Returns: undefined
+      }
+      extension: {
+        Args: {
+          name: string
+        }
+        Returns: string
+      }
+      filename: {
+        Args: {
+          name: string
+        }
+        Returns: string
+      }
+      foldername: {
+        Args: {
+          name: string
+        }
+        Returns: unknown
+      }
+      get_size_by_bucket: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          size: number
+          bucket_id: string
+        }[]
+      }
+      search: {
+        Args: {
+          prefix: string
+          bucketname: string
+          limits?: number
+          levels?: number
+          offsets?: number
+          search?: string
+          sortcolumn?: string
+          sortorder?: string
+        }
+        Returns: {
+          name: string
+          id: string
+          updated_at: string
+          created_at: string
+          last_accessed_at: string
+          metadata: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

@@ -7,12 +7,13 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid'
 
 interface InputTitleProps {
     label: string,
+    textSize?: string
 };
 
-export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label }) => {
+export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize = "text-base" }) => {
     return (
         <div>
-            <label className="text-base mb-2 text-foreground/50 font-black">
+            <label className={`${textSize} mb-2 text-foreground/50 font-bold`}>
                 {label.toLocaleUpperCase()}
             </label>
         </div>
