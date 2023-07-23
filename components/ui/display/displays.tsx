@@ -1,4 +1,3 @@
-'use client'
 import React from 'react';
 
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from "@/types/types.world";
@@ -27,13 +26,11 @@ interface FieldContentDisplayProps {
 }
 
 export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize, bold }) => {
-
     return (
         <div>
             <p className={`py-2 w-full font-serif ${textSize} ${bold}`}>{content}</p>
         </div>
     )
-
 }
 
 
@@ -96,6 +93,19 @@ export const SectionCard = ({ title, content }: { title: string, content: string
             <div className='text-xs text-left overflow-hidden overflow-ellipsis h-48 w-full'>
                 {content}
             </div>
+        </div>
+    )
+}
+
+export const NavBarHeader = ({ title, subtitle }: { title: string, subtitle: string }) => {
+    return (
+        <div className='flex flex-col font-mono text-foreground justify-center pt-2 items-start'>
+            <h1 className='font-bold text-xs '>
+                {title}
+            </h1>
+            <h2 className='font-medium text-foreground/50 text-sm'>
+                {subtitle}
+            </h2>
         </div>
     )
 }

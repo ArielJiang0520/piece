@@ -22,11 +22,11 @@ export default function InputList({ data, width, nameKey, display_func = null, h
 
     useEffect(() => {
         console.log('rerendering')
-    })
+    }, [])
 
     useEffect(() => {
         if (handleOnChange)
-            handleOnChange(selected);
+            handleOnChange(selected)
     }, [selected])
 
     return (

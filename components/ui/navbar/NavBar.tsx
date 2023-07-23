@@ -52,27 +52,25 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
     return (
         <>
-            <nav id="global-bar" className="w-full flex flex-row justify-between items-center 
-                h-12 py-3 sticky top-0 z-10  text-foreground text-base font-mono bg-background" >
-                <div id="menu-part" className='mx-4'>
+            <nav id="global-bar" className="w-full flex flex-row justify-between items-center h-12 py-3 sticky top-0 z-10 text-foreground text-base font-mono bg-background">
+                <div id="menu-part" className='mx-4 flex-grow-0 flex-shrink-0'>
                     <div className='flex flex-row items-center justify-start space-x-3'>
-                        <div id="burger" className='rounded-lg border p-2 cursor-pointer' onClick={() => setIsMenuOpen(true)} >
+                        <div id="burger" className='rounded-lg border p-2 cursor-pointer' onClick={() => setIsMenuOpen(true)}>
                             <AiOutlineMenu size={14} />
                         </div>
                         <div>
                             <Image src={'/logo_500px.png'} alt="logo" width={32} height={32} />
                         </div>
-                        <div>
-                            <PageTitleNavBarComponent {...props} />
-                        </div>
                     </div>
-
                 </div>
-                <div id="signin-part" className='mx-4'>
+                <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-grow flex-shrink'>
+                    <PageTitleNavBarComponent {...props} />
+                </div>
+                <div id="signin-part" className='mx-4 flex-grow-0 flex-shrink-0'>
                     {user ? (
-                        <div className="flex items-center gap-4">
-                            {`Hey! ${user.user_metadata["name"]}!`}
-                            <LogoutButton />
+                        <div className="flex items-center">
+                            <Image className='rounded-full' src={user.user_metadata.picture} alt={"profile picture"} width={32} height={32} />
+                            {/* <LogoutButton /> */}
                         </div>
                     ) : (
                         <Link
@@ -84,6 +82,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
                     )}
                 </div>
             </nav>
+
 
             <nav className="w-full flex flex-row justify-between items-center border-b
                 h-12 py-3 sticky top-12 z-10 text-foreground text-base font-mono bg-background">

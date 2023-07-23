@@ -9,15 +9,13 @@ import { TagsBar } from '@/components/ui/button/TagsBar';
 import DescriptionSections from '@/components/ui/description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/SettingGroup';
 import OriginSwitchTab from '@/components/ui/switch-tab/OriginSwitchTab';
-
+import { useDraftContext } from './draft-provider';
 import { postData, } from '@/utils/helpers';
 import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload } from '@/types/types.world';
 
-interface CaWFormProps {
-    currentDraft: null | WorldPayload
-}
 
-export default function CaW({ currentDraft }: CaWFormProps) {
+export default function CaW() {
+    const { currentDraft } = useDraftContext();
 
     console.log('CaW', currentDraft)
 
