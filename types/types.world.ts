@@ -38,7 +38,7 @@ export type WorldPayload = {
     settings: WorldSettings
 }
 
-export const emptyValues: WorldPayload = {
+export const EmptyWorldPayload: WorldPayload = {
     origin: null,
     images: [],
     title: "",

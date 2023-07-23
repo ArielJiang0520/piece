@@ -1,17 +1,20 @@
 'use client'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
 import LogoutButton from '@/components/ui/button/LogoutButton'
-import { useEffect, useState } from 'react'
+import { ComponentType, useEffect, useState } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { User } from '@supabase/auth-helpers-nextjs'
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai'
-import { AnimatePresence, motion } from "framer-motion";
-import type { Database } from '@/types/supabase'
+import { AnimatePresence, motion } from "framer-motion"
+import Image from 'next/image'
 
+interface NavBarProps {
+    PageTitleNavBarComponent: ComponentType<any>;
+    LocalNavBarComponent: ComponentType<any>;
+    [key: string]: any;
+}
 
-export default function NavBar() {
+export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent, ...props }: NavBarProps) {
     const supabase = createClientComponentClient()
     const [user, setUser] = useState<User | null>(null)
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,9 +37,10 @@ export default function NavBar() {
     useEffect(() => {
         const fetchUser = async () => {
             const {
-                data: { user },
-            } = await supabase.auth.getUser()
-            setUser(user)
+                data: { session },
+            } = await supabase.auth.getSession()
+            if (session)
+                setUser(session.user)
         }
         fetchUser()
     }, [])
@@ -47,51 +51,88 @@ export default function NavBar() {
     };
 
     return (
-        <nav id="global-bar" className="w-full flex flex-row justify-between items-center border-b h-16 py-3 sticky top-0 text-foreground text-base font-mono bg-background z-50">
-            <div id="menu-part">
-                <AiOutlineMenu size={24} onClick={() => setIsMenuOpen(true)} />
-                <AnimatePresence>
-                    {isMenuOpen && (
-                        <div className="fixed inset-0 flex z-50">
-                            <motion.div
-                                className="fixed inset-0 bg-black opacity-50"
+        <>
+            <nav id="global-bar" className="w-full flex flex-row justify-between items-center 
+                h-12 py-3 sticky top-0 z-10  text-foreground text-base font-mono bg-background" >
+                <div id="menu-part" className='mx-4'>
+                    <div className='flex flex-row items-center justify-start space-x-3'>
+                        <div id="burger" className='rounded-lg border p-2 cursor-pointer' onClick={() => setIsMenuOpen(true)} >
+                            <AiOutlineMenu size={14} />
+                        </div>
+                        <div>
+                            <Image src={'/logo_500px.png'} alt="logo" width={32} height={32} />
+                        </div>
+                        <div>
+                            <PageTitleNavBarComponent {...props} />
+                        </div>
+                    </div>
+
+                </div>
+                <div id="signin-part" className='mx-4'>
+                    {user ? (
+                        <div className="flex items-center gap-4">
+                            {`Hey! ${user.user_metadata["name"]}!`}
+                            <LogoutButton />
+                        </div>
+                    ) : (
+                        <Link
+                            href="/login"
+                            className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
+                        >
+                            Login
+                        </Link>
+                    )}
+                </div>
+            </nav>
+
+            <nav className="w-full flex flex-row justify-between items-center border-b
+                h-12 py-3 sticky top-12 z-10 text-foreground text-base font-mono bg-background">
+                <div id="menu-part" className='mx-4'>
+                    <LocalNavBarComponent {...props} />
+                </div>
+                <div id="other-part" className='mx-4'>
+
+                </div>
+            </nav>
+
+            <AnimatePresence>
+                {isMenuOpen && (
+                    <div className="fixed inset-0 flex z-50" >
+                        <motion.div
+                            className="fixed inset-0 bg-foreground opacity-50"
+                            onClick={() => setIsMenuOpen(false)}
+                        />
+                        <motion.div
+                            className="relative w-80 h-full bg-background shadow-lg border-r rounded-tr-lg rounded-br-lg"
+                            initial="closed"
+                            animate="open"
+                            exit="closed"
+                            variants={variants}
+                        >
+                            <AiOutlineClose
+                                size={14}
+                                className="text-foreground/50 absolute top-5 right-5 cursor-pointer"
                                 onClick={() => setIsMenuOpen(false)}
                             />
-                            <motion.div
-                                className="relative w-80 h-full bg-white shadow-lg"
-                                initial="closed"
-                                animate="open"
-                                exit="closed"
-                                variants={variants}
-                            >
-                                <AiOutlineClose
-                                    size={24}
-                                    className="absolute top-3 right-3 cursor-pointer"
-                                    onClick={() => setIsMenuOpen(false)}
-                                />
-                                {/* Add your menu content here */}
-                            </motion.div>
-                        </div>
-                    )}
-                </AnimatePresence>
-            </div>
-
-            <div id="signin-part">
-                {user ? (
-                    <div className="flex items-center gap-4">
-                        {`Hey! ${user.user_metadata["name"]}!`}
-                        <LogoutButton />
+                            <div className='flex flex-col justify-start items-start px-4 py-8 font-mono font-bold'>
+                                <div id="logo" className='h-20'>
+                                    <Image src={'/logo_500px.png'} alt="logo" width={48} height={48} />
+                                </div>
+                                <ul id="menu-items" className='space-y-2'>
+                                    {menuItems.map(item =>
+                                        <li key={item.name}>
+                                            <Link href={item.link} onClick={() => setIsMenuOpen(false)}>
+                                                {item.name}
+                                            </Link>
+                                        </li>
+                                    )}
+                                </ul>
+                            </div>
+                        </motion.div>
                     </div>
-                ) : (
-                    <Link
-                        href="/login"
-                        className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
-                    >
-                        Login
-                    </Link>
                 )}
-            </div>
-        </nav>
+            </AnimatePresence>
+        </>
     )
 
 }

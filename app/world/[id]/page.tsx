@@ -4,7 +4,7 @@ import { TagsBarDisplay } from "@/components/ui/button/TagsBar";
 import { AccordionDisplay } from "@/components/ui/display/displays";
 import { WorldDescriptionSection } from "@/types/types.world";
 
-export default async function WorldDisplay({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { id: string } }) {
     const world = await getWorldDetailsById(params.id)
 
     return (

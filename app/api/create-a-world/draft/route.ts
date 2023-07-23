@@ -9,10 +9,10 @@ export async function POST(req: Request) {
         try {
             const supabase = createRouteHandlerClient<Database>({ cookies });
             const {
-                data: { user }
-            } = await supabase.auth.getUser();
+                data: { session }
+            } = await supabase.auth.getSession();
 
-            if (!user)
+            if (!session)
                 throw Error("User not found")
 
             const { status, statusText } = await supabase
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
                     origin: origin,
                     images: images,
                     world_name: title,
-                    creator_id: user.id,
+                    creator_id: session.user.id,
                     logline: logline,
                     tags: tags,
                     description: description,

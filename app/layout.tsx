@@ -56,12 +56,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
   return (
     <html lang="en" className={`${alike.variable} ${montserrat.variable}`}>
 
       <body>
         <SupabaseProvider>
-          <NavBar />
           <main className="min-h-screen bg-background flex flex-col items-center">
             {children}
           </main>

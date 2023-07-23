@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Listbox } from '@headlessui/react'
 import { ChevronRightIcon, CheckIcon } from '@heroicons/react/20/solid'
 
@@ -12,20 +12,27 @@ interface InputListProps {
 }
 
 export default function InputList({ data, width, nameKey, display_func = null, handleOnChange = null }: InputListProps) {
-    const defaultOption = { id: 'default', name: 'A New Draft' };
-    const allData = [defaultOption, ...data];
-    const [selected, setSelected] = useState<any>(allData[0]);
+    const [selected, setSelected] = useState<any>(data[0]);
 
     const handleChange = (item: any) => {
-        setSelected(item);
-        if (handleOnChange)
-            handleOnChange(item);
+        if (item.id !== selected.id) {
+            setSelected(item);
+        }
     };
+
+    useEffect(() => {
+        console.log('rerendering')
+    })
+
+    useEffect(() => {
+        if (handleOnChange)
+            handleOnChange(selected);
+    }, [selected])
 
     return (
         <Listbox value={selected} onChange={handleChange}>
             <div className='relative'>
-                <Listbox.Button className={`my-2 border rounded-2xl text-xs py-2 px-3 focus:outline-none ${width}`}>
+                <Listbox.Button className={`my-2 border rounded-2xl text-xs py-1 px-2 focus:outline-none ${width}`}>
                     <div className='flex flex-row justify-between items-center' >
                         <div className='overflow-hidden whitespace-nowrap overflow-ellipsis'>
                             {display_func ? display_func(selected) : selected[nameKey]}
@@ -34,7 +41,7 @@ export default function InputList({ data, width, nameKey, display_func = null, h
                     </div>
                 </Listbox.Button>
                 <Listbox.Options className={`absolute bg-background border shadow-md text-xs overflow-auto rounded-2xl py-2 focus:outline-none ${width}`}>
-                    {allData.map((item) => (
+                    {data.map((item) => (
                         <Listbox.Option
                             key={item.id}
                             value={item}
