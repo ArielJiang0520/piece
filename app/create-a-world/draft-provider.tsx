@@ -2,10 +2,12 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Draft } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
+import { deleteData } from '@/utils/helpers';
 
 interface DraftContextData {
     currentDraft: Draft | null;
     handleDraftChange: (selectedOption: any) => void;
+    handleDraftDelete: (selectedOption: any) => void;
     drafts: Draft[];
     updateDrafts: () => Promise<void>;
 }
@@ -26,6 +28,14 @@ export function DraftProvider({
             setCurrentDraft(null)
         } else {
             setCurrentDraft(selectedOption)
+        }
+    }
+
+    const handleDraftDelete = (selectedOption: any) => {
+        if (selectedOption.id === 'default') {
+            return
+        } else {
+            deleteData({ url: 'api/create-a-world/draft', id: selectedOption.id })
         }
     }
 
@@ -53,8 +63,9 @@ export function DraftProvider({
         updateDrafts();
     }, []);
 
+
     return (
-        <DraftContext.Provider value={{ currentDraft, handleDraftChange, drafts, updateDrafts }}>
+        <DraftContext.Provider value={{ currentDraft, handleDraftChange, handleDraftDelete, drafts, updateDrafts }}>
             {children}
         </DraftContext.Provider>
     );

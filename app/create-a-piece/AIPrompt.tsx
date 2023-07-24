@@ -5,7 +5,7 @@ import TextInput from '@/components/ui/input/InputText';
 import { FieldTitleDisplay } from '@/components/ui/display/displays';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import { TagsBar } from '@/components/ui/button/TagsBar';
-import useStreamText from './useStreamText';
+import useStreamText from '../../utils/useStreamText';
 
 const initValues = {
     prompt: '',

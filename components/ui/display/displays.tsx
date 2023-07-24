@@ -12,7 +12,7 @@ interface InputTitleProps {
 export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize = "text-base" }) => {
     return (
         <div>
-            <label className={`${textSize} mb-2 text-foreground/50 font-bold`}>
+            <label className={`${textSize} mb-2 text-foreground/50 font-bold whitespace-nowrap`}>
                 {label.toLocaleUpperCase()}
             </label>
         </div>
@@ -93,19 +93,6 @@ export const SectionCard = ({ title, content }: { title: string, content: string
             <div className='text-xs text-left overflow-hidden overflow-ellipsis h-48 w-full'>
                 {content}
             </div>
-        </div>
-    )
-}
-
-export const NavBarHeader = ({ title, subtitle }: { title: string, subtitle: string }) => {
-    return (
-        <div className='flex flex-col font-mono text-foreground justify-center pt-2 items-start'>
-            <h1 className='font-bold text-xs '>
-                {title}
-            </h1>
-            <h2 className='font-medium text-foreground/50 text-sm'>
-                {subtitle}
-            </h2>
         </div>
     )
 }

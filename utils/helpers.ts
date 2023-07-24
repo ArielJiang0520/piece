@@ -63,6 +63,34 @@ export const updateData = async ({
     return res.json();
 }
 
+export const deleteData = async ({
+    url,
+    id,
+}: {
+    url: string;
+    id: string;
+}) => {
+    console.log('deleting,', url, 'at', id);
+
+    const res = await fetch(url, {
+        method: 'DELETE',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            id: id
+        })
+    });
+
+    if (!res.ok) {
+        console.log('Error in deleteData', { url, id, res });
+        throw Error(res.statusText);
+    }
+
+    return res.json();
+}
+
+
+
 
 
 export function renameKeyInObjectsArray(

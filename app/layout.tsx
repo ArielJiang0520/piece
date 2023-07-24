@@ -1,5 +1,5 @@
 import '@/styles/globals.css'
-import NavBar from '@/components/ui/navbar/NavBar'
+import NavBar from '@/app/NavBar'
 import { Alike, Montserrat } from 'next/font/google'
 import SupabaseProvider from './supabase-provider';
 

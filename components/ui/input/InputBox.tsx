@@ -4,26 +4,20 @@ import { Listbox } from '@headlessui/react'
 import { ChevronRightIcon, CheckIcon } from '@heroicons/react/20/solid'
 
 interface InputListProps {
-    data: any[],
-    width: string,
-    nameKey: string,
-    display_func?: ((arg?: any) => any) | null,
-    handleOnChange?: ((arg: any) => void) | null
+    data: any[];
+    selected: any;
+    setSelected: (arg: any) => void;
+    width: string;
+    nameKey: string;
+    display_func?: ((arg?: any) => any) | null;
 }
 
-export default function InputList({ data, width, nameKey, display_func = null, handleOnChange = null }: InputListProps) {
-    const [selected, setSelected] = useState<any>(data[0]);
-
+export default function InputList({ data, selected, setSelected, width, nameKey, display_func = null }: InputListProps) {
     const handleChange = (item: any) => {
         if (item.id !== selected.id) {
             setSelected(item);
         }
     };
-
-    useEffect(() => {
-        if (handleOnChange)
-            handleOnChange(selected)
-    }, [selected])
 
     return (
         <Listbox value={selected} onChange={handleChange}>

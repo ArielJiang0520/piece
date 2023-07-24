@@ -94,7 +94,7 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-    if (req.method === 'PUT') {
+    if (req.method === 'DELETE') {
         const { id } = await req.json()
         try {
             const supabase = createRouteHandlerClient<Database>({ cookies });

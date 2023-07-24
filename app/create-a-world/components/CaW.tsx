@@ -1,11 +1,11 @@
 'use client'
 // create-a-world
 import { useEffect, useRef } from 'react';
-import { useDraftContext } from './draft-provider';
+import { useDraftContext } from '../draft-provider';
 import { useRouter } from 'next/navigation';
 import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload } from '@/types/types.world';
 import { postData, updateData } from '@/utils/helpers';
-import { Formik, Field, FormikHelpers, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
+import { Formik, Field, FormikHelpers, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
 // UI
 import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
@@ -13,9 +13,9 @@ import TextInput from '@/components/ui/input/InputText';
 import { FieldTitleDisplay } from '@/components/ui/display/displays';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import { TagsBar } from '@/components/ui/button/TagsBar';
-import DescriptionSections from '@/components/ui/description/DescriptionSections';
+import DescriptionSections from '@/app/create-a-world/components/description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/SettingGroup';
-import OriginSwitchTab from '@/components/ui/switch-tab/OriginSwitchTab';
+import OriginSwitchTab from '@/app/create-a-world/components/OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 
 
@@ -93,9 +93,8 @@ export default function CaW() {
             event.preventDefault();
         }
     }
-
+    // Need to add image uploading
     return (
-
         <Formik
             initialValues={EmptyWorldPayload}
             onSubmit={handleSubmit}
@@ -103,12 +102,11 @@ export default function CaW() {
         >
             {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
                 <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
-
-
                     <div id="origin-group" className='w-full md:w-1/2 flex flex-col'>
                         <FieldTitleDisplay label={'❇️origin'} />
                         <OriginSwitchTab />
                     </div>
+
 
                     <div id="title-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"🖋️title"} />

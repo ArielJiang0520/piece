@@ -1,6 +1,6 @@
 // create-a-world
-import LocalNavBar from './LocalNavBar';
-import CaW from './CaW'
+import LocalNavBar from './local-navbar';
+import CaW from './components/CaW'
 import { DraftProvider } from './draft-provider';
 
 export default function Page() {

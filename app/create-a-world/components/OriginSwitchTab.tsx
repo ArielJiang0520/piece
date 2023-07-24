@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import SwitchTab from './SwitchTab'
-import TextInput from '../input/InputText'
+import SwitchTab from '../../../components/ui/switch-tab/SwitchTab'
+import TextInput from '../../../components/ui/input/InputText'
 import { useFormikContext } from 'formik';
 
 interface OriginSwitchTab {
