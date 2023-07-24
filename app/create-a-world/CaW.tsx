@@ -1,7 +1,14 @@
 'use client'
 // create-a-world
-import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { useEffect, useRef } from 'react';
+import { useDraftContext } from './draft-provider';
+import { useRouter } from 'next/navigation';
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload } from '@/types/types.world';
+import { postData, updateData } from '@/utils/helpers';
+import { Formik, Field, FormikHelpers, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
+// UI
+import { Disclosure } from '@headlessui/react';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import TextInput from '@/components/ui/input/InputText';
 import { FieldTitleDisplay } from '@/components/ui/display/displays';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
@@ -9,26 +16,26 @@ import { TagsBar } from '@/components/ui/button/TagsBar';
 import DescriptionSections from '@/components/ui/description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/SettingGroup';
 import OriginSwitchTab from '@/components/ui/switch-tab/OriginSwitchTab';
-import { useDraftContext } from './draft-provider';
-import { postData, } from '@/utils/helpers';
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload } from '@/types/types.world';
+import { LoadingOverlay } from '@/components/ui/widget/loading';
 
 
 export default function CaW() {
-    const { currentDraft } = useDraftContext();
+    const router = useRouter()
+    const { currentDraft, updateDrafts } = useDraftContext();
 
-    console.log('CaW', currentDraft)
-
-    const initValues = currentDraft ? currentDraft : EmptyWorldPayload
     const formikRef = useRef<FormikProps<WorldPayload> | null>(null); // Adding a ref to Formik
 
     useEffect(() => {
-        formikRef.current && formikRef.current.resetForm({ values: initValues })
+        if (formikRef.current) {
+            const newValues: WorldPayload = currentDraft ? cast_to_worldpayload(currentDraft) : EmptyWorldPayload
+            formikRef.current.resetForm({ values: newValues });
+        }
     }, [currentDraft])  // Resetting the form whenever currentDraft changes
 
 
-    const handleSubmit = async (values: WorldPayload) => {
+    const handleSubmit = async (values: WorldPayload, actions: FormikHelpers<WorldPayload>) => {
         console.log('form submitted', values)
+        actions.setSubmitting(true)
         try {
             const response = await postData({
                 url: '/api/create-a-world',
@@ -38,11 +45,15 @@ export default function CaW() {
         } catch (error) {
             console.error('Error:', (error as Error).message);
         }
+        actions.setSubmitting(false)
     }
 
-    const handleSaveDraft = async (values: WorldPayload) => {
+    const handleSaveDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
         console.log('form saved as new draft', values)
+        setSubmitting(true)
         try {
+            if (currentDraft)
+                throw Error('Should not save new a draft when currentDraft is set')
             const response = await postData({
                 url: '/api/create-a-world/draft',
                 data: values
@@ -51,6 +62,30 @@ export default function CaW() {
         } catch (error) {
             console.error('Error:', (error as Error).message);
         }
+        updateDrafts();
+
+        setSubmitting(false)
+        router.refresh();
+    }
+
+    const handleOverwriteDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
+        console.log('form overwrite draft', values)
+        setSubmitting(true)
+        try {
+            if (!currentDraft)
+                throw Error('No draft id found, can not update draft')
+            const response = await updateData({
+                url: '/api/create-a-world/draft',
+                data: values,
+                id: currentDraft.id
+            });
+            console.log('Response:', response);
+        } catch (error) {
+            console.error('Error:', (error as Error).message);
+        }
+        updateDrafts();
+        setSubmitting(false)
+        router.refresh();
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -62,11 +97,11 @@ export default function CaW() {
     return (
 
         <Formik
-            initialValues={initValues}
+            initialValues={EmptyWorldPayload}
             onSubmit={handleSubmit}
             innerRef={formikRef}
         >
-            {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors }) => (
+            {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
                 <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
 
 
@@ -77,12 +112,12 @@ export default function CaW() {
 
                     <div id="title-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"🖋️title"} />
-                        <TextInput name={"title"} placeholder={"My World..."} textSize={"text-4xl"} multiline={1} />
+                        <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-4xl"} multiline={1} />
                     </div>
 
                     <div id="logline-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"✨logline"} />
-                        <TextInput name={"logline"} placeholder={"My World..."} textSize={"text-base"} multiline={2} />
+                        <TextInput name={"logline"} placeholder={"Add your logline..."} textSize={"text-base"} multiline={2} />
                     </div>
 
                     <div id="tags-group" className='w-full flex flex-col'>
@@ -100,18 +135,35 @@ export default function CaW() {
                     </div>
 
                     <div id="settings-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"🔧settings"} />
-                        <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
+                        <Disclosure as="div">
+                            {({ open }) => (
+                                <>
+                                    <div className='flex flex-row items-center space-x-2'>
+                                        <FieldTitleDisplay label={"🔧settings"} />
+                                        <Disclosure.Button>
+                                            <ChevronRightIcon className={`${open ? 'transform rotate-90' : ''} w-5 h-5`} />
+                                        </Disclosure.Button>
+                                    </div>
+                                    <Disclosure.Panel as={SettingGroup} settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
+                                </>
+                            )}
+                        </Disclosure>
                     </div>
 
-                    <div id="submit-group" className='mx-auto w-full lg:w-2/3 flex flex-col space-y-3'>
+                    <div id="submit-group" className='my-4 mx-auto w-full lg:w-2/3 flex flex-col space-y-3'>
                         <button className="w-full p-3 primaryButton text-2xl" type="submit">
                             Review & Publish
                         </button>
-                        <button className="w-full p-2 secondaryButton text-lg" onClick={() => handleSaveDraft(values)} type="button">
-                            Save as Draft
-                        </button>
+                        {!currentDraft ?
+                            <button className="w-full p-2 secondaryButton text-lg" onClick={() => handleSaveDraft(values, setSubmitting)} type="button">
+                                Save as New Draft
+                            </button> :
+                            <button className="w-full p-2 secondaryButton text-lg" onClick={() => handleOverwriteDraft(values, setSubmitting)} type="button">
+                                Overwrite Draft
+                            </button>
+                        }
                     </div>
+                    {isSubmitting && <LoadingOverlay />}
                 </Form>
             )}
         </Formik>

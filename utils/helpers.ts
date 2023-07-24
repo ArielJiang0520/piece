@@ -34,6 +34,37 @@ export const postData = async ({
     return res.json();
 };
 
+export const updateData = async ({
+    url,
+    data,
+    id,
+}: {
+    url: string;
+    data: any;
+    id: string;
+}) => {
+    console.log('updating,', url, data, 'at', id);
+
+    const res = await fetch(url, {
+        method: 'PUT',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            data: data,
+            id: id
+        })
+    });
+
+    if (!res.ok) {
+        console.log('Error in updateData', { url, data, id, res });
+        throw Error(res.statusText);
+    }
+
+    return res.json();
+}
+
+
+
 export function renameKeyInObjectsArray(
     objectsArray: any[],
     existingKey: string,
@@ -69,4 +100,9 @@ export function formatTimestamp(timestamp: string | null): string {
     const formattedDate = `${month}/${day} ${hours}:${minutes}`;
 
     return formattedDate;
+}
+
+// await sleep(10000); // Sleep for 10 seconds
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -7,7 +7,7 @@ interface OriginSwitchTab {
 
 }
 
-const FandomInput = () => <TextInput name={'origin'} placeholder={'Your fandom name...'} textSize={'text-xl'} multiline={1} />;
+const FandomInput = () => <TextInput name={'origin'} placeholder={'Add your fandom...'} textSize={'text-xl'} multiline={1} />;
 
 export default function OriginSwitchTab({ }: OriginSwitchTab) {
     const { setFieldValue } = useFormikContext();  // Formik context to access its functions
@@ -18,8 +18,8 @@ export default function OriginSwitchTab({ }: OriginSwitchTab) {
 
     const handleTabsChange = (index: number) => {
         setActiveTab(index);
-        if (index === 0) { // If 'original' tab is active, set 'origin' field to null
-            setFieldValue('origin', null);
+        if (index === 0) {
+            setFieldValue('origin', '');
         }
     };
 

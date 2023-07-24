@@ -23,7 +23,8 @@ interface AccordionSectionProps {
 
 const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, delSection, renameSection, addCard, editCard, delCard }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [dialogueIsOpen, setDialogIsOpen] = useState(false)
+    const [dialogueRenameIsOpen, setDialogRenameIsOpen] = useState(false)
+    const [dialogueDelIsOpen, setDialogDelIsOpen] = useState(false)
 
     const [addCardDialogIsOpen, setAddCardDialogIsOpen] = useState(false)
     const [editingCard, setEditingCard] = useState<null | { card: WorldDescriptionSectionCard, index: number }>(null);
@@ -35,12 +36,13 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
 
     const onDeleteSection = () => {
         setDropdownVisible(!dropdownVisible);
-        delSection(index)
+        setDialogDelIsOpen(true)
+
     };
 
     const onRenameSection = () => {
         setDropdownVisible(!dropdownVisible);
-        setDialogIsOpen(true)
+        setDialogRenameIsOpen(true)
     };
 
     const changeTitle = (newTitle: string) => {
@@ -109,13 +111,22 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             </div>
 
                             <InputDialog
-                                isOpen={dialogueIsOpen}
-                                setIsOpen={setDialogIsOpen}
+                                isOpen={dialogueRenameIsOpen}
+                                setIsOpen={setDialogRenameIsOpen}
                                 dialogTitle={"Rename Section:"}
                                 dialogContent={""}
                                 initInputValue={section.sectionTitle}
                                 confirmAction={changeTitle}
                                 dialogType='input'
+                            />
+                            <InputDialog
+                                isOpen={dialogueDelIsOpen}
+                                setIsOpen={setDialogDelIsOpen}
+                                dialogTitle={`Delete Section`}
+                                dialogContent={`Are you sure you want to delete "${section.sectionTitle}"?`}
+                                initInputValue={index}
+                                confirmAction={() => delSection(index)}
+                                dialogType='confirm'
                             />
                         </div>
 

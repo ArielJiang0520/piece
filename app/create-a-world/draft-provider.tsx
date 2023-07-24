@@ -1,10 +1,15 @@
-import React, { createContext, useState } from 'react';
-import { WorldPayload, cast_to_worldpayload } from '@/types/types.world';
-import { useContext } from 'react';
+'use client'
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { Draft } from '@/types/types.world';
+import { useSupabase } from '@/app/supabase-provider';
+
 interface DraftContextData {
-    currentDraft: WorldPayload | null;
+    currentDraft: Draft | null;
     handleDraftChange: (selectedOption: any) => void;
+    drafts: Draft[];
+    updateDrafts: () => Promise<void>;
 }
+
 export const DraftContext = createContext<DraftContextData | undefined>(undefined);
 
 export function DraftProvider({
@@ -12,18 +17,44 @@ export function DraftProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [currentDraft, setCurrentDraft] = useState<WorldPayload | null>(null);
+    const [currentDraft, setCurrentDraft] = useState<Draft | null>(null);
+    const [drafts, setDrafts] = useState<Draft[]>([]);
+    const { supabase } = useSupabase();
 
     const handleDraftChange = (selectedOption: any) => {
         if (selectedOption.id === 'default') {
             setCurrentDraft(null)
         } else {
-            setCurrentDraft(cast_to_worldpayload(selectedOption))
+            setCurrentDraft(selectedOption)
         }
     }
 
+    const updateDrafts = async () => {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session) {
+            console.error('did not find authenticated user')
+            return
+        }
+
+        const { data, error } = await supabase
+            .from('drafts')
+            .select()
+            .eq('creator_id', session.user.id)
+
+        if (error) {
+            console.error(error.code, error.message)
+            return
+        }
+
+        setDrafts(data);
+    }
+
+    useEffect(() => {
+        updateDrafts();
+    }, []);
+
     return (
-        <DraftContext.Provider value={{ currentDraft, handleDraftChange }}>
+        <DraftContext.Provider value={{ currentDraft, handleDraftChange, drafts, updateDrafts }}>
             {children}
         </DraftContext.Provider>
     );

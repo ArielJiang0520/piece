@@ -66,7 +66,7 @@ const AutocompleteBox: React.FC<AutocompleteBoxProps> = ({ value, setFieldValue 
             <input
                 className='text-lg w-full singleLineInput'
                 type="text"
-                placeholder='Add yours...'
+                placeholder='Add your tags...'
                 value={inputValue}
                 onChange={onInputChange}
                 onKeyDown={onKeyDown}

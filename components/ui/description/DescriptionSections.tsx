@@ -12,6 +12,10 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
     const [newSectionName, setNewSectionName] = useState('')
 
     useEffect(() => {
+        setSections(formSections);
+    }, [formSections]);
+
+    useEffect(() => {
         setFieldValue("description", sections);
     }, [sections, setFieldValue])
 
@@ -79,7 +83,7 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
                     type="text"
                     value={newSectionName}
                     className="text-3xl singleLineInput"
-                    placeholder="Add section..."
+                    placeholder="Add your section..."
                     onChange={handleSectionNameChange}
                     onKeyDown={addSection}
                 />
