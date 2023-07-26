@@ -10,13 +10,14 @@ import { Formik, Field, FormikHelpers, FormikProps, Form, ErrorMessage, FieldPro
 import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import TextInput from '@/components/ui/input/InputText';
-import { FieldTitleDisplay } from '@/components/ui/display/displays';
+import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
-import { TagsBar } from '@/components/ui/button/TagsBar';
+import { TagsBar } from '@/components/ui/display/tags-display-helpers';
 import DescriptionSections from '@/app/create-a-world/components/description/DescriptionSections';
-import SettingGroup from '@/components/ui/button/SettingGroup';
+import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import OriginSwitchTab from '@/app/create-a-world/components/OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
+import CoversUpload from './CoversUpload';
 
 
 export default function CaW() {
@@ -107,7 +108,6 @@ export default function CaW() {
                         <OriginSwitchTab />
                     </div>
 
-
                     <div id="title-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"🖋️title"} />
                         <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-4xl"} multiline={1} />
@@ -132,8 +132,13 @@ export default function CaW() {
                         <DescriptionSections formSections={values.description} setFieldValue={setFieldValue} />
                     </div>
 
+                    <div id="images-group" className='w-full flex flex-col'>
+                        <FieldTitleDisplay label={'🖼️covers'} />
+                        <CoversUpload />
+                    </div>
+
                     <div id="settings-group" className='w-full flex flex-col'>
-                        <Disclosure as="div">
+                        <Disclosure>
                             {({ open }) => (
                                 <>
                                     <div className='flex flex-row items-center space-x-2'>
@@ -148,7 +153,7 @@ export default function CaW() {
                         </Disclosure>
                     </div>
 
-                    <div id="submit-group" className='my-4 mx-auto w-full lg:w-2/3 flex flex-col space-y-3'>
+                    <div id="submit-group" className='my-4 md:my-8 mx-auto w-full md:w-2/3 flex flex-col space-y-3'>
                         <button className="w-full p-3 primaryButton text-2xl" type="submit">
                             Review & Publish
                         </button>

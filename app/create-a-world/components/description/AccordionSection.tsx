@@ -8,7 +8,8 @@ import { useState, useEffect } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/DropDownMenu';
 import { InputDialog } from '@/components/ui/input/InputDialog';
-import { NewSectionCard, SectionCard } from './SectionCard';
+import { SectionCard } from './SectionCard';
+import AddCard from '@/components/ui/button/AddCard';
 
 
 interface AccordionSectionProps {
@@ -144,9 +145,9 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                                 ondel={onDelCard}
                                             />
                                         )}
-                                        <NewSectionCard onclick={onAddNewSection} />
+                                        <AddCard text={"Add New Card"} onclick={onAddNewSection} width='w-64' height='h-64' />
                                     </> :
-                                    <NewSectionCard onclick={onAddNewSection} />
+                                    <AddCard text={"Add New Card"} onclick={onAddNewSection} width='w-64' height='h-64' />
                             }
                             <InputDialog
                                 isOpen={addCardDialogIsOpen}

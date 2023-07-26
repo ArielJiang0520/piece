@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { AiOutlineClose } from 'react-icons/ai'
 import Image from 'next/image'
 import Link from 'next/link'
+import LogoutButton from "../button/LogoutButton";
 
 const leftVariants = {
     open: { opacity: 1, x: 0, transition: { duration: 0.3, type: 'tween' } },
@@ -19,14 +20,14 @@ interface SideBarProps {
     onLeft: boolean,
     isMenuOpen: boolean,
     setIsMenuOpen: (isMenuOpen: boolean) => void,
-    menuItems: { link: string; name: string }[],
+    menuItems: { link: string; name: string }[] | any[],
     image: { link: string; alt: string };
 }
 
 export function SideBar({ onLeft, isMenuOpen, setIsMenuOpen, menuItems, image }: SideBarProps) {
     return <AnimatePresence>
         {isMenuOpen && (
-            <div className={`fixed inset-0 flex ${onLeft ? "" : "justify-end"} z-50`}>
+            <div className={`fixed inset-0 flex ${onLeft ? "" : "justify-end"} z-50 text-foreground`}>
                 <motion.div
                     className="fixed inset-0 bg-foreground opacity-50"
                     onClick={() => setIsMenuOpen(false)} />
@@ -53,6 +54,7 @@ export function SideBar({ onLeft, isMenuOpen, setIsMenuOpen, menuItems, image }:
                             </li>
                             )}
                         </ul>
+                        <LogoutButton />
                     </div>
                 </motion.div>
             </div>
@@ -65,7 +67,7 @@ export const NavBarHeader = ({ title, subtitle }: { title: string, subtitle: str
     return (
         <div className='flex flex-col font-mono text-foreground/50 justify-center pt-1 items-start'>
             <h1 className='font-bold text-xs '>
-                {title}
+                {title.toLocaleUpperCase()}
             </h1>
             <h2 className='font-semibold font-serif text-foreground text-base'>
                 {subtitle}

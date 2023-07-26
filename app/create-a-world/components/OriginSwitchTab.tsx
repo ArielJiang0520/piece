@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import SwitchTab from '../../../components/ui/switch-tab/SwitchTab'
-import TextInput from '../../../components/ui/input/InputText'
+import { SolidSwitchTab } from '@/components/ui/switch-tab/switch-tab'
+import TextInput from '@/components/ui/input/InputText'
 import { useFormikContext } from 'formik';
 
 interface OriginSwitchTab {
@@ -25,5 +25,5 @@ export default function OriginSwitchTab({ }: OriginSwitchTab) {
 
     const contents = [<></>, <FandomInput />];
 
-    return <SwitchTab titles={titles} contents={contents} onTabChange={handleTabsChange} />;
+    return <SolidSwitchTab titles={titles} contents={contents} onTabChange={handleTabsChange} />;
 }

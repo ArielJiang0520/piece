@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from "@/types/types.world";
@@ -50,7 +51,7 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) 
                                     <div id="accordion-panel" className="flex flex-row justify-between items-center w-full ">
                                         <div className='flex flex-row items-center space-x-2'>
                                             <div
-                                                className="font-bold text-xl md:text-3xl overflow-hidden max-w-xs md:max-w-lg whitespace-nowrap overflow-ellipsis"
+                                                className="font-bold text-2xl md:text-3xl overflow-hidden max-w-xs md:max-w-lg whitespace-nowrap overflow-ellipsis"
                                             >
                                                 {section.sectionTitle}
                                             </div>
@@ -93,6 +94,30 @@ export const SectionCard = ({ title, content }: { title: string, content: string
             <div className='text-xs text-left overflow-hidden overflow-ellipsis h-48 w-full'>
                 {content}
             </div>
+        </div>
+    )
+}
+
+export const MetadataDisplay = ({ items }: { items: any[] }) => {
+    return (
+        <div className='w-full border-t border-b grid grid-cols-2 justify-items-start py-5 px-2'>
+            {items.map(item =>
+                <div className="text-right text-sm">
+                    {item}
+                </div>)}
+        </div>
+    )
+}
+
+
+
+export const CreatorDisplay = ({ items }: { items: any[] }) => {
+    return (
+        <div className='w-full border-t border-b grid grid-cols-2 justify-items-start py-5 px-2'>
+            {items.map(item =>
+                <div className="text-right text-sm">
+                    {item}
+                </div>)}
         </div>
     )
 }

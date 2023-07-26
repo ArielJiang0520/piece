@@ -1,8 +1,8 @@
 'use client'
 import { Tab } from '@headlessui/react'
 import AIPrompt from '@/app/create-a-piece/AIPrompt';
-import { FieldTitleDisplay } from '@/components/ui/display/displays';
-import { FieldContentDisplay } from '@/components/ui/display/displays';
+import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
+import { FieldContentDisplay } from '@/components/ui/display/display-helpers';
 import { useSearchParams } from 'next/navigation'
 
 const tabSwitchColor = ({ selected }: any) => (

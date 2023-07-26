@@ -1,4 +1,4 @@
-import { ToggleButton } from "@/components/ui/button/Toggle";
+import { ToggleButton } from "./Toggle";
 
 type SettingGroupProps = {
     settings: { [key: string]: boolean },

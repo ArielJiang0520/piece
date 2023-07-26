@@ -11,7 +11,7 @@ interface SwitchTabProps {
     onTabChange: (index: number) => void;
 }
 
-export default function SwitchTab({ titles, contents, onTabChange }: SwitchTabProps) {
+export function SolidSwitchTab({ titles, contents, onTabChange }: SwitchTabProps) {
     return (
         <>
             <Tab.Group onChange={onTabChange}>
@@ -26,4 +26,21 @@ export default function SwitchTab({ titles, contents, onTabChange }: SwitchTabPr
             </Tab.Group>
         </>
     )
-}   
+}
+
+export function NavBarSwitchTab({ tabs }: { tabs: any[] }) {
+
+    return (
+        <Tab.Group >
+            <Tab.List className='h-full flex flex-row justify-start  px-4 overflow-x-auto whitespace-nowrap mb-0 pb-0'>
+                {tabs.map((tab, idx) => (
+                    <Tab key={idx} className="outline-none mb-0 pb-0">
+                        <div className={`h-full font-mono text-sm text-foreground/80 flex px-5 items-center border-b-2 ui-selected:border-brand ui-selected:font-bold ui-not-selected:border-transparent`} >
+                            {tab}
+                        </div>
+                    </Tab>
+                ))}
+            </Tab.List>
+        </Tab.Group>
+    )
+}

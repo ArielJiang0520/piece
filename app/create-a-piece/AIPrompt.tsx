@@ -2,9 +2,9 @@
 import { Formik, Field, Form, ErrorMessage, FieldProps } from 'formik';
 import { RiAiGenerate } from 'react-icons/ri'
 import TextInput from '@/components/ui/input/InputText';
-import { FieldTitleDisplay } from '@/components/ui/display/displays';
+import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
-import { TagsBar } from '@/components/ui/button/TagsBar';
+import { TagsBar } from '@/components/ui/display/tags-display-helpers';
 import useStreamText from '../../utils/useStreamText';
 
 const initValues = {

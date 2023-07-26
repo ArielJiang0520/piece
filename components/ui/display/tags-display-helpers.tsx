@@ -36,7 +36,7 @@ interface TagsBarDisplay {
 export function TagsBarDisplay({ tags }: TagsBarDisplay) {
     return (
 
-        <div className='my-2 pb-5 flex flex-row w-full space-x-2 justify-start overflow-x-auto'>
+        <div className='flex flex-row w-full space-x-2 justify-start'>
             {
                 tags.map((tag, index) =>
                     <button

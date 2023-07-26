@@ -11,6 +11,12 @@ const nextConfig = {
         port: '',
         pathname: '/avatars/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 }
