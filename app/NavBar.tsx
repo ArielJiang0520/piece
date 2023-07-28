@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ComponentType, useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import type { User } from '@supabase/auth-helpers-nextjs'
-import { AiOutlineMenu } from 'react-icons/ai'
+import { BurgerIcon } from '@/components/icon/icon'
 import { SideBar } from '@/components/ui/navbar/navbar-helpers'
 import Image from 'next/image'
 
@@ -61,7 +61,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
                     <div className='flex flex-row items-center justify-start'>
 
                         <div id="burger" className='rounded-lg border p-2 cursor-pointer mr-2' onClick={() => setIsLeftMenuOpen(true)}>
-                            <AiOutlineMenu size={14} />
+                            <BurgerIcon size={14} />
                         </div>
 
                         <div id="logo" className='mr-2'>

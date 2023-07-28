@@ -1,8 +1,8 @@
 
 import { WorldDescriptionSectionCard, WorldDescriptionSection } from "@/types/types.world";
-import { Worlds } from "@/app/supabase-server";
+import type { World } from "@/types/types.world";
 
-export function worldToString(world: Worlds): string {
+export function worldToString(world: World): string {
     let descriptionString = '';
 
     if (world.description) {
@@ -23,7 +23,7 @@ export function worldToString(world: Worlds): string {
     return `**World Name**\n${world.world_name}\n**Logline**\n${world.logline}\n**Tags**\n${tagsString}\n**Description**\n${descriptionString}`;
 }
 
-export function worldPrompt(world: Worlds): string {
+export function worldPrompt(world: World): string {
     const worldString = worldToString(world)
     return `
 **Introduction**

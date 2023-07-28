@@ -1,11 +1,14 @@
 'use client'
 // create-a-world
-import { useEffect, useRef } from 'react';
+// Need to handle input error
+// Need to add "?" icon for instruction
+import { useEffect, useRef, useState } from 'react';
+
 import { useDraftContext } from '../draft-provider';
 import { useRouter } from 'next/navigation';
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload } from '@/types/types.world';
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world, World } from '@/types/types.world';
 import { postData, updateData } from '@/utils/helpers';
-import { Formik, Field, FormikHelpers, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
+import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
 // UI
 import { Disclosure } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
@@ -13,19 +16,41 @@ import TextInput from '@/components/ui/input/InputText';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import { TagsBar } from '@/components/ui/display/tags-display-helpers';
-import DescriptionSections from '@/app/create-a-world/components/description/DescriptionSections';
+import DescriptionSections from './description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
-import OriginSwitchTab from '@/app/create-a-world/components/OriginSwitchTab';
+import OriginSwitchTab from './OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import CoversUpload from './CoversUpload';
-
+import { useSupabase } from '@/app/supabase-provider';
+import type { User } from '@supabase/supabase-js';
+import { InputDialog } from '@/components/ui/input/InputDialog';
+import WorldDisplay from '@/components/ui/display/WorldDisplay';
+import { moveImages, deleteImages } from '@/utils/image-helpers';
 
 export default function CaW() {
+    const { currentDraft, updateDrafts, handleDraftDelete } = useDraftContext();
+
     const router = useRouter()
-    const { currentDraft, updateDrafts } = useDraftContext();
+    const [isReviewOpen, setIsReviewOpen] = useState(false)
+
+
+    const { supabase } = useSupabase()
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session || !session.user) {
+                alert('did not find authenticated user')
+            } else {
+                setUser(session.user)
+            }
+        }
+        fetchUser()
+    }, [])
+
 
     const formikRef = useRef<FormikProps<WorldPayload> | null>(null); // Adding a ref to Formik
-
     useEffect(() => {
         if (formikRef.current) {
             const newValues: WorldPayload = currentDraft ? cast_to_worldpayload(currentDraft) : EmptyWorldPayload
@@ -33,68 +58,92 @@ export default function CaW() {
         }
     }, [currentDraft])  // Resetting the form whenever currentDraft changes
 
+    if (!user) {
+        console.log(user)
+        return <>Loading...</>;
+    }
 
-    const handleSubmit = async (values: WorldPayload, actions: FormikHelpers<WorldPayload>) => {
-        console.log('form submitted', values)
-        actions.setSubmitting(true)
+    const submitWorld = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
+        setSubmitting(true)
         try {
+            const newPaths = await moveImages('world', 'published', user.id, values.images)
+            console.log(values.images, newPaths)
             const response = await postData({
                 url: '/api/create-a-world',
-                data: values
+                data: {
+                    ...values,
+                    images: newPaths
+                }
             });
-            console.log('Response:', response);
+            if (currentDraft) {
+                // delete currentDraft from draft
+                handleDraftDelete(currentDraft)
+            }
         } catch (error) {
-            console.error('Error:', (error as Error).message);
+            alert(`Error: ${(error as Error).message}`);
+        } finally {
+            setSubmitting(false)
+            router.push(`/`); // Redirect to world page
         }
-        actions.setSubmitting(false)
+    }
+
+    const handleSubmit = async (values: WorldPayload, actions: FormikHelpers<WorldPayload>) => {
+        setIsReviewOpen(true)
     }
 
     const handleSaveDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
-        console.log('form saved as new draft', values)
+        if (currentDraft) {
+            alert('Should not save new a draft when currentDraft is set')
+            return
+        }
         setSubmitting(true)
         try {
-            if (currentDraft)
-                throw Error('Should not save new a draft when currentDraft is set')
+            const newPaths = await moveImages('world', 'draft', user.id, values.images)
             const response = await postData({
                 url: '/api/create-a-world/draft',
                 data: values
             });
-            console.log('Response:', response);
         } catch (error) {
-            console.error('Error:', (error as Error).message);
+            alert(`Error: ${(error as Error).message}`);
+        } finally {
+            updateDrafts();
+            setSubmitting(false)
+            router.refresh();
         }
-        updateDrafts();
-
-        setSubmitting(false)
-        router.refresh();
     }
 
     const handleOverwriteDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
-        console.log('form overwrite draft', values)
+        if (!currentDraft) {
+            alert('No draft id found, can not update draft')
+            return
+        }
         setSubmitting(true)
         try {
-            if (!currentDraft)
-                throw Error('No draft id found, can not update draft')
+            const newPaths = await moveImages('world', 'draft', user.id, values.images)
+
             const response = await updateData({
                 url: '/api/create-a-world/draft',
                 data: values,
                 id: currentDraft.id
             });
-            console.log('Response:', response);
+
         } catch (error) {
-            console.error('Error:', (error as Error).message);
+            alert(`Error: ${(error as Error).message}`);
+
+        } finally {
+            updateDrafts();
+            setSubmitting(false)
+            router.refresh();
         }
-        updateDrafts();
-        setSubmitting(false)
-        router.refresh();
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
             event.preventDefault();
         }
-    }
-    // Need to add image uploading
+    };
+
+
     return (
         <Formik
             initialValues={EmptyWorldPayload}
@@ -106,6 +155,11 @@ export default function CaW() {
                     <div id="origin-group" className='w-full md:w-1/2 flex flex-col'>
                         <FieldTitleDisplay label={'❇️origin'} />
                         <OriginSwitchTab />
+                    </div>
+
+                    <div id="images-group" className='w-full flex flex-col'>
+                        <FieldTitleDisplay label={'🖼️covers'} />
+                        <CoversUpload initPaths={values.images} user={user} />
                     </div>
 
                     <div id="title-group" className='w-full flex flex-col'>
@@ -130,11 +184,6 @@ export default function CaW() {
                     <div id="description-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"📜description"} />
                         <DescriptionSections formSections={values.description} setFieldValue={setFieldValue} />
-                    </div>
-
-                    <div id="images-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={'🖼️covers'} />
-                        <CoversUpload />
                     </div>
 
                     <div id="settings-group" className='w-full flex flex-col'>
@@ -167,8 +216,18 @@ export default function CaW() {
                         }
                     </div>
                     {isSubmitting && <LoadingOverlay />}
+                    <InputDialog
+                        isOpen={isReviewOpen}
+                        setIsOpen={setIsReviewOpen}
+                        dialogTitle='Are you sure you want to publish this world?'
+                        dialogContent=''
+                        initInputValue={<WorldDisplay world={cast_to_world(values, user?.id as string, new Date().toISOString())} preview={true} />}
+                        confirmAction={() => submitWorld(values, setSubmitting)}
+                        dialogType='display'
+                    />
                 </Form>
             )}
+
         </Formik>
 
     );

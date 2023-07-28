@@ -9,7 +9,7 @@ import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import { InputDialog } from '@/components/ui/input/InputDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
-import { BsFillTrashFill } from 'react-icons/bs'
+import { TrashIcon } from '@heroicons/react/20/solid';
 
 const defaultOption = { id: 'default', name: 'A New Draft' };
 
@@ -48,7 +48,7 @@ export default function LocalNavBar() {
                     display_func={(item: any) => item.id === "default" ? `${item.name}` : `${formatTimestamp(item.modified_at)} - ${item.world_name}`}
 
                 />
-                {selected.id !== "default" ? <BsFillTrashFill className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} /> : null}
+                {selected.id !== "default" ? <TrashIcon className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} /> : null}
                 <InputDialog
                     isOpen={isDeleteDialogOpen}
                     setIsOpen={setDeleteDialogOpen}

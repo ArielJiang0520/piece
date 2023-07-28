@@ -83,7 +83,7 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
                     type="text"
                     value={newSectionName}
                     className="text-xl md:text-3xl singleLineInput"
-                    placeholder="Add your section..."
+                    placeholder="Add a new section..."
                     onChange={handleSectionNameChange}
                     onKeyDown={addSection}
                 />

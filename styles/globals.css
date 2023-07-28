@@ -1,6 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 @layer base {
   :root {
@@ -62,4 +65,8 @@
 
 .multiLineInput {
   @apply py-2 w-full bg-transparent focus:outline-none placeholder-foreground/20 text-foreground font-serif
+}
+
+.max-h-2-3-screen {
+  max-height: calc(100vh * 0.67);
 }

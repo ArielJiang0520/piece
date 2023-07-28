@@ -1,9 +1,7 @@
-'use client'
 import React from 'react';
-
-import { WorldDescriptionSection, WorldDescriptionSectionCard } from "@/types/types.world";
-import { Disclosure } from '@headlessui/react';
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import { formatTimestamp } from '@/utils/helpers';
+import { WorldDescriptionSectionCard } from "@/types/types.world";
+import { CalendarIcon, BookIcon, SingleUserIcon, Rating18PlusIcon, RatingGeneralIcon } from '@/components/icon/icon';
 
 interface InputTitleProps {
     label: string,
@@ -35,76 +33,33 @@ export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ conten
 }
 
 
-interface AccordionDisplayProps {
-    sections: WorldDescriptionSection[]
-}
-
-export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) => {
-    return (
-        <div className='flex flex-col justify-start'>
-            <ul className='my-5 font-serif space-y-2'>
-                {sections.map((section) => (
-                    <li className="">
-                        <Disclosure>
-                            {({ open }) => (
-                                <>
-                                    <div id="accordion-panel" className="flex flex-row justify-between items-center w-full ">
-                                        <div className='flex flex-row items-center space-x-2'>
-                                            <div
-                                                className="font-bold text-2xl md:text-3xl overflow-hidden max-w-xs md:max-w-lg whitespace-nowrap overflow-ellipsis"
-                                            >
-                                                {section.sectionTitle}
-                                            </div>
-
-                                            <Disclosure.Button>
-                                                <ChevronRightIcon className={`${open ? 'transform rotate-90' : ''} w-5 h-5`} />
-                                            </Disclosure.Button>
-                                        </div>
-                                    </div>
-                                    <Disclosure.Panel className="flex flex-row w-full space-x-5 justify-start p-10 overflow-x-auto">
-                                        {section.sectionCards.map((card, index) =>
-                                            <SectionCard
-                                                key={index}
-                                                title={card.cardTitle}
-                                                content={card.cardContent}
-                                            />
-                                        )}
-                                    </Disclosure.Panel>
-                                </>
-                            )}
-                        </Disclosure>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
-}
-
-
-
-export const SectionCard = ({ title, content }: { title: string, content: string }) => {
-    return (
-        <div id='card'
-            className='relative flex-shrink-0 p-8 flex flex-col justify-start items-center space-y-2 border-2 cursor-pointer rounded-lg w-64 h-64'
-        >
-            <div className='text-center leading-snug text-2xl overflow-hidden overflow-ellipsis whitespace-nowrap w-full h-12'>
-                {title}
-            </div>
-            <div className='w-full border-b-2 h-px'></div>
-            <div className='text-xs text-left overflow-hidden overflow-ellipsis h-48 w-full'>
-                {content}
-            </div>
-        </div>
-    )
-}
-
 export const MetadataDisplay = ({ items }: { items: any[] }) => {
     return (
-        <div className='w-full border-t border-b grid grid-cols-2 justify-items-start py-5 px-2'>
-            {items.map(item =>
-                <div className="text-right text-sm">
-                    {item}
-                </div>)}
+        <div className='w-full border-t border-b grid md:grid-cols-2 sm:grid-cols-1 justify-items-start py-3 px-2 text-right text-sm text-foreground/80'>
+            <div className="mb-1">
+                <div className='flex flex-row justify-start items-center space-x-2'>
+                    <CalendarIcon />
+                    <span>Created on {formatTimestamp(items[0], true)}</span>
+                </div>
+            </div>
+            <div className="mb-1 md:col-start-auto sm:col-start-auto">
+                <div className='flex flex-row justify-start items-center space-x-2'>
+                    <BookIcon />
+                    <span>{items[1] ? `Derived from ${items[1]}` : "Original World"}</span>
+                </div>
+            </div>
+            <div className="md:col-start-auto sm:col-start-auto mb-1 md:mb-0">
+                <div className='flex flex-row justify-start items-center space-x-2'>
+                    {items[2] ? <Rating18PlusIcon /> : <RatingGeneralIcon />}
+                    <span>{items[2] ? "18+ Audiences" : "General Audiences"}</span>
+                </div>
+            </div>
+            <div className="md:col-start-auto sm:col-start-auto">
+                <div className='flex flex-row justify-start items-center space-x-2'>
+                    <SingleUserIcon />
+                    <span>{"Single World-Creator"}</span>
+                </div>
+            </div>
         </div>
     )
 }

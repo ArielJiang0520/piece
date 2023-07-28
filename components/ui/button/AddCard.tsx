@@ -1,5 +1,5 @@
 
-import { BsPlusCircleDotted } from 'react-icons/bs'
+import { PlusCircleIcon } from "@/components/icon/icon";
 
 interface AddCardProps {
     text: string;
@@ -13,7 +13,7 @@ const AddCard = ({ text, width, height, onclick }: AddCardProps) => {
         <div className={`flex-shrink-0 flex flex-col justify-center items-center space-y-2 border-2 cursor-pointer rounded-lg ${width} ${height}`}
             onClick={onclick}>
             <div>
-                <BsPlusCircleDotted
+                <PlusCircleIcon
                     size={40}
                     className='text-foreground/20'
                 />

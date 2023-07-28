@@ -36,19 +36,20 @@ interface TagsBarDisplay {
 export function TagsBarDisplay({ tags }: TagsBarDisplay) {
     return (
 
-        <div className='flex flex-row w-full space-x-2 justify-start'>
+        <div className='flex flex-row flex-wrap w-full justify-start'>
             {
                 tags.map((tag, index) =>
                     <button
                         key={index}
                         type="button"
-                        className='bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2'
+                        className={`bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-2 my-1`}
                     >
                         {tag}
                     </button>
                 )
             }
         </div>
+
 
     )
 }

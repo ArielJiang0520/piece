@@ -70,6 +70,25 @@ export function cast_to_worldpayload(world: World | Draft) {
     } as WorldPayload
 }
 
+export function cast_to_world(payload: WorldPayload, creator_id: string | null, created_at: string) {
+    return {
+        allow_contribution: payload.settings.allowContribution,
+        allow_suggestion: payload.settings.allowSuggestion,
+        created_at: created_at,
+        creator_id: creator_id,
+        description: payload.description,
+        id: '',
+        images: payload.images,
+        logline: payload.logline,
+        modified_at: created_at,
+        nsfw: payload.settings.NSFW,
+        origin: payload.origin,
+        public: payload.settings.public,
+        tags: payload.tags,
+        world_name: payload.title,
+    } as World
+}
+
 export const initValues: WorldPayload = {
     origin: null,
     images: [],

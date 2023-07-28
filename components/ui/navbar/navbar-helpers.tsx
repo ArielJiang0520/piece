@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { AiOutlineClose } from 'react-icons/ai'
+import { CloseIcon } from "@/components/icon/icon";
 import Image from 'next/image'
 import Link from 'next/link'
 import LogoutButton from "../button/LogoutButton";
@@ -38,7 +38,7 @@ export function SideBar({ onLeft, isMenuOpen, setIsMenuOpen, menuItems, image }:
                     exit="closed"
                     variants={onLeft ? leftVariants : rightVariants}
                 >
-                    <AiOutlineClose
+                    <CloseIcon
                         size={14}
                         className="text-foreground/50 absolute top-5 right-5 cursor-pointer"
                         onClick={() => setIsMenuOpen(false)} />

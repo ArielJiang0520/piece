@@ -108,7 +108,7 @@ export function renameKeyInObjectsArray(
 }
 
 
-export function formatTimestamp(timestamp: string | null): string {
+export function formatTimestamp(timestamp: string | null, dateOnly: boolean = false): string {
     if (!timestamp)
         return ""
     // Parse the timestamp into a Date object.
@@ -125,9 +125,10 @@ export function formatTimestamp(timestamp: string | null): string {
     const minutes = padNumber(date.getUTCMinutes());
 
     // Format the date and time.
-    const formattedDate = `${month}/${day} ${hours}:${minutes}`;
-
-    return formattedDate;
+    if (!dateOnly)
+        return `${month}/${day} ${hours}:${minutes}`;
+    else
+        return `${month}/${day}/${year}`
 }
 
 // await sleep(10000); // Sleep for 10 seconds

@@ -56,6 +56,17 @@ function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
     )
 }
 
+
+interface DialogDisplayProps {
+    children: React.ReactNode
+}
+
+function DialogDisplay({ children }: DialogDisplayProps) {
+    return (
+        <>{children}</>
+    )
+}
+
 interface DialogProps {
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
@@ -63,10 +74,12 @@ interface DialogProps {
     dialogContent: string;
     initInputValue: any;
     confirmAction: (...args: any[]) => void;
-    dialogType: "input" | "form" | "confirm"
+    dialogType: "input" | "form" | "confirm" | "display"
+    overwriteConfirm?: string
+    hideCancel?: boolean
 }
 
-export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, initInputValue, confirmAction, dialogType }: DialogProps) {
+export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, initInputValue, confirmAction, dialogType, overwriteConfirm = "Confirm", hideCancel = false }: DialogProps) {
     const [inputValue, setInputValue] = useState(initInputValue);
 
     const handleButtonClick = () => {
@@ -86,7 +99,7 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
         >
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
             <div className="fixed inset-0 flex items-center justify-center p-4">
-                <Dialog.Panel className="w-2/3 max-w-sm rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500">
+                <Dialog.Panel className="w-11/12  max-h-2-3-screen max-w-3xl rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500 overflow-y-auto">
                     <Dialog.Title className="text-base font-semibold text-foreground">{dialogTitle}</Dialog.Title>
                     <Dialog.Description className="text-foreground">
                         {dialogContent}
@@ -94,20 +107,21 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
 
                     {dialogType === "input" && < DialogLineInput inputValue={inputValue} setInputValue={setInputValue} />}
                     {dialogType === "form" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
+                    {dialogType === "display" && <DialogDisplay children={initInputValue} />}
 
                     <div className="mt-8 flex flex-row justify-end items-center space-x-4">
-                        <button
+                        {hideCancel ? null : <button
                             onClick={() => setIsOpen(false)}
                             className="px-1 text-base secondaryButton"
                         >
                             Cancel
-                        </button>
+                        </button>}
 
                         <button
                             onClick={handleButtonClick}
                             className="px-2 py-1 text-base primaryButton"
                         >
-                            Confirm
+                            {overwriteConfirm}
                         </button>
                     </div>
 

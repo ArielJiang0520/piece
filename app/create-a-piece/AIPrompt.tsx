@@ -1,6 +1,6 @@
 'use client'
 import { Formik, Field, Form, ErrorMessage, FieldProps } from 'formik';
-import { RiAiGenerate } from 'react-icons/ri'
+import { AIGenerateIcon } from '@/components/icon/icon';
 import TextInput from '@/components/ui/input/InputText';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
@@ -61,7 +61,7 @@ export default function AIPrompt({ worldId }: { worldId: string }) {
                     <div id="content-group" className='w-full flex flex-col'>
                         <div className='flex flex-row items-center space-x-2'>
                             <FieldTitleDisplay label={"content"} />
-                            <RiAiGenerate className='text-foreground/50' onClick={() => handleGenerate(values)} />
+                            <AIGenerateIcon className='text-foreground/50' onClick={() => handleGenerate(values)} />
                         </div>
                         <div className='border rounded-ml w-full h-96 overflow-scroll font-serif text-sm'>
                             {lines.map((line, index) => (

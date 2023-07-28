@@ -1,9 +1,8 @@
 
 import { Disclosure } from '@headlessui/react';
-import { BsThreeDotsVertical, BsFillTrashFill } from 'react-icons/bs';
+import { PencilIcon, DotsVerticalIcon, TrashIcon } from '@/components/icon/icon';
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
-import { RiPencilFill } from 'react-icons/ri'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/DropDownMenu';
@@ -80,8 +79,8 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
     }
 
     const menuOptions: DropDownMenuOptions[] = [
-        { name: 'Rename', icon: RiPencilFill, function: onRenameSection },
-        { name: 'Delete', icon: BsFillTrashFill, function: onDeleteSection }
+        { name: 'Rename', icon: PencilIcon, function: onRenameSection },
+        { name: 'Delete', icon: TrashIcon, function: onDeleteSection }
     ]
 
     return (
@@ -103,7 +102,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             </div>
 
                             <div className='relative'>
-                                <BsThreeDotsVertical
+                                <DotsVerticalIcon
                                     className='cursor-pointer'
                                     size={20}
                                     onClick={onDropdownClick}
