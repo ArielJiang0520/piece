@@ -4,44 +4,57 @@ import { UploadIcon, CloseIcon } from '@/components/icon/icon';
 import { v4 as uuidv4 } from 'uuid';
 import { Bubble } from '@/components/ui/widget/bubble';
 import { useSupabase } from '@/app/supabase-provider';
-import type { User } from '@supabase/supabase-js';
-
-import { useFormikContext } from 'formik';
 import LazyImage from '@/components/ui/display/LazyImage';
 
 interface CoversUploadProps {
-    user: User | null;
+    dimension: {
+        height: string;
+        width: string;
+    };
     initPaths: string[];
+    setValues: (arg: any) => void;
 }
 
-export default function CoversUpload({ user, initPaths }: CoversUploadProps) {
-    const { setFieldValue } = useFormikContext();
+export default function ImagesUpload({ dimension, initPaths, setValues }: CoversUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { supabase } = useSupabase();
     const [paths, setPaths] = useState<string[]>(initPaths);
     const [uploading, setUploading] = useState(false);
+    const [uid, setUid] = useState<string | null>(null)
 
     useEffect(() => {
-        setFieldValue('images', paths);
-    }, [paths, setFieldValue]);
+        setValues(paths);
+    }, [paths]);
 
     useEffect(() => {
         setPaths(initPaths)
     }, [initPaths])
 
-    const uploadTempCover = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session || !session.user) {
+                alert('did not find authenticated user')
+            } else {
+                setUid(session.user.id)
+            }
+        }
+        fetchUser()
+    }, [])
+
+    if (!uid)
+        return <>Loading...</>
+
+    const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
         setUploading(true);
         try {
-            if (!user || !user.id)
-                throw (`No authenticated user found!`);
-
             const file = event.target.files![0];
             const fileExt = file.name.split('.').pop();
-            const filePath = `tmp/${user.id}/${uuidv4()}.${fileExt}`;
+            const filePath = `tmp/${uid}/${uuidv4()}.${fileExt}`;
 
             const { error } = await supabase.storage.from('world').upload(filePath, file);
             if (error) {
-                throw (`Error uploading image: ${error}`);
+                throw (`Error uploading image: ${JSON.stringify(error)}`);
             } else {
                 setPaths((prevPaths) => [...prevPaths, filePath]);
             }
@@ -78,14 +91,14 @@ export default function CoversUpload({ user, initPaths }: CoversUploadProps) {
                     type="file"
                     ref={fileInputRef}
                     accept="image/*"
-                    onChange={uploadTempCover}
+                    onChange={uploadImage}
                     disabled={uploading || paths.length === 10}
                 />
             </div>
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
                 {paths.map((path, index) =>
-                    <div key={index} className="h-56 flex-shrink-0 relative">
-                        <LazyImage bucket="world" path={path} dimension="h-56 w-56" />
+                    <div key={index} className={`${dimension.height} flex-shrink-0 relative`}>
+                        <LazyImage bucket="world" path={path} dimension={`${dimension.height} ${dimension.width}`} />
                         <button
                             onClick={() => handleImageDelete(index)}
                             type="button"

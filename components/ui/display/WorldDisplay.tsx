@@ -6,6 +6,7 @@ import { TagsBarDisplay } from "@/components/ui/display/tags-display-helpers";
 import { AccordionDisplay } from './AccordionDisplay';
 import { WorldDescriptionSection } from "@/types/types.world";
 import { LazyImage } from "./LazyImage";
+import Link from "next/link";
 
 interface WorldDisplayProps {
     world: World;
@@ -21,11 +22,11 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
                     <IconButton icon={<StarIcon />} title={"124"} />
                 </div>
                 <div className="cursor-pointer">
-                    <IconButton icon={<AtomIcon />} title={"Create a Piece"} />
+                    <Link href={{ pathname: '/create-a-piece', query: { id: world.id } }} >
+                        <IconButton icon={<AtomIcon />} title={"Create a Piece"} />
+                    </Link>
                 </div>
             </div>}
-
-
 
             <div id="title-group" className='w-full flex flex-col'>
                 <FieldContentDisplay content={world.world_name} textSize="text-4xl" bold="font-semibold" />
@@ -46,7 +47,7 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
                 <FieldContentDisplay content={world.logline} textSize="text-base" bold="font-normal" />
             </div>
             <div id="tags-group" className='w-full flex flex-col'>
-                <TagsBarDisplay tags={world.tags} />
+                <TagsBarDisplay tags={world.tags} preview={preview} />
             </div>
             <div id="description-group" className='w-full flex flex-col'>
                 <AccordionDisplay sections={world.description as WorldDescriptionSection[]} />

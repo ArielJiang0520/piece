@@ -28,14 +28,18 @@ export function SolidSwitchTab({ titles, contents, onTabChange }: SwitchTabProps
     )
 }
 
-export function NavBarSwitchTab({ tabs }: { tabs: any[] }) {
-
+interface NavBarSwitchTab {
+    tabs: any[],
+    onChange: (arg: any) => void;
+}
+export function NavBarSwitchTab({ tabs, onChange }: NavBarSwitchTab) {
     return (
-        <Tab.Group >
-            <Tab.List className='h-full flex flex-row justify-start  px-4 overflow-x-auto whitespace-nowrap mb-0 pb-0'>
+        <Tab.Group
+            onChange={(index) => { onChange(tabs[index]) }}>
+            <Tab.List className='h-full flex flex-row justify-start px-4 overflow-x-auto whitespace-nowrap mb-0 pb-0'>
                 {tabs.map((tab, idx) => (
                     <Tab key={idx} className="outline-none mb-0 pb-0">
-                        <div className={`h-full font-mono text-sm text-foreground/80 flex px-5 items-center border-b-2 ui-selected:border-brand ui-selected:font-bold ui-not-selected:border-transparent`} >
+                        <div className={`capitalize  h-full font-mono text-sm text-foreground/80 flex px-5 items-center border-b-2 ui-selected:border-brand ui-selected:font-bold ui-not-selected:border-transparent`} >
                             {tab}
                         </div>
                     </Tab>

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
             if (!session)
                 throw Error("User not found")
 
-            const { status, statusText } = await supabase
+            const { status, statusText, error } = await supabase
                 .from('worlds')
                 .insert({
                     origin: origin,
@@ -34,12 +34,12 @@ export async function POST(req: Request) {
             if (status === 201) {
                 return new Response(JSON.stringify(statusText), { status: 201 });
             } else {
-                throw Error(statusText)
+                throw Error(`${JSON.stringify(error)}`)
             }
 
         } catch (err: any) {
             console.log(err);
-            return new Response(JSON.stringify(err), { status: 500 });
+            return new Response(err, { status: 500 });
         }
     } else {
         return new Response('Method Not Allowed', {

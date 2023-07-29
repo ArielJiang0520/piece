@@ -1,6 +1,8 @@
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { WorldDescriptionSectionCard } from '@/types/types.world';
+import ImagesUpload from '@/app/create-a-world/components/ImagesUpload';
+import { FieldTitleDisplay } from '../display/display-helpers';
 
 interface DialogLineInputProps {
     inputValue: string,
@@ -35,6 +37,13 @@ function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
         });
     };
 
+    const handleImageChange = (paths: string[]) => {
+        setInputValue({
+            ...inputValue,
+            ["cardImages"]: paths
+        });
+    }
+
     return (
         <div>
             <input
@@ -52,6 +61,7 @@ function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
                 value={inputValue.cardContent}
                 onChange={handleInputChange}
             />
+            <ImagesUpload dimension={{ height: "h-48", width: "w-48" }} initPaths={inputValue.cardImages} setValues={(paths) => handleImageChange(paths)} />
         </div>
     )
 }
@@ -99,7 +109,7 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
         >
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
             <div className="fixed inset-0 flex items-center justify-center p-4">
-                <Dialog.Panel className="w-11/12  max-h-2-3-screen max-w-3xl rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500 overflow-y-auto">
+                <Dialog.Panel className="w-11/12 max-h-2-3-screen max-w-lg rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500 overflow-y-auto">
                     <Dialog.Title className="text-base font-semibold text-foreground">{dialogTitle}</Dialog.Title>
                     <Dialog.Description className="text-foreground">
                         {dialogContent}

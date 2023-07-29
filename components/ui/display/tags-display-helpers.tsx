@@ -17,7 +17,7 @@ export function TagsBar({ tags, setFieldValue }: TagsBarProps) {
                     <button
                         key={index}
                         type="button"
-                        className='bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2'
+                        className='bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap '
                         onClick={() => handleRemoveTag(index)}
                     >
                         {tag}
@@ -30,10 +30,11 @@ export function TagsBar({ tags, setFieldValue }: TagsBarProps) {
 }
 
 interface TagsBarDisplay {
-    tags: string[]
+    tags: string[],
+    preview?: boolean
 }
 
-export function TagsBarDisplay({ tags }: TagsBarDisplay) {
+export function TagsBarDisplay({ tags, preview = false }: TagsBarDisplay) {
     return (
 
         <div className='flex flex-row flex-wrap w-full justify-start'>
@@ -42,7 +43,8 @@ export function TagsBarDisplay({ tags }: TagsBarDisplay) {
                     <button
                         key={index}
                         type="button"
-                        className={`bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-2 my-1`}
+                        disabled={preview}
+                        className={`bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-2 my-1 ${preview ? "cursor-auto" : ""}`}
                     >
                         {tag}
                     </button>

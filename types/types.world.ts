@@ -3,10 +3,12 @@ import { Database } from "./supabase"
 export type World = Database['public']['Tables']['worlds']['Row']
 export type Draft = Database['public']['Tables']['drafts']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
+export type Piece = Database['public']['Tables']['pieces']['Row']
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,
-    cardContent: string
+    cardContent: string,
+    cardImages: string[],
 }
 
 export type WorldDescriptionSection = {
@@ -108,7 +110,8 @@ export const initValues: WorldPayload = {
                     cardContent: `Background: High school computer science teacher in a Fremont suburb, co-founder of WinLin, and a Stanford graduate. Previously a tech entrepreneur, he chose a simpler life due to disillusionment with corporate greed.
 Appearance: Medium height with unkempt dark curly hair, big eyes, and an often rugged appearance due to his simple and functional clothing. But underneath his scruffiness is a cute face and a pale, fragile yet appealing body
 Personality: Intellectually curious, introverted, genuine, and dedicated, with a strong ethical stand against commercial exploitation of knowledge and technology. Has a tendency to suppress emotions and desires and play coy
-`
+`,
+                    cardImages: []
                 }
             ]
         },

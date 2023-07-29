@@ -1,9 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import { WorldDescriptionSection } from "@/types/types.world";
 import { Disclosure } from '@headlessui/react';
 import { AccordionIcon } from '@/components/icon/icon';
-import { InputDialog } from '@/components/ui/input/InputDialog';
+import { SectionCard } from '@/components/ui/display/SectionCard';
 
 interface AccordionDisplayProps {
     sections: WorldDescriptionSection[];
@@ -37,8 +37,11 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) 
                                         {section.sectionCards.map((card, index) =>
                                             <SectionCard
                                                 key={index}
-                                                title={card.cardTitle}
-                                                content={card.cardContent}
+                                                index={index}
+                                                card={card}
+                                                onclick={() => { }}
+                                                ondel={() => { }}
+                                                display={true}
                                             />
                                         )}
                                     </Disclosure.Panel>
@@ -51,49 +54,4 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) 
 
         </div>
     );
-};
-
-
-
-export const SectionCard = ({ title, content }: { title: string; content: string; }) => {
-    const [isOpen, setIsOpen] = useState(false)
-    function DisplayCard() {
-        return <div className='flex flex-col w-full space-y-2'>
-            <div className='font-serif text-2xl font-semibold'>
-                {title}
-            </div>
-            <div className='w-full border-b-2 h-px my-2'></div>
-            <div className='text-sm whitespace-pre-line'>
-                {content}
-            </div>
-        </div>
-    }
-    return (
-        <div id='card'
-            onClick={() => setIsOpen(true)}
-            className='relative flex-shrink-0 p-8 flex flex-col justify-start items-center space-y-2 border-2 cursor-pointer rounded-lg w-64 h-64'
-        >
-            <div className='text-center leading-snug text-2xl overflow-hidden overflow-ellipsis whitespace-nowrap w-full h-12'>
-                {title}
-            </div>
-            <div className='w-full border-b-2 h-px'></div>
-            <div className='text-xs text-left overflow-hidden overflow-ellipsis h-48 w-full whitespace-pre-line'>
-                {content}
-            </div>
-            <InputDialog
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                dialogTitle=''
-                dialogContent=''
-                initInputValue={<DisplayCard />}
-                confirmAction={() => setIsOpen(false)}
-                dialogType='display'
-                overwriteConfirm='Okay'
-                hideCancel={true}
-            />
-        </div>
-    );
-
-
-
 };

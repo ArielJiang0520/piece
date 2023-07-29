@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/DropDownMenu';
 import { InputDialog } from '@/components/ui/input/InputDialog';
-import { SectionCard } from './SectionCard';
+import { SectionCard } from '../../../../components/ui/display/SectionCard';
 import AddCard from '@/components/ui/button/AddCard';
 
 
@@ -138,8 +138,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                             <SectionCard
                                                 key={index}
                                                 index={index}
-                                                title={card.cardTitle}
-                                                content={card.cardContent}
+                                                card={card}
                                                 onclick={onEditCard}
                                                 ondel={onDelCard}
                                             />
@@ -153,7 +152,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 setIsOpen={setAddCardDialogIsOpen}
                                 dialogTitle={"Add New Card"}
                                 dialogContent={""}
-                                initInputValue={{ cardTitle: "", cardContent: "" }}
+                                initInputValue={{ cardTitle: "", cardContent: "", cardImages: [] } as WorldDescriptionSectionCard}
                                 confirmAction={saveNewCard}
                                 dialogType='form'
                             />

@@ -16,6 +16,7 @@ import { BiSolidUser as SingleUserIcon } from 'react-icons/bi'
 import { TbRating18Plus as Rating18PlusIcon } from 'react-icons/tb'
 import { MdOutlineGeneratingTokens as RatingGeneralIcon } from 'react-icons/md'
 import { RiBook2Fill as BookIcon } from 'react-icons/ri'
+import { AiFillEye as EyeIcon } from 'react-icons/ai'
 
 export {
     BurgerIcon,
@@ -35,5 +36,6 @@ export {
     SingleUserIcon,
     Rating18PlusIcon,
     RatingGeneralIcon,
-    BookIcon
+    BookIcon,
+    EyeIcon
 };

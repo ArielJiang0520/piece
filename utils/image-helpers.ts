@@ -21,15 +21,15 @@ export async function downloadImage(bucket_name: string, path: string) {
 }
 
 // Move each image from paths to bucket_name/folder_name/uid/{filename}
-export async function moveImages(bucket_name: string, folder_name: string, uid: string, paths: string[]): Promise<string[]> {
+export async function copyImages(bucket_name: string, folder_name: string, uid: string, paths: string[]): Promise<string[]> {
     const supabase = createClientComponentClient()
     const newPaths = await Promise.all(paths.map(async (path, index) => {
         const newPath = `${folder_name}/${uid}/${path.split('/').pop()}`;
         const { data, error } = await supabase.storage
             .from(bucket_name)
-            .move(path, newPath);
+            .copy(path, newPath);
         if (error) {
-            console.error(error)
+            console.log('error on path', path, newPath, JSON.stringify(error))
             throw (error)
         }
         return newPath;

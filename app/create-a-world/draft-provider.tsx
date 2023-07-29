@@ -31,11 +31,11 @@ export function DraftProvider({
         }
     }
 
-    const handleDraftDelete = (selectedOption: any) => {
+    const handleDraftDelete = async (selectedOption: any) => {
         if (selectedOption.id === 'default') {
             return
         } else {
-            deleteData({ url: 'api/create-a-world/draft', id: selectedOption.id })
+            await deleteData({ url: 'api/create-a-world/draft', id: selectedOption.id })
         }
     }
 

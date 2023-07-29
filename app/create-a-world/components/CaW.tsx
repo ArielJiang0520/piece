@@ -3,10 +3,9 @@
 // Need to handle input error
 // Need to add "?" icon for instruction
 import { useEffect, useRef, useState } from 'react';
-
 import { useDraftContext } from '../draft-provider';
 import { useRouter } from 'next/navigation';
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world, World } from '@/types/types.world';
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world, World, WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { postData, updateData } from '@/utils/helpers';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
 // UI
@@ -20,12 +19,12 @@ import DescriptionSections from './description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import OriginSwitchTab from './OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
-import CoversUpload from './CoversUpload';
+import ImagesUpload from './ImagesUpload';
 import { useSupabase } from '@/app/supabase-provider';
 import type { User } from '@supabase/supabase-js';
 import { InputDialog } from '@/components/ui/input/InputDialog';
 import WorldDisplay from '@/components/ui/display/WorldDisplay';
-import { moveImages, deleteImages } from '@/utils/image-helpers';
+import { copyImages } from '@/utils/image-helpers';
 
 export default function CaW() {
     const { currentDraft, updateDrafts, handleDraftDelete } = useDraftContext();
@@ -59,20 +58,51 @@ export default function CaW() {
     }, [currentDraft])  // Resetting the form whenever currentDraft changes
 
     if (!user) {
-        console.log(user)
         return <>Loading...</>;
     }
+
+    const moveSectionImages = async (bucket_name: string, folder_name: string, sections: WorldDescriptionSection[]) => {
+        const newSections: WorldDescriptionSection[] = []
+        let newImages: string[] = []
+
+        for (let description of sections) {
+            // Copying the section and its cards
+            let newDescription: WorldDescriptionSection = {
+                ...description,
+                sectionCards: []
+            }
+
+            for (let card of description.sectionCards) {
+                let newPaths: string[] = await copyImages(bucket_name, folder_name, user.id, card.cardImages)
+                newImages = [...newImages, ...newPaths]
+                // Create a new card object, copying old card fields and replacing cardImages with newPaths
+                let newCard: WorldDescriptionSectionCard = {
+                    ...card,
+                    cardImages: newPaths
+                }
+                // Add the new card to the copied section's cards array
+                newDescription.sectionCards.push(newCard)
+            }
+
+            // Add the copied and modified section to newSections
+            newSections.push(newDescription)
+        }
+
+        return { newSections: newSections, newImages: newImages }
+    }
+
 
     const submitWorld = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
         setSubmitting(true)
         try {
-            const newPaths = await moveImages('world', 'published', user.id, values.images)
-            console.log(values.images, newPaths)
-            const response = await postData({
+            const newCoverPaths = await copyImages('world', 'published', user.id, values.images)
+            const { newSections, newImages } = await moveSectionImages('world', 'published', values.description)
+            await postData({
                 url: '/api/create-a-world',
                 data: {
                     ...values,
-                    images: newPaths
+                    description: newSections,
+                    images: newCoverPaths
                 }
             });
             if (currentDraft) {
@@ -98,10 +128,15 @@ export default function CaW() {
         }
         setSubmitting(true)
         try {
-            const newPaths = await moveImages('world', 'draft', user.id, values.images)
-            const response = await postData({
+            const newCoverPaths = await copyImages('world', 'draft', user.id, values.images)
+            const { newSections, newImages } = await moveSectionImages('world', 'draft', values.description)
+            await postData({
                 url: '/api/create-a-world/draft',
-                data: values
+                data: {
+                    ...values,
+                    images: newCoverPaths,
+                    description: newSections
+                }
             });
         } catch (error) {
             alert(`Error: ${(error as Error).message}`);
@@ -119,17 +154,20 @@ export default function CaW() {
         }
         setSubmitting(true)
         try {
-            const newPaths = await moveImages('world', 'draft', user.id, values.images)
-
-            const response = await updateData({
+            const newCoverPaths = await copyImages('world', 'draft', user.id, values.images)
+            const { newSections, newImages } = await moveSectionImages('world', 'draft', values.description)
+            await updateData({
                 url: '/api/create-a-world/draft',
-                data: values,
+                data: {
+                    ...values,
+                    images: newCoverPaths,
+                    description: newSections
+                },
                 id: currentDraft.id
             });
 
         } catch (error) {
-            alert(`Error: ${(error as Error).message}`);
-
+            alert(`Error: ${JSON.stringify(error)}`);
         } finally {
             updateDrafts();
             setSubmitting(false)
@@ -159,7 +197,7 @@ export default function CaW() {
 
                     <div id="images-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={'🖼️covers'} />
-                        <CoversUpload initPaths={values.images} user={user} />
+                        <ImagesUpload dimension={{ height: "h-56", width: "w-56" }} initPaths={values.images} setValues={(paths) => setFieldValue('images', paths)} />
                     </div>
 
                     <div id="title-group" className='w-full flex flex-col'>

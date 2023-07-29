@@ -45,7 +45,7 @@ export const MetadataDisplay = ({ items }: { items: any[] }) => {
             <div className="mb-1 md:col-start-auto sm:col-start-auto">
                 <div className='flex flex-row justify-start items-center space-x-2'>
                     <BookIcon />
-                    <span>{items[1] ? `Derived from ${items[1]}` : "Original World"}</span>
+                    <span>{items[1] ? `Derived from "${items[1]}"` : "Original World"}</span>
                 </div>
             </div>
             <div className="md:col-start-auto sm:col-start-auto mb-1 md:mb-0">

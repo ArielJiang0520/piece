@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import NavBar from '@/app/NavBar';
 import type { World } from '@/types/types.world';

@@ -69,7 +69,7 @@ export const NavBarHeader = ({ title, subtitle }: { title: string, subtitle: str
             <h1 className='font-bold text-xs '>
                 {title.toLocaleUpperCase()}
             </h1>
-            <h2 className='font-semibold font-serif text-foreground text-base'>
+            <h2 className='font-semibold w-48 md:w-full font-serif text-foreground text-base whitespace-nowrap overflow-hidden overflow-ellipsis'>
                 {subtitle}
             </h2>
         </div>

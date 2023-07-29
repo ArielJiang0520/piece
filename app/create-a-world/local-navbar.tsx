@@ -9,7 +9,7 @@ import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import { InputDialog } from '@/components/ui/input/InputDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
-import { TrashIcon } from '@heroicons/react/20/solid';
+import { TrashIcon } from '@/components/icon/icon';
 
 const defaultOption = { id: 'default', name: 'A New Draft' };
 
@@ -36,6 +36,14 @@ export default function LocalNavBar() {
             setDeleteDialogOpen(true)
         }
 
+        const confirmAction = async () => {
+            setIsLoading(true);
+            await handleDraftDelete(selected);
+            await updateDrafts();
+            setIsLoading(false);
+            router.refresh();
+        };
+
         return (
             <div id="draft-group" className='px-4 w-full font-mono flex flex-row justify-start items-center space-x-2'>
                 <FieldTitleDisplay label={'load draft'} textSize={'text-xs'} />
@@ -55,13 +63,7 @@ export default function LocalNavBar() {
                     dialogTitle={`Delete Draft`}
                     dialogContent={`Are you sure you want to delete draft "${selected.world_name}"?`}
                     initInputValue={selected}
-                    confirmAction={() => {
-                        setIsLoading(true)
-                        handleDraftDelete(selected);
-                        updateDrafts();
-                        setIsLoading(false)
-                        router.refresh();
-                    }}
+                    confirmAction={confirmAction}
                     dialogType='confirm'
                 />
                 {isLoading && <LoadingOverlay />}

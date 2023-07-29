@@ -14,7 +14,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({ bucket, path, dimension })
     useEffect(() => {
         downloadImage(bucket, path)
             .then((url) => setUrl(url))
-            .catch((error) => alert(error));
+            .catch((error) => console.error(error));
 
     }, [path]);
 
