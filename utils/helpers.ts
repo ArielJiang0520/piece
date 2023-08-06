@@ -23,7 +23,9 @@ export const postData = async ({
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
         credentials: 'same-origin',
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+            data: data
+        })
     });
 
     if (!res.ok) {

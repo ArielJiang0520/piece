@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['var(--font-alike)'],
-        mono: ['var(--font-montserrat)']
+        serif: ['var(--font-domine)', 'serif'],
+        mono: ['var(--font-montserrat)', 'mono']
       },
       colors: {
         background: 'hsl(var(--background))',

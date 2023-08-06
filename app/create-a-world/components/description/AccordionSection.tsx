@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/DropDownMenu';
 import { InputDialog } from '@/components/ui/input/InputDialog';
-import { SectionCard } from '../../../../components/ui/display/SectionCard';
+import { SectionCard } from '../../../../components/ui/display/World/SectionCard';
 import AddCard from '@/components/ui/button/AddCard';
 
 
@@ -154,7 +154,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 dialogContent={""}
                                 initInputValue={{ cardTitle: "", cardContent: "", cardImages: [] } as WorldDescriptionSectionCard}
                                 confirmAction={saveNewCard}
-                                dialogType='form'
+                                dialogType='edit-card'
                             />
                             {editingCard && (
                                 <InputDialog
@@ -164,7 +164,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                     dialogContent={""}
                                     initInputValue={editingCard.card}
                                     confirmAction={saveEditedCard}
-                                    dialogType='form'
+                                    dialogType='edit-card'
                                 />
                             )}
                             {delCardIndex != -1 && <InputDialog

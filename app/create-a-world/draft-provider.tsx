@@ -1,15 +1,16 @@
 'use client'
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { Draft } from '@/types/types.world';
+import { World, DefaultWorld } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
-import { deleteData } from '@/utils/helpers';
+import { v4 as uuidv4 } from 'uuid';
+import { deleteWorld } from '@/utils/world-helpers';
 
 interface DraftContextData {
-    currentDraft: Draft | null;
+    currentDraft: World | DefaultWorld;
     handleDraftChange: (selectedOption: any) => void;
     handleDraftDelete: (selectedOption: any) => void;
-    drafts: Draft[];
-    updateDrafts: () => Promise<void>;
+    drafts: Array<World | DefaultWorld>;
+    fetchDrafts: () => Promise<void>;
 }
 
 export const DraftContext = createContext<DraftContextData | undefined>(undefined);
@@ -19,27 +20,25 @@ export function DraftProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const [currentDraft, setCurrentDraft] = useState<Draft | null>(null);
-    const [drafts, setDrafts] = useState<Draft[]>([]);
+    const initDraft = { id: uuidv4(), world_name: 'A New Draft', default: true } as DefaultWorld;
+
+    const [currentDraft, setCurrentDraft] = useState<World | DefaultWorld>(initDraft);
+    const [drafts, setDrafts] = useState<Array<World | DefaultWorld>>([initDraft]);
     const { supabase } = useSupabase();
 
     const handleDraftChange = (selectedOption: any) => {
-        if (selectedOption.id === 'default') {
-            setCurrentDraft(null)
-        } else {
-            setCurrentDraft(selectedOption)
-        }
+        setCurrentDraft(selectedOption)
     }
 
     const handleDraftDelete = async (selectedOption: any) => {
-        if (selectedOption.id === 'default') {
+        if (selectedOption.default) {
             return
         } else {
-            await deleteData({ url: 'api/create-a-world/draft', id: selectedOption.id })
+            deleteWorld(selectedOption.id)
         }
     }
 
-    const updateDrafts = async () => {
+    const fetchDrafts = async () => {
         const { data: { session } } = await supabase.auth.getSession()
         if (!session) {
             console.error('did not find authenticated user')
@@ -47,25 +46,25 @@ export function DraftProvider({
         }
 
         const { data, error } = await supabase
-            .from('drafts')
+            .from('worlds')
             .select()
             .eq('creator_id', session.user.id)
+            .eq('is_draft', true)
 
         if (error) {
             console.error(error.code, error.message)
             return
         }
-
-        setDrafts(data);
+        setDrafts([initDraft, ...data]);
     }
 
     useEffect(() => {
-        updateDrafts();
+        fetchDrafts();
     }, []);
 
 
     return (
-        <DraftContext.Provider value={{ currentDraft, handleDraftChange, handleDraftDelete, drafts, updateDrafts }}>
+        <DraftContext.Provider value={{ currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>
             {children}
         </DraftContext.Provider>
     );

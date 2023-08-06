@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { PlusCircleIcon, MinusIcon } from "@/components/icon/icon";
 import type { WorldDescriptionSectionCard } from "@/types/types.world";
-import LazyImage from "@/components/ui/display/LazyImage";
 import { InputDialog } from "@/components/ui/input/InputDialog";
+import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 
 interface SectionCardProps {
     index: number,
@@ -15,17 +15,20 @@ interface SectionCardProps {
 export const SectionCard = ({ index, card, onclick, ondel, display = false }: SectionCardProps) => {
     const { cardTitle, cardContent, cardImages } = card
     const [isOpen, setIsOpen] = useState(false)
+
     function DisplayCard() {
         return <div className='flex flex-col w-full space-y-2'>
-            <div className='font-serif text-2xl font-semibold'>
+            <div className='text-center font-serif text-2xl font-semibold'>
                 {cardTitle}
             </div>
             <div className='w-full border-b-2 h-px my-2'></div>
-            <div className='text-sm whitespace-pre-line'>
+            <div className='text-sm min-h-[300px] whitespace-pre-line'>
                 {cardContent}
             </div>
+            <ImagesDisplayRow paths={cardImages.slice(0, 3)} dimension={{ height: "h-48", width: "w-48" }} />
         </div>
     }
+
     return (
         <div
             id='card'
@@ -53,11 +56,7 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
             </div>
 
             <div id='image-display' className="flex flex-row justify-start items-start space-x-2 overflow-hidden">
-                {cardImages.slice(0, 3).map((path, index) =>
-                    <div key={index} className="h-24 flex-shrink-0 relative">
-                        <LazyImage bucket="world" path={path} dimension="h-24 w-24" />
-                    </div>
-                )}
+                <ImagesDisplayRow paths={cardImages.slice(0, 3)} dimension={{ height: "h-24", width: "w-24" }} />
             </div>
             <InputDialog
                 isOpen={isOpen}

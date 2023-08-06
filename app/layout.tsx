@@ -1,12 +1,18 @@
 import '@/styles/globals.css'
-import NavBar from '@/app/NavBar'
-import { Alike, Montserrat } from 'next/font/google'
+import { Alike, Montserrat, Domine } from 'next/font/google'
 import SupabaseProvider from './supabase-provider';
+import NextTopLoader from 'nextjs-toploader';
 
 const alike = Alike({
   weight: ['400'],
   subsets: ['latin'],
   variable: '--font-alike'
+})
+
+const domine = Domine({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-domine'
 })
 
 const montserrat = Montserrat({
@@ -58,11 +64,12 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="en" className={`${alike.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${alike.variable} ${montserrat.variable} ${domine.variable}`}>
 
       <body>
         <SupabaseProvider>
           <main className="min-h-screen bg-background flex flex-col items-center">
+            <NextTopLoader />
             {children}
           </main>
         </SupabaseProvider>

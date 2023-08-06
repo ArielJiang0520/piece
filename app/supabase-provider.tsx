@@ -4,9 +4,11 @@ import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
+import type { User } from '@supabase/supabase-js';
 
 type SupabaseContext = {
     supabase: SupabaseClient<Database>;
+    user: User | null
 };
 
 const Context = createContext<SupabaseContext | undefined>(undefined);
@@ -17,22 +19,18 @@ export default function SupabaseProvider({
     children: React.ReactNode;
 }) {
     const [supabase] = useState(() => createPagesBrowserClient());
-    // const router = useRouter();
+    const [user, setUser] = useState<User | null>(null);
+    const fetchUser = async () => {
+        const { data: { session } } = await supabase.auth.getSession()
+        setUser(session?.user === undefined ? null : session.user)
+    }
 
-    // useEffect(() => {
-    //     const {
-    //         data: { subscription }
-    //     } = supabase.auth.onAuthStateChange((event) => {
-    //         if (event === 'SIGNED_IN') router.refresh();
-    //     });
-
-    //     return () => {
-    //         subscription.unsubscribe();
-    //     };
-    // }, [router, supabase]);
+    useEffect(() => {
+        fetchUser()
+    }, [])
 
     return (
-        <Context.Provider value={{ supabase }}>
+        <Context.Provider value={{ supabase, user }}>
             <>{children}</>
         </Context.Provider>
     );

@@ -17,6 +17,11 @@ import { TbRating18Plus as Rating18PlusIcon } from 'react-icons/tb'
 import { MdOutlineGeneratingTokens as RatingGeneralIcon } from 'react-icons/md'
 import { RiBook2Fill as BookIcon } from 'react-icons/ri'
 import { AiFillEye as EyeIcon } from 'react-icons/ai'
+import { BiSubdirectoryLeft as PointingArrowIcon } from 'react-icons/bi'
+import { RxSlash as SlashIcon } from 'react-icons/rx'
+import { PiFolderNotch as FolderIcon } from 'react-icons/pi'
+import { AiFillHeart as HeartIcon } from 'react-icons/ai'
+import { FaRegCommentDots as CommentIcon } from 'react-icons/fa'
 
 export {
     BurgerIcon,
@@ -37,5 +42,10 @@ export {
     Rating18PlusIcon,
     RatingGeneralIcon,
     BookIcon,
-    EyeIcon
+    EyeIcon,
+    PointingArrowIcon,
+    SlashIcon,
+    FolderIcon,
+    HeartIcon,
+    CommentIcon
 };

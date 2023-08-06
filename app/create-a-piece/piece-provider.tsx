@@ -1,13 +1,19 @@
 'use client'
 import React, { createContext, Dispatch, SetStateAction, useState, useEffect, useContext } from 'react';
-import type { World } from '@/types/types.world';
+import type { Folder, World, DefaultFolder } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
 import { useSearchParams } from 'next/navigation'
+import { v4 as uuidv4 } from 'uuid';
+
+
+
 
 interface PieceContextData {
-    inputType: "text" | "media";
-    updateInputType: Dispatch<SetStateAction<"text" | "media">>;
+    piece_id: string,
+    inputType: string;
+    updateInputType: Dispatch<SetStateAction<string>>;
     world: World | null;
+    folders: Array<Folder | DefaultFolder>;
 }
 
 export const PieceContext = createContext<PieceContextData | undefined>(undefined);
@@ -17,16 +23,19 @@ export function PieceProvider({
 }: {
     children: React.ReactNode;
 }) {
+    const initFolder = { id: uuidv4(), folder_name: 'A New Folder', default: true } as DefaultFolder;
+
     const searchParams = useSearchParams()
     const world_id = searchParams.get('id')
 
-    const [currentInputType, setCurrentInputType] = useState<"text" | "media">('text');
+    const piece_id = uuidv4();
+
+    const [currentInputType, setCurrentInputType] = useState<string>('text');
     const [world, setWorld] = useState<World | null>(null)
-    const { supabase } = useSupabase();
+    const [folders, setFolders] = useState<Array<Folder | DefaultFolder>>([initFolder])
+    const { supabase, user } = useSupabase();
 
     const fetchWorld = async () => {
-        console.log(world_id)
-
         const { data, error } = await supabase
             .from('worlds')
             .select()
@@ -38,13 +47,30 @@ export function PieceProvider({
             setWorld(data[0])
     };
 
+    const fetchFolders = async () => {
+        if (!user || !world)
+            return
+
+        const { data, error } = await supabase
+            .from('folders')
+            .select()
+            .eq('creator_id', user.id)
+            .eq('world_id', world.id)
+
+        if (error || !data)
+            console.error(error)
+        else
+            setFolders([initFolder, ...data])
+    };
+
     useEffect(() => {
         fetchWorld();
+        fetchFolders();
     }, []);
 
 
     return (
-        <PieceContext.Provider value={{ inputType: currentInputType, updateInputType: setCurrentInputType, world: world }}>
+        <PieceContext.Provider value={{ piece_id, inputType: currentInputType, updateInputType: setCurrentInputType, world, folders }}>
             {children}
         </PieceContext.Provider>
     );

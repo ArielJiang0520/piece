@@ -3,11 +3,23 @@ interface IconButtonProps {
     title: string,
 }
 export function IconButton({ icon, title }: IconButtonProps) {
-    return <div className="h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2">
+    return <div className="cursor-pointer h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2">
         <div>
             {icon}
         </div>
         <div className="text-base font-mono text-foreground">
+            {title}
+        </div>
+    </div>
+}
+
+
+export function IconButtonSmall({ icon, title }: IconButtonProps) {
+    return <div className="cursor-pointer h-8 flex flex-row items-center justify-center space-x-1">
+        <div>
+            {icon}
+        </div>
+        <div className="text-xs font-mono text-foreground">
             {title}
         </div>
     </div>

@@ -1,11 +1,10 @@
 'use client'
 import Link from 'next/link'
 import { ComponentType, useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { User } from '@supabase/auth-helpers-nextjs'
 import { BurgerIcon } from '@/components/icon/icon'
 import { SideBar } from '@/components/ui/navbar/navbar-helpers'
 import Image from 'next/image'
+import { useSupabase } from './supabase-provider'
 
 interface NavBarProps {
     PageTitleNavBarComponent: ComponentType<any>;
@@ -14,8 +13,7 @@ interface NavBarProps {
 }
 
 export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent, ...props }: NavBarProps) {
-    const supabase = createClientComponentClient()
-    const [user, setUser] = useState<User | null>(null)
+    const { user } = useSupabase()
     const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
     const [isRightMenuOpen, setIsRightMenuOpen] = useState(false);
 
@@ -38,18 +36,6 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
     const profileItems: any[] = [
 
     ]
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession()
-            if (session)
-                setUser(session.user)
-        }
-        fetchUser()
-    }, [])
-
 
 
     return (

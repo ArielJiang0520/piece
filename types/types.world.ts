@@ -1,9 +1,10 @@
 import { Database } from "./supabase"
 
 export type World = Database['public']['Tables']['worlds']['Row']
-export type Draft = Database['public']['Tables']['drafts']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Piece = Database['public']['Tables']['pieces']['Row']
+export type Folder = Database['public']['Tables']['folders']['Row']
+
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,
@@ -28,6 +29,13 @@ export const WorldSettingsAsks = {
     NSFW: "Contains NSFW Content",
     allowContribution: "Allow contribution from other users",
     allowSuggestion: "Allow suggestions from other users",
+}
+
+
+export interface DefaultWorld {
+    id: string,
+    world_name: string,
+    default: boolean
 }
 
 export type WorldPayload = {
@@ -55,7 +63,7 @@ export const EmptyWorldPayload: WorldPayload = {
     }
 }
 
-export function cast_to_worldpayload(world: World | Draft) {
+export function cast_to_worldpayload(world: World) {
     return {
         origin: world.origin,
         images: world.images,
@@ -64,7 +72,7 @@ export function cast_to_worldpayload(world: World | Draft) {
         tags: world.tags,
         description: world.description as WorldDescriptionSection[],
         settings: {
-            public: world.public,
+            public: world.is_public,
             NSFW: world.nsfw,
             allowContribution: world.allow_contribution,
             allowSuggestion: world.allow_suggestion,
@@ -72,12 +80,13 @@ export function cast_to_worldpayload(world: World | Draft) {
     } as WorldPayload
 }
 
-export function cast_to_world(payload: WorldPayload, creator_id: string | null, created_at: string) {
+export function cast_to_world(payload: WorldPayload, uid: string) {
+    const created_at = new Date().toISOString()
     return {
         allow_contribution: payload.settings.allowContribution,
         allow_suggestion: payload.settings.allowSuggestion,
         created_at: created_at,
-        creator_id: creator_id,
+        creator_id: uid,
         description: payload.description,
         id: '',
         images: payload.images,
@@ -85,45 +94,65 @@ export function cast_to_world(payload: WorldPayload, creator_id: string | null, 
         modified_at: created_at,
         nsfw: payload.settings.NSFW,
         origin: payload.origin,
-        public: payload.settings.public,
+        is_public: payload.settings.public,
         tags: payload.tags,
         world_name: payload.title,
+        is_draft: true,
+        draft_created_at: created_at,
+        draft_modified_at: created_at,
     } as World
 }
 
-export const initValues: WorldPayload = {
-    origin: null,
+export type PiecePayload = {
+    title: string,
+    logline: string,
+    tags: string[],
+    content: string,
+    folder_id: string,
+    images: string[],
+    settings: PieceSettings
+}
+
+export type PieceSettings = {
+    NSFW: boolean,
+    allowComments: boolean;
+}
+
+export interface DefaultFolder {
+    id: string,
+    folder_name: string,
+    default: boolean
+}
+
+export const PieceSettingsAsks = {
+    NSFW: "Contains NSFW Content",
+    allowComments: "Allow comments from other users"
+}
+
+export const EmptyPiecePayload: PiecePayload = {
+    title: "",
+    logline: "",
+    tags: [],
+    content: "",
+    folder_id: "",
     images: [],
-    title: 'Silicon Valley Psychos',
-    logline: `The resilient yet financially struggling Linus, grappling with his uncompromising principles against corporate greed,  was faced with an offer from Wynn - the man who once betrayed him`,
-    tags: ["BL", "Tech", "Power Dynamics"],
-    description: [
-        {
-            sectionTitle: "Backdrop",
-            sectionCards: []
-        },
-        {
-            sectionTitle: "Characters",
-            sectionCards: [
-                {
-                    cardTitle: 'Linus',
-                    cardContent: `Background: High school computer science teacher in a Fremont suburb, co-founder of WinLin, and a Stanford graduate. Previously a tech entrepreneur, he chose a simpler life due to disillusionment with corporate greed.
-Appearance: Medium height with unkempt dark curly hair, big eyes, and an often rugged appearance due to his simple and functional clothing. But underneath his scruffiness is a cute face and a pale, fragile yet appealing body
-Personality: Intellectually curious, introverted, genuine, and dedicated, with a strong ethical stand against commercial exploitation of knowledge and technology. Has a tendency to suppress emotions and desires and play coy
-`,
-                    cardImages: []
-                }
-            ]
-        },
-        {
-            sectionTitle: "Story Premise",
-            sectionCards: []
-        }
-    ],
     settings: {
-        public: true,
         NSFW: false,
-        allowContribution: true,
-        allowSuggestion: true,
+        allowComments: true
     }
+}
+
+export function cast_to_piece(payload: PiecePayload) {
+    const created_at = new Date().toISOString()
+    return {
+        created_at: created_at,
+        title: payload.title,
+        logline: payload.logline,
+        tags: payload.tags,
+        content: payload.content,
+        images: payload.images,
+        folder_id: payload.folder_id,
+        nsfw: payload.settings.NSFW,
+        allow_comments: payload.settings.allowComments,
+    } as Piece
 }

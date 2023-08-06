@@ -18,7 +18,7 @@ export default function LocalNavBar() {
     const LocalNavBarComponent = () => {
         const { updateInputType } = usePieceContext()
         const tabs = ['text', 'media'];
-        return <NavBarSwitchTab tabs={tabs} onChange={updateInputType} />
+        return <NavBarSwitchTab tabs={tabs} onChange={(index) => { updateInputType(tabs[index]) }} />
     }
 
     return <NavBar

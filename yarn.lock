@@ -256,6 +256,11 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-20.3.1.tgz"
   integrity sha512-EhcH/wvidPy1WeML3TtYFGR83UzjxeWRen9V402T8aUGYsCHOmfoisV3ZSg03gAFIbLq8TnWOJ0f4cALtnSEUg==
 
+"@types/nprogress@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
+  integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
+
 "@types/phoenix@^1.5.4":
   version "1.6.0"
   resolved "https://registry.npmjs.org/@types/phoenix/-/phoenix-1.6.0.tgz"
@@ -890,6 +895,15 @@ next@^13.4.9:
     "@next/swc-win32-ia32-msvc" "13.4.9"
     "@next/swc-win32-x64-msvc" "13.4.9"
 
+nextjs-toploader@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/nextjs-toploader/-/nextjs-toploader-1.4.2.tgz#00c34e0267c05cc678143157ea69032a2e8036b8"
+  integrity sha512-FS5+zCdNHLq0YA+SijkbDifOMFNayKfxkCLTiM6TIrvSaf6kAzCGlNjwgVpoG3zpampVMQSVf5L/jrWFJgs23g==
+  dependencies:
+    "@types/nprogress" "^0.2.0"
+    nprogress "^0.2.0"
+    prop-types "^15.8.1"
+
 node-domexception@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/node-domexception/-/node-domexception-1.0.0.tgz"
@@ -935,6 +949,11 @@ npm-normalize-package-bin@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/npm-normalize-package-bin/-/npm-normalize-package-bin-3.0.1.tgz"
   integrity sha512-dMxCf+zZ+3zeQZXKxmyuCKlIDPGuv8EF940xbkC4kQVDTtqoh6rJFO+JTKSA6/Rwi0getWmtuy4Itup0AMcaDQ==
+
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==
 
 object-assign@^4.0.1, object-assign@^4.1.1:
   version "4.1.1"
@@ -1067,7 +1086,7 @@ postcss@^8.4.23:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-prop-types@^15.7.2:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -1208,10 +1227,10 @@ sucrase@^3.32.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-supabase@^1.77.9:
-  version "1.77.9"
-  resolved "https://registry.yarnpkg.com/supabase/-/supabase-1.77.9.tgz#d946ffdf32889b276488cf42017bd267b024667a"
-  integrity sha512-AyMaMsb+QpUMTE1XfV8Vhl/9G+Hkzk61RXf/JP5uyxc256hcb3N3FQoW2bi+A/BodJ/rfZOPE7vv+xtfVf6vyQ==
+supabase@^1.82.2:
+  version "1.82.2"
+  resolved "https://registry.yarnpkg.com/supabase/-/supabase-1.82.2.tgz#b96277bde42ecd760670aa9e35c8147a81d976b7"
+  integrity sha512-ZixBcuUP0IleNvKGXtyfM1Xyah/6koZTNn66fGAyzOFZDGhr91cgtmUn+rrLOChm0XIxNCmPi+8SzHry5zqD2w==
   dependencies:
     bin-links "^4.0.1"
     node-fetch "^3.2.10"

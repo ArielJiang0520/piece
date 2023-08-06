@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NavBar from '@/app/NavBar';
-import { useDraftContext } from './draft-provider';
+import { useDraftContext, } from './draft-provider';
+import type { World, DefaultWorld } from '@/types/types.world';
 import InputList from '@/components/ui/input/InputBox';
 import { formatTimestamp } from '@/utils/helpers';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
@@ -10,8 +11,6 @@ import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import { InputDialog } from '@/components/ui/input/InputDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
 import { TrashIcon } from '@/components/icon/icon';
-
-const defaultOption = { id: 'default', name: 'A New Draft' };
 
 export default function LocalNavBar() {
     const PageTitleNavBarComponent = () => {
@@ -22,9 +21,11 @@ export default function LocalNavBar() {
     }
     const LocalNavBarComponent = () => {
         const router = useRouter()
-        const { handleDraftChange, handleDraftDelete, drafts, updateDrafts } = useDraftContext();
-        const allData = [defaultOption, ...drafts]
-        const [selected, setSelected] = useState<any>(allData[0]);
+
+        const { handleDraftChange, handleDraftDelete, drafts, fetchDrafts } = useDraftContext();
+
+        const [selected, setSelected] = useState<World | DefaultWorld>(drafts[0]);
+
         const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
         const [isLoading, setIsLoading] = useState(false)
 
@@ -39,7 +40,7 @@ export default function LocalNavBar() {
         const confirmAction = async () => {
             setIsLoading(true);
             await handleDraftDelete(selected);
-            await updateDrafts();
+            await fetchDrafts();
             setIsLoading(false);
             router.refresh();
         };
@@ -48,15 +49,14 @@ export default function LocalNavBar() {
             <div id="draft-group" className='px-4 w-full font-mono flex flex-row justify-start items-center space-x-2'>
                 <FieldTitleDisplay label={'load draft'} textSize={'text-xs'} />
                 <InputList
-                    data={allData}
+                    data={drafts}
                     width='w-56'
                     nameKey="world_name"
                     selected={selected}
                     setSelected={setSelected}
-                    display_func={(item: any) => item.id === "default" ? `${item.name}` : `${formatTimestamp(item.modified_at)} - ${item.world_name}`}
-
+                    display_func={(item: any) => item.default ? `${item.world_name}` : `${formatTimestamp(item.modified_at)} - ${item.world_name}`}
                 />
-                {selected.id !== "default" ? <TrashIcon className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} /> : null}
+                {'default' in selected ? null : <TrashIcon className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} />}
                 <InputDialog
                     isOpen={isDeleteDialogOpen}
                     setIsOpen={setDeleteDialogOpen}

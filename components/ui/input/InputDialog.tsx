@@ -1,8 +1,9 @@
+'use client'
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { WorldDescriptionSectionCard } from '@/types/types.world';
-import ImagesUpload from '@/app/create-a-world/components/ImagesUpload';
-import { FieldTitleDisplay } from '../display/display-helpers';
+import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
+import { useDraftContext } from '@/app/create-a-world/draft-provider';
 
 interface DialogLineInputProps {
     inputValue: string,
@@ -28,6 +29,7 @@ interface DialogCardInputProps {
 }
 
 function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
+    const { currentDraft } = useDraftContext()
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
 
@@ -61,7 +63,13 @@ function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
                 value={inputValue.cardContent}
                 onChange={handleInputChange}
             />
-            <ImagesUpload dimension={{ height: "h-48", width: "w-48" }} initPaths={inputValue.cardImages} setValues={(paths) => handleImageChange(paths)} />
+            <ImagesUpload
+                dimension={{ height: "h-48", width: "w-48" }}
+                initPaths={inputValue.cardImages}
+                setValues={(paths) => handleImageChange(paths)}
+                folder={`${currentDraft.id}/`}
+                bucket={"world"}
+            />
         </div>
     )
 }
@@ -78,18 +86,33 @@ function DialogDisplay({ children }: DialogDisplayProps) {
 }
 
 interface DialogProps {
+    dialogType: "input" | "edit-card" | "confirm" | "display"
+
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
+
     dialogTitle: string;
     dialogContent: string;
+
     initInputValue: any;
     confirmAction: (...args: any[]) => void;
-    dialogType: "input" | "form" | "confirm" | "display"
+
     overwriteConfirm?: string
     hideCancel?: boolean
+
+    additionalInfo?: {
+        [key: string]: any;
+    };
 }
 
-export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, initInputValue, confirmAction, dialogType, overwriteConfirm = "Confirm", hideCancel = false }: DialogProps) {
+export function InputDialog({
+    dialogType,
+    isOpen, setIsOpen,
+    dialogTitle, dialogContent,
+    initInputValue, confirmAction,
+    overwriteConfirm = "Confirm", hideCancel = false,
+    additionalInfo = {}
+}: DialogProps) {
     const [inputValue, setInputValue] = useState(initInputValue);
 
     const handleButtonClick = () => {
@@ -108,6 +131,7 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
             onClose={() => setIsOpen(false)}
         >
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
             <div className="fixed inset-0 flex items-center justify-center p-4">
                 <Dialog.Panel className="w-11/12 max-h-2-3-screen max-w-lg rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500 overflow-y-auto">
                     <Dialog.Title className="text-base font-semibold text-foreground">{dialogTitle}</Dialog.Title>
@@ -116,8 +140,10 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
                     </Dialog.Description>
 
                     {dialogType === "input" && < DialogLineInput inputValue={inputValue} setInputValue={setInputValue} />}
-                    {dialogType === "form" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
+
                     {dialogType === "display" && <DialogDisplay children={initInputValue} />}
+
+                    {dialogType === "edit-card" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
 
                     <div className="mt-8 flex flex-row justify-end items-center space-x-4">
                         {hideCancel ? null : <button
@@ -134,9 +160,9 @@ export function InputDialog({ isOpen, setIsOpen, dialogTitle, dialogContent, ini
                             {overwriteConfirm}
                         </button>
                     </div>
-
                 </Dialog.Panel>
             </div>
+
         </Dialog>
     );
 }

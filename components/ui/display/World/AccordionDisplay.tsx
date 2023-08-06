@@ -3,7 +3,7 @@ import React from 'react';
 import { WorldDescriptionSection } from "@/types/types.world";
 import { Disclosure } from '@headlessui/react';
 import { AccordionIcon } from '@/components/icon/icon';
-import { SectionCard } from '@/components/ui/display/SectionCard';
+import { SectionCard } from '@/components/ui/display/World/SectionCard';
 
 interface AccordionDisplayProps {
     sections: WorldDescriptionSection[];

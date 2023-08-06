@@ -50,6 +50,17 @@ export async function getWorldDetailsById(id: string) {
     }
 }
 
+export async function getPiecesByWorld(id: string) {
+    const supabase = createServerSupabaseClient();
+    try {
+        const { data, error } = await supabase
+            .from('pieces')
+            .select()
+            .eq('world_id', id)
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
 
-export type WorldsResponse = Awaited<ReturnType<typeof getWorldDetailsById>>
-
+}

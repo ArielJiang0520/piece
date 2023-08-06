@@ -55,3 +55,24 @@ export function TagsBarDisplay({ tags, preview = false }: TagsBarDisplay) {
 
     )
 }
+
+
+export function TagsBarSmallDisplay({ tags }: { tags: string[] }) {
+
+    return (
+
+        <div className='py-2 flex flex-row w-full space-x-2 justify-start overflow-hidden font-mono'>
+            {
+                tags.map((tag, index) =>
+                    <div
+                        key={index}
+                        className='text-foreground/50 text-xs font-normal whitespace-nowrap'
+                    >
+                        #{tag}
+                    </div>
+                )
+            }
+        </div>
+
+    )
+}
