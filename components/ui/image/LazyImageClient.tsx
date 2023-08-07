@@ -2,14 +2,14 @@
 import { useState, useEffect } from 'react'
 import { downloadImage } from "@/utils/image-helpers";
 
-interface LazyImageProps {
+interface LazyImageClientProps {
     bucket: string,
     path: string;
     dimension: string;
     rounded?: boolean
 }
 
-export const LazyImage: React.FC<LazyImageProps> = ({ bucket, path, dimension, rounded = true }) => {
+export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, dimension, rounded = true }) => {
     const [url, setUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -30,4 +30,4 @@ export const LazyImage: React.FC<LazyImageProps> = ({ bucket, path, dimension, r
     }
 };
 
-export default LazyImage;
+export default LazyImageClient;

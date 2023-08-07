@@ -11,7 +11,7 @@ interface LocalNavBarProps {
 }
 export default function LocalNavBar({ world_id }: LocalNavBarProps) {
     const { supabase } = useSupabase()
-    const [world, setWorld] = useState<string>('')
+    const [world, setWorld] = useState<string | null>(null)
 
     const tabs = [
         { name: 'Overview', link: `/world/${world_id}` },
@@ -19,13 +19,17 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
         { name: 'Discussions', link: `/world/${world_id}/discussions` },
     ];
 
+    const PageTitleNavBarComponent = () => {
+        return <NavBarHeader title={"world"} subtitle={world} />
+    }
+
     const fetchWorld = async () => {
         const { data, error } = await supabase
             .from('worlds')
             .select('world_name')
             .eq('id', world_id)
         if (error || !data || data.length != 1)
-            console.error()
+            alert(error)
         else
             setWorld(data[0].world_name)
     };
@@ -34,9 +38,7 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
         fetchWorld();
     }, [])
 
-    const PageTitleNavBarComponent = () => {
-        return <NavBarHeader title={"world"} subtitle={world} />
-    }
+
 
     const LocalNavBarComponent = () => {
 

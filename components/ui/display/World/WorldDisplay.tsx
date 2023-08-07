@@ -8,6 +8,8 @@ import { WorldDescriptionSection } from "@/types/types.world";
 import { formatTimestamp } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const WorldMetadataDisplay = ({ world }: { world: World }) => {
     return (
@@ -29,47 +31,51 @@ const WorldMetadataDisplay = ({ world }: { world: World }) => {
 }
 
 interface WorldDisplayProps {
-    world: World;
+    world: World | null;
     preview?: boolean
 }
 
 export default function WorldDisplay({ world, preview = false }: WorldDisplayProps) {
     return (
+
         <div className='flex flex-col space-y-3 items-start'>
             <div id="button-group" className='w-full flex flex-row justify-between items-center'>
-                {preview ? null : <div className='flex flex-row space-x-2'>
-                    <IconButton icon={<StarIcon />} title={"124"} />
-                    <Link href={{ pathname: '/create-a-piece', query: { id: world.id } }} >
-                        <IconButton icon={<AtomIcon />} title={"Create a Piece"} />
-                    </Link>
-                </div>}
+                {world ? preview ? null :
+                    <div className='flex flex-row space-x-2'>
+                        <IconButton icon={<StarIcon />} title={"124"} />
+                        <Link href={{ pathname: '/create-a-piece', query: { id: world.id } }} >
+                            <IconButton icon={<AtomIcon />} title={"Create a Piece"} />
+                        </Link>
+                    </div>
+                    : <Skeleton />}
 
-                <div className='flex flex-row'>
+                {world ? <div className='flex flex-row'>
                     {world.nsfw ? <Rating18PlusIcon className="w-10 h-10 text-left text-red-500" /> : null}
-                </div>
+                </div> : <Skeleton />}
+
             </div>
 
             <div id="title-group" className='w-full flex flex-row flex-wrap items-center justify-start'>
-                <FieldContentDisplay content={world.world_name} textSize="text-4xl" bold="font-bold" />
-
+                {world ? <FieldContentDisplay content={world.world_name} textSize="text-4xl" bold="font-bold" /> : <Skeleton />}
             </div>
 
             <div id="metadata-group" className="w-full flex flex-col" >
-                <WorldMetadataDisplay world={world} />
+                {world ? <WorldMetadataDisplay world={world} /> : <Skeleton />}
             </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-                <ImagesDisplayRow paths={world.images} dimension={{ height: "h-80", width: "w-80" }} />
+                {world ? <ImagesDisplayRow paths={world.images} dimension={{ height: "h-80", width: "w-80" }} /> : <div style={{ lineHeight: 10, }}> <Skeleton /> </div>}
             </div>
 
             <div id="logline-group" className='w-full flex flex-col'>
-                <FieldContentDisplay content={world.logline} textSize="text-base" bold="font-normal" />
+                {world ? <FieldContentDisplay content={world.logline} textSize="text-base" bold="font-normal" /> : <Skeleton count={2} />}
             </div>
+
             <div id="tags-group" className='w-full flex flex-col'>
-                <TagsBarDisplay tags={world.tags} preview={preview} />
+                {world ? <TagsBarDisplay tags={world.tags} preview={preview} /> : <Skeleton />}
             </div>
             <div id="description-group" className='w-full flex flex-col'>
-                <AccordionDisplay sections={world.description as WorldDescriptionSection[]} />
+                {world ? <AccordionDisplay sections={world.description as WorldDescriptionSection[]} /> : <div style={{ lineHeight: 5, }}> <Skeleton count={3} /> </div>}
             </div>
             <div id="authors-group" className='w-full flex flex-col'>
 

@@ -51,7 +51,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
                         </div>
 
                         <div id="logo" className='mr-2'>
-                            <Image src={'/logo_500px.png'} alt="logo" width={32} height={32} />
+                            <Image src={'/logo_500px.png'} alt="logo" priority={true} width={32} height={32} />
                         </div>
 
                     </div>
@@ -68,6 +68,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
                                 className='cursor-pointer rounded-full'
                                 src={user.user_metadata.picture}
                                 alt={"profile picture"}
+                                priority={true}
                                 width={32} height={32}
                                 onClick={() => setIsRightMenuOpen(true)}
                             />

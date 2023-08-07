@@ -64,3 +64,27 @@ export async function getPiecesByWorld(id: string) {
     }
 
 }
+
+export async function downloadImage(bucket_name: string, path: string) {
+    const supabase = createServerSupabaseClient();
+    try {
+        const { data, error } = await supabase
+            .storage
+            .from(bucket_name)
+            .download(path)
+
+        if (error) {
+            throw error
+        }
+
+        const url = URL.createObjectURL(data)
+
+        if (!url)
+            throw Error(`Error downloading image ${error}`)
+
+        return url;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}

@@ -1,5 +1,5 @@
 import { CloseIcon } from '@/components/icon/icon';
-import LazyImage from '@/components/ui/image/LazyImage';
+import LazyImage from '@/components/ui/image/LazyImageClient';
 
 interface ImagesDisplayRowProps {
     dimension: {

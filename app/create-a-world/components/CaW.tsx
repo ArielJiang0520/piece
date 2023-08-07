@@ -100,17 +100,17 @@ export default function CaW() {
             {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
                 <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
                     <div id="title-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"🖋️title"} />
+                        <FieldTitleDisplay label={"title"} />
                         <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-4xl"} multiline={1} />
                     </div>
 
                     <div id="origin-group" className='w-full md:w-1/2 flex flex-col'>
-                        <FieldTitleDisplay label={'❇️origin'} />
+                        <FieldTitleDisplay label={'origin'} />
                         <OriginSwitchTab />
                     </div>
 
                     <div id="images-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={'🖼️covers'} />
+                        <FieldTitleDisplay label={'covers'} />
                         <ImagesUpload
                             dimension={{ height: "h-56", width: "w-56" }}
                             bucket={"world"}
@@ -121,12 +121,12 @@ export default function CaW() {
                     </div>
 
                     <div id="logline-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"✨logline"} />
+                        <FieldTitleDisplay label={"logline"} />
                         <TextInput name={"logline"} placeholder={"Add your logline..."} textSize={"text-base"} multiline={2} />
                     </div>
 
                     <div id="tags-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"🏷️tags"} />
+                        <FieldTitleDisplay label={"tags"} />
                         <AutocompleteBox
                             value={values.tags}
                             setFieldValue={setFieldValue}
@@ -135,7 +135,7 @@ export default function CaW() {
                     </div>
 
                     <div id="description-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"📜description"} />
+                        <FieldTitleDisplay label={"description"} />
                         <DescriptionSections formSections={values.description} setFieldValue={setFieldValue} />
                     </div>
 
