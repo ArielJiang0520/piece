@@ -1,7 +1,7 @@
 'use client'
 import { PieceProvider, usePieceContext } from './piece-provider';
 import LocalNavBar from './local-navbar';
-import CaPText from '@/app/create-a-piece/components/CaPText';
+import CaPText from '@/app/create-a-piece/components/CaP';
 
 function Content() {
     const { inputType } = usePieceContext();
