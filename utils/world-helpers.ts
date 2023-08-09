@@ -123,6 +123,30 @@ export const deleteWorld = async (wid: string) => {
     })
 }
 
+export const editWorld = async (values: WorldPayload, wid: string) => {
+    const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
+
+    let world_data = {
+        origin: origin,
+        images: images,
+        world_name: title,
+        logline: logline,
+        tags: tags,
+        description: description,
+        is_public: settings.public,
+        nsfw: settings.NSFW,
+        allow_contribution: settings.allowContribution,
+        allow_suggestion: settings.allowSuggestion,
+        modified_at: new Date().toISOString(),
+    }
+
+    await updateData({
+        url: '/api/create-a-world',
+        data: world_data,
+        id: wid,
+    });
+}
+
 export const publishPiece = async (values: PiecePayload, pid: string, wid: string, uid: string) => {
     const { title, logline, tags, content, images, settings } = values as PiecePayload;
 

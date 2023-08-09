@@ -1,12 +1,17 @@
 'use client'
+
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world } from '@/types/types.world';
+
 // create-a-world
 // Need to handle input error
 // Need to add "?" icon for instruction
 import { useEffect, useRef, useState } from 'react';
 import { useDraftContext } from '../draft-provider';
 import { useRouter } from 'next/navigation';
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world } from '@/types/types.world';
+import { useSupabase } from '@/app/supabase-provider';
+import Link from 'next/link';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
+import { overwriteDraft, saveNewDraft, publishWorld, publishDraft, editWorld } from '@/utils/world-helpers';
 // UI
 import { Disclosure } from '@headlessui/react';
 import { AccordionIcon } from '@/components/icon/icon';
@@ -19,10 +24,9 @@ import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import OriginSwitchTab from './OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
-import { useSupabase } from '@/app/supabase-provider';
 import { InputDialog } from '@/components/ui/input/InputDialog';
 import WorldDisplay from '@/components/ui/display/World/WorldDisplay';
-import { overwriteDraft, saveNewDraft, publishWorld, publishDraft } from '@/utils/world-helpers';
+
 
 export default function CaW() {
     const { currentDraft, fetchDrafts } = useDraftContext();
@@ -47,9 +51,11 @@ export default function CaW() {
         try {
             if ("default" in currentDraft)
                 await publishWorld(values, currentDraft.id, user.id)
-            else {
+            else if (!currentDraft.is_public) {
                 await overwriteDraft(values, currentDraft.id)
                 await publishDraft(currentDraft.id)
+            } else {
+                await editWorld(values, currentDraft.id)
             }
         } catch (error) {
             alert(`Error: ${(error as Error).message}`);
@@ -159,16 +165,24 @@ export default function CaW() {
                         <button className="w-full p-3 primaryButton text-2xl" onClick={() => setIsReviewOpen(true)} type="button">
                             Review & Publish
                         </button>
-                        {'default' in currentDraft ?
+                        {'default' in currentDraft ? (
                             <button className="w-full p-2 secondaryButton text-lg" onClick={() => handleSaveNewDraft(values, setSubmitting)} type="button">
                                 Save as New Draft
-                            </button> :
-                            <button className="w-full p-2 secondaryButton text-lg" onClick={() => handleOverwriteDraft(values, setSubmitting)} type="button">
-                                Overwrite Draft
-                            </button>
-                        }
+                            </button>) : (
+                            currentDraft.is_public ?
+                                <Link href={`/world/${currentDraft.id}`} >
+                                    <button className="w-full p-2 secondaryButton text-lg" type="button">
+                                        Cancel
+                                    </button>
+                                </Link> :
+                                <button className="w-full p-2 secondaryButton text-lg" onClick={() => handleOverwriteDraft(values, setSubmitting)} type="button">
+                                    Overwrite Draft
+                                </button>
+                        )}
                     </div>
+
                     {isSubmitting && <LoadingOverlay />}
+
                     <InputDialog
                         isOpen={isReviewOpen}
                         setIsOpen={setIsReviewOpen}
@@ -178,6 +192,7 @@ export default function CaW() {
                         confirmAction={() => submitWorld(values, setSubmitting)}
                         dialogType='display'
                     />
+
                 </Form>
             )}
 

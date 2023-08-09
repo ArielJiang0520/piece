@@ -11,15 +11,23 @@ import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import { InputDialog } from '@/components/ui/input/InputDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
 import { TrashIcon } from '@/components/icon/icon';
+import { useSearchParams } from 'next/navigation';
 
 export default function LocalNavBar() {
+    const searchParams = useSearchParams()
+    const edit_id = searchParams.get("edit_id")
+
+    console.log(searchParams, edit_id)
+
     const PageTitleNavBarComponent = () => {
         const { currentDraft } = useDraftContext();
-        return (
-            <NavBarHeader title="Create-a-World" subtitle={currentDraft ? `Editing draft: ${currentDraft.world_name}` : `Editing a new world`} />
-        )
+        return <NavBarHeader title="Create-a-World" subtitle={edit_id ? `Editing an existing world` : (currentDraft ? `Editing draft: ${currentDraft.world_name}` : `Editing a new world`)} />
     }
+
     const LocalNavBarComponent = () => {
+        if (edit_id) {
+            return <></>
+        }
         const router = useRouter()
 
         const { handleDraftChange, handleDraftDelete, drafts, fetchDrafts } = useDraftContext();

@@ -34,7 +34,10 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
     ]
 
     const profileItems: any[] = [
-
+        {
+            link: `/profile/${user?.id}`,
+            name: 'Profile'
+        },
     ]
 
 

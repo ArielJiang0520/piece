@@ -24,7 +24,7 @@ interface FieldContentDisplayProps {
 export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize, bold }) => {
     return (
         <div>
-            <p className={`w-full font-serif ${textSize} ${bold}`}>{content}</p>
+            <p className={`font-serif ${textSize} ${bold}`}>{content}</p>
         </div>
     )
 }

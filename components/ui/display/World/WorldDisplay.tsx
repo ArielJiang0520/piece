@@ -48,15 +48,16 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
                         </Link>
                     </div>
                     : <Skeleton />}
-
-                {world ? <div className='flex flex-row'>
-                    {world.nsfw ? <Rating18PlusIcon className="w-10 h-10 text-left text-red-500" /> : null}
-                </div> : <Skeleton />}
-
             </div>
 
             <div id="title-group" className='w-full flex flex-row flex-wrap items-center justify-start'>
-                {world ? <FieldContentDisplay content={world.world_name} textSize="text-4xl" bold="font-bold" /> : <Skeleton />}
+                {world ?
+                    <>
+                        <FieldContentDisplay content={world.world_name} textSize="text-4xl" bold="font-bold" />
+                        {/* {world.nsfw && <Rating18PlusIcon className="w-10 h-10 text-left text-red-500" />} */}
+                    </>
+                    :
+                    <Skeleton />}
             </div>
 
             <div id="metadata-group" className="w-full flex flex-col" >

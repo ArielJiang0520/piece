@@ -4,6 +4,7 @@ import { World, DefaultWorld } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
 import { v4 as uuidv4 } from 'uuid';
 import { deleteWorld } from '@/utils/world-helpers';
+import { useSearchParams } from 'next/navigation';
 
 interface DraftContextData {
     currentDraft: World | DefaultWorld;
@@ -20,6 +21,9 @@ export function DraftProvider({
 }: {
     children: React.ReactNode;
 }) {
+    const searchParams = useSearchParams()
+    const edit_id = searchParams.get("edit_id")
+
     const initDraft = { id: uuidv4(), world_name: 'A New Draft', default: true } as DefaultWorld;
 
     const [currentDraft, setCurrentDraft] = useState<World | DefaultWorld>(initDraft);
@@ -58,8 +62,27 @@ export function DraftProvider({
         setDrafts([initDraft, ...data]);
     }
 
+    const fetchWorld = async () => {
+        const { data, error } = await supabase
+            .from('worlds')
+            .select()
+            .eq('id', edit_id)
+            .limit(1)
+            .single()
+
+        if (error) {
+            console.error(error.code, error.message)
+            return
+        }
+        setCurrentDraft(data);
+    }
+
     useEffect(() => {
-        fetchDrafts();
+        if (edit_id) {
+            fetchWorld();
+        } else {
+            fetchDrafts();
+        }
     }, []);
 
 

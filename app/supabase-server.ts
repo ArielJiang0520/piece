@@ -62,6 +62,35 @@ export async function getPiecesByWorld(id: string) {
         console.error('Error:', error);
         return null;
     }
+}
+
+export async function getPiecesByUser(id: string) {
+    const supabase = createServerSupabaseClient();
+    try {
+        const { data, error } = await supabase
+            .from('pieces')
+            .select()
+            .eq('creator_id', id)
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+
+export async function getWorldsByUser(id: string) {
+    const supabase = createServerSupabaseClient();
+    try {
+        const { data, error } = await supabase
+            .from('worlds')
+            .select()
+            .eq('creator_id', id)
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
 
 }
 
