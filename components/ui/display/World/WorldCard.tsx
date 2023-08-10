@@ -6,7 +6,7 @@ import { formatTimestamp } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import { useState } from "react";
-import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/DropDownMenu";
+import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropDownMenu";
 import { useRouter } from "next/navigation";
 
 interface WorldCardProps {
@@ -34,10 +34,10 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                     <FieldContentDisplay textSize="text-lg" content={world.world_name} bold={"font-bold"} />
                 </div>
 
-                <div className="flex flex-row justify-end items-center text-right space-x-2">
+                <div className="flex flex-row justify-end items-center text-right space-x-1">
 
                     <Link href={`/world/${world.id}`}>
-                        <button className="primaryButton text-base px-4 py-1">
+                        <button className="primaryButton text-sm px-4 py-1">
                             View
                         </button>
                     </Link>

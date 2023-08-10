@@ -5,8 +5,8 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
 
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
-import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/DropDownMenu';
-import { InputDialog } from '@/components/ui/input/InputDialog';
+import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
+import { InputDialog } from '@/components/ui/input/PopupDialog';
 import { SectionCard } from '../../../../components/ui/display/World/SectionCard';
 import AddCard from '@/components/ui/button/AddCard';
 

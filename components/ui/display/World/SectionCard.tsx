@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { PlusCircleIcon, MinusIcon } from "@/components/icon/icon";
 import type { WorldDescriptionSectionCard } from "@/types/types.world";
-import { InputDialog } from "@/components/ui/input/InputDialog";
+import { InputDialog } from "@/components/ui/input/PopupDialog";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 
 interface SectionCardProps {

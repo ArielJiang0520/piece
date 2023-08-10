@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SolidSwitchTab } from '@/components/ui/switch-tab/switch-tab'
-import TextInput from '@/components/ui/input/InputText'
+import TextInput from '@/components/ui/input/InputTextField'
 import { useFormikContext } from 'formik';
 
 interface OriginSwitchTab {

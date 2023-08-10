@@ -1,3 +1,4 @@
+// /profile/[id]/worlds
 import WorldCard from "@/components/ui/display/World/WorldCard"
 import { getSession, getWorldsByUser } from "@/app/supabase-server";
 
@@ -8,7 +9,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         return <>Loading...</>
     return (
         <div className="w-full md:w-1/2 flex flex-col gap-14 px-2 py-5 lg:py-10 text-foreground font-mono">
-            <div className="flex flex-col space-y-6">
+            <div className="flex flex-col space-y-2">
                 {worlds
                     .sort((a, b) => {
                         const dateA = a.modified_at || a.created_at;

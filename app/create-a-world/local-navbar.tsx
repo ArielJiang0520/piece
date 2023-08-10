@@ -4,11 +4,11 @@ import { useRouter } from 'next/navigation';
 import NavBar from '@/app/NavBar';
 import { useDraftContext, } from './draft-provider';
 import type { World, DefaultWorld } from '@/types/types.world';
-import InputList from '@/components/ui/input/InputBox';
+import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import { formatTimestamp } from '@/utils/helpers';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
-import { InputDialog } from '@/components/ui/input/InputDialog';
+import { InputDialog } from '@/components/ui/input/PopupDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
 import { TrashIcon } from '@/components/icon/icon';
 import { useSearchParams } from 'next/navigation';
@@ -56,7 +56,7 @@ export default function LocalNavBar() {
         return (
             <div id="draft-group" className='px-4 w-full font-mono flex flex-row justify-start items-center space-x-2'>
                 <FieldTitleDisplay label={'load draft'} textSize={'text-xs'} />
-                <InputList
+                <DropDownSelector
                     data={drafts}
                     width='w-56'
                     nameKey="world_name"

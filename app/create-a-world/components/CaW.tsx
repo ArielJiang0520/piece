@@ -15,7 +15,7 @@ import { overwriteDraft, saveNewDraft, publishWorld, publishDraft, editWorld } f
 // UI
 import { Disclosure } from '@headlessui/react';
 import { AccordionIcon } from '@/components/icon/icon';
-import TextInput from '@/components/ui/input/InputText';
+import TextInput from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import { TagsBar } from '@/components/ui/display/tags-display-helpers';
@@ -24,7 +24,7 @@ import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import OriginSwitchTab from './OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
-import { InputDialog } from '@/components/ui/input/InputDialog';
+import { InputDialog } from '@/components/ui/input/PopupDialog';
 import WorldDisplay from '@/components/ui/display/World/WorldDisplay';
 
 

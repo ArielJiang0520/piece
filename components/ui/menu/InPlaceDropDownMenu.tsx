@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useRef } from 'react';
 import { IconType } from 'react-icons';
 
@@ -11,7 +12,6 @@ export interface DropDownMenu {
     options: DropDownMenuOptions[];
 }
 export function DropDownMenu({ options, setDropdownVisible }: DropDownMenu) {
-
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

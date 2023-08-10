@@ -1,13 +1,13 @@
 'use client'
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { EyeIcon, AccordionIcon } from '@/components/icon/icon';
-import TextInput from '@/components/ui/input/InputText';
+import TextInput from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import { TagsBar } from '@/components/ui/display/tags-display-helpers';
 import { usePieceContext } from '../piece-provider';
 import WorldDisplay from '@/components/ui/display/World/WorldDisplay';
-import { InputDialog } from '@/components/ui/input/InputDialog';
+import { InputDialog } from '@/components/ui/input/PopupDialog';
 import { useEffect, useRef, useState } from 'react';
 import { publishPiece } from '@/utils/world-helpers';
 import { PiecePayload, PieceSettingsAsks, EmptyPiecePayload, cast_to_piece } from '@/types/types.world';

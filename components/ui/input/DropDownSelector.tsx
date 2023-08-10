@@ -1,9 +1,8 @@
 'use client'
-import { useEffect, useState } from 'react'
 import { Listbox } from '@headlessui/react'
 import { ChevronRightIcon, CheckIcon } from '@heroicons/react/20/solid'
 
-interface InputListProps {
+interface DropDownSelectorProps {
     data: any[];
     selected: any;
     setSelected: (arg: any) => void;
@@ -12,7 +11,7 @@ interface InputListProps {
     display_func?: ((arg?: any) => any) | null;
 }
 
-export default function InputList({ data, selected, setSelected, width, nameKey, display_func = null }: InputListProps) {
+export default function DropDownSelector({ data, selected, setSelected, width, nameKey, display_func = null }: DropDownSelectorProps) {
     const handleChange = (item: any) => {
         if (item.id !== selected.id) {
             setSelected(item);
