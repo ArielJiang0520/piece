@@ -31,20 +31,21 @@ export function TagsBar({ tags, setFieldValue }: TagsBarProps) {
 
 interface TagsBarDisplay {
     tags: string[],
-    preview?: boolean
+    preview?: boolean,
+    scroll?: boolean
 }
 
-export function TagsBarDisplay({ tags, preview = false }: TagsBarDisplay) {
+export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBarDisplay) {
     return (
 
-        <div className='flex flex-row flex-wrap w-full justify-start'>
+        <div className={`flex flex-row w-full justify-start  ${scroll ? "overflow-hidden overflow-x-auto" : "flex-wrap "}`}>
             {
                 tags.map((tag, index) =>
                     <button
                         key={index}
                         type="button"
                         disabled={preview}
-                        className={`bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-2 my-1 ${preview ? "cursor-auto" : ""}`}
+                        className={`bg-foreground text-background text-xs font-medium rounded-full px-3 py-1 whitespace-nowrap mr-2 my-1 ${preview ? "cursor-auto" : ""}`}
                     >
                         {tag}
                     </button>

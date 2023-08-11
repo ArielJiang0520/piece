@@ -101,7 +101,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 </Disclosure.Button>
                             </div>
 
-                            <div className='relative'>
+                            <div className='relative z-10'>
                                 <DotsVerticalIcon
                                     className='cursor-pointer'
                                     size={20}

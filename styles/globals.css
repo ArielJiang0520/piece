@@ -47,7 +47,7 @@
 }
 
 .primaryButton {
-  @apply border-2 rounded-lg font-semibold 
+  @apply border-2 rounded-lg font-semibold  whitespace-nowrap
         bg-foreground border-foreground text-background
         hover:text-foreground hover:bg-background;
 }

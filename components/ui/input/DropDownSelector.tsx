@@ -1,6 +1,6 @@
 'use client'
 import { Listbox } from '@headlessui/react'
-import { ChevronRightIcon, CheckIcon } from '@heroicons/react/20/solid'
+import { AccordionIcon, CheckIcon } from '@/components/icon/icon'
 
 interface DropDownSelectorProps {
     data: any[];
@@ -26,7 +26,7 @@ export default function DropDownSelector({ data, selected, setSelected, width, n
                         <div className='overflow-hidden whitespace-nowrap overflow-ellipsis'>
                             {display_func ? display_func(selected) : selected[nameKey]}
                         </div>
-                        <ChevronRightIcon className={`ui-open:transform ui-open:rotate-90 w-5 h-5 mx-2`} />
+                        <AccordionIcon className={`ui-open:transform ui-open:rotate-90 w-5 h-5 mx-2`} />
                     </div>
                 </Listbox.Button>
                 <Listbox.Options className={`absolute bg-background border shadow-md text-xs overflow-auto rounded-2xl py-2 focus:outline-none ${width}`}>

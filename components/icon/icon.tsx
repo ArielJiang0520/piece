@@ -5,6 +5,7 @@ import { MdFileUpload as UploadIcon } from 'react-icons/md'
 import { ImCross as CrossIcon } from 'react-icons/im'
 import { BsThreeDotsVertical as DotsVerticalIcon } from 'react-icons/bs'
 import { ChevronRightIcon as AccordionIcon } from '@heroicons/react/20/solid'
+import { CheckIcon as CheckIcon } from '@heroicons/react/20/solid'
 import { RiPencilFill as PencilIcon } from 'react-icons/ri'
 import { BsPlusCircleDotted as PlusCircleIcon } from 'react-icons/bs'
 import { AiOutlineMinus as MinusIcon } from 'react-icons/ai'
@@ -23,6 +24,8 @@ import { AiFillHeart as HeartIcon } from 'react-icons/ai'
 import { FaRegCommentDots as CommentIcon } from 'react-icons/fa'
 import { FiEyeOff as EyeOffIcon } from 'react-icons/fi'
 import { FiEye as EyeIcon } from 'react-icons/fi'
+import { ChevronUpDownIcon as UpDownIcon } from '@heroicons/react/20/solid'
+import { LuRotateCcw as ResetIcon } from 'react-icons/lu'
 
 export {
     BurgerIcon,
@@ -32,6 +35,7 @@ export {
     CrossIcon,
     DotsVerticalIcon,
     AccordionIcon,
+    CheckIcon,
     PencilIcon,
     PlusCircleIcon,
     MinusIcon,
@@ -49,5 +53,7 @@ export {
     HeartIcon,
     CommentIcon,
     EyeOffIcon,
-    EyeIcon
+    EyeIcon,
+    UpDownIcon,
+    ResetIcon
 };

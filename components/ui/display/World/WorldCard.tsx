@@ -8,51 +8,27 @@ import Link from "next/link";
 import { useState } from "react";
 import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropDownMenu";
 import { useRouter } from "next/navigation";
+import { TagsBarDisplay } from "../tags-display-helpers";
 
 interface WorldCardProps {
     world: World,
     isOwner: boolean
 }
-
-
 export default function WorldCard({ world, isOwner }: WorldCardProps) {
-    if (!isOwner && !world.is_public)
-        return null;
-
-    const menuOptions: DropDownMenuOptions[] = [
+    const ownerMenu: DropDownMenuOptions[] = [
         { name: 'Edit', icon: PencilIcon, function: () => { router.push(`/create-a-world?edit_id=${world.id}`) } },
         { name: 'Delete', icon: TrashIcon, function: () => { } }
+    ]
+
+    const guestMenu: DropDownMenuOptions[] = [
+        { name: 'Create a Piece', icon: PencilIcon, function: () => { router.push(`/create-a-piece?id=${world.id}`) } },
+        { name: 'Subscribe', icon: TrashIcon, function: () => { } }
     ]
 
     const router = useRouter()
     const [dropdownVisible, setDropdownVisible] = useState(false)
     return (
         <div className="flex flex-col space-y-4 rounded-lg bg-foreground/5 p-4">
-            <div className="flex flex-row w-full justify-between items-center">
-
-                <div className="flex flex-row text-left w-56 md:w-80 ">
-                    <FieldContentDisplay textSize="text-lg" content={world.world_name} bold={"font-bold"} />
-                </div>
-
-                <div className="flex flex-row justify-end items-center text-right space-x-1">
-
-                    <Link href={`/world/${world.id}`}>
-                        <button className="primaryButton text-sm px-4 py-1">
-                            View
-                        </button>
-                    </Link>
-
-                    {isOwner && <div className='relative'>
-                        <DotsVerticalIcon
-                            className='cursor-pointer'
-                            size={20}
-                            onClick={() => setDropdownVisible(true)}
-                        />
-                        {dropdownVisible && <DropDownMenu setDropdownVisible={setDropdownVisible} options={menuOptions} />}
-                    </div>}
-                </div>
-
-            </div>
 
             <div className="flex flex-row w-full justify-start space-x-6 text-sm text-foreground/80 font-medium text-left">
                 <div className="flex flex-row  items-center  space-x-1">
@@ -73,8 +49,45 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                 </div>
             </div>
 
+            <div className="flex flex-row w-full justify-between items-center">
+
+                <div className="flex flex-row text-left w-56 md:w-80 ">
+                    <FieldContentDisplay textSize="text-xl" content={world.world_name} bold={"font-bold"} />
+                </div>
+
+                <div className="flex flex-row justify-end items-center text-right space-x-1">
+
+                    <Link href={`/world/${world.id}`}>
+                        <button className="primaryButton text-sm px-4 py-1">
+                            View
+                        </button>
+                    </Link>
+
+                    {isOwner && <div className='relative z-10'>
+                        <DotsVerticalIcon
+                            className='cursor-pointer'
+                            size={20}
+                            onClick={() => setDropdownVisible(true)}
+                        />
+                        {dropdownVisible && <DropDownMenu setDropdownVisible={setDropdownVisible} options={isOwner ? ownerMenu : guestMenu} />}
+                    </div>}
+                </div>
+
+            </div>
+
+
+
             <div className="w-full">
-                <ImagesDisplayRow dimension={{ height: "h-40", width: "w-40" }} paths={world.images} />
+                <FieldContentDisplay content={world.logline} textSize="text-xs lg:text-sm" bold="font-normal" />
+
+            </div>
+
+            <div className="w-full">
+                <ImagesDisplayRow dimension={{ height: "h-64", width: "w-64" }} paths={world.images} />
+            </div>
+
+            <div className="w-full">
+                <TagsBarDisplay tags={world.tags} scroll={true} />
             </div>
 
             <div className="flex flex-row w-full justify-between text-foreground/80 text-base items-center mt-2">

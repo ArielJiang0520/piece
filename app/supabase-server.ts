@@ -64,13 +64,18 @@ export async function getPiecesByWorld(id: string) {
     }
 }
 
-export async function getPiecesByUser(id: string) {
+export async function getPiecesByUser(id: string, isOwner: boolean) {
     const supabase = createServerSupabaseClient();
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('pieces')
-            .select()
+            .select('*, worlds(world_name)')
             .eq('creator_id', id)
+
+        if (!isOwner) { query = query.eq('worlds.is_public', true); }
+
+        const { data, error } = await query
+
         return data;
     } catch (error) {
         console.error('Error:', error);
@@ -78,14 +83,17 @@ export async function getPiecesByUser(id: string) {
     }
 }
 
-
-export async function getWorldsByUser(id: string) {
+export async function getWorldsByUser(id: string, isOwner: boolean) {
     const supabase = createServerSupabaseClient();
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('worlds')
             .select()
             .eq('creator_id', id)
+
+        if (!isOwner) { query = query.eq('is_public', true) }
+
+        const { data, error } = await query
         return data;
     } catch (error) {
         console.error('Error:', error);

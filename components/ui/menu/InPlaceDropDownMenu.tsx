@@ -28,7 +28,7 @@ export function DropDownMenu({ options, setDropdownVisible }: DropDownMenu) {
     }, []);
 
     return (
-        <div ref={dropdownRef} className='z-10 absolute right-[50%] transform translateX([50%]) 
+        <div ref={dropdownRef} className='absolute right-[50%] transform translateX([50%]) 
                                         mt-2 w-24 bg-background border rounded-lg shadow-lg
                                         font-mono font-semibold text-foreground/70 text-xs '>
             <div className='flex flex-col py-1'>

@@ -1,24 +1,24 @@
 // /profile/[id]/worlds
-import WorldCard from "@/components/ui/display/World/WorldCard"
 import { getSession, getWorldsByUser } from "@/app/supabase-server";
+import MyWorlds from "./components/MyWorlds";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+    searchParams,
+}: {
+    params: { id: string }
+    searchParams?: { [key: string]: string | string[] | undefined };
+}) {
     const session = await getSession()
-    const worlds = await getWorldsByUser(params.id)
+    const isOwner = session !== null && session.user.id === params.id
+    const worlds = await getWorldsByUser(params.id, isOwner)
+
     if (!worlds)
         return <>Loading...</>
+
     return (
-        <div className="w-full md:w-1/2 flex flex-col gap-14 px-2 py-5 lg:py-10 text-foreground font-mono">
-            <div className="flex flex-col space-y-2">
-                {worlds
-                    .sort((a, b) => {
-                        const dateA = a.modified_at || a.created_at;
-                        const dateB = b.modified_at || b.created_at;
-                        // For descending order (latest to oldest)
-                        return dateB.localeCompare(dateA);
-                    })
-                    .map((world, idx) => <WorldCard key={idx} world={world} isOwner={session !== null && session.user.id === params.id} />)}
-            </div>
+        <div className="w-full md:w-2/3 flex flex-col gap-7 px-2 py-5 lg:py-10 text-foreground font-mono">
+            <MyWorlds worlds={worlds} isOwner={isOwner} />
         </div>
     )
 }

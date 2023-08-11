@@ -15,7 +15,7 @@ const SettingGroup: React.FC<SettingGroupProps> = ({ settings, asks, setFieldVal
         <div className="my-4 flex flex-col items-start space-y-4">
             {Object.keys(settings).map(field => (
                 <div key={field} className="flex flex-col items-start space-y-4">
-                    <div key={`${field}-ask`} className="text-small font-normal font-mono text-foreground">
+                    <div key={`${field}-ask`} className="text-sm font-normal font-mono text-foreground">
                         {asks[field]}
                     </div>
                     <ToggleButton

@@ -14,7 +14,7 @@ interface ImagesDisplayRowProps {
 }
 export function ImagesDisplayRow({ dimension, paths, del = { hasDelete: false, onDelete: () => { } } }: ImagesDisplayRowProps) {
     return <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-        {paths.map((path, index) => <div key={index} className={`${dimension.height} flex-shrink-0 relative`}>
+        {paths.map((path, index) => <div key={index} className={`${dimension.height} flex-shrink-0`}>
             <LazyImage bucket="world" path={path} dimension={`${dimension.height} ${dimension.width}`} />
 
             {del.hasDelete ? <button
