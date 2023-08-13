@@ -18,7 +18,7 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
     const [filteredWorlds, setFilteredWorlds] = useState<World[]>(worlds)
     const [currentQuery, setCurrentQuery] = useState<null | World>(null)
     const [privateOnly, setPrivateOnly] = useState(false)
-    const [nsfweOnly, setNsfweOnly] = useState(false)
+    const [nsfwOnly, setNsfwOnly] = useState(false)
 
 
     const sortFunc: SortFunc[] = [
@@ -59,9 +59,9 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
         const updatedFilteredWorlds = worlds.sort(currentSort.myFunc)
             .filter(world => currentQuery ? world.id === currentQuery.id : true)
             .filter(world => privateOnly ? !world.is_public : true)
-            .filter(world => nsfweOnly ? world.nsfw : true)
+            .filter(world => nsfwOnly ? world.nsfw : true)
         setFilteredWorlds(updatedFilteredWorlds)
-    }, [currentSort, currentQuery, privateOnly, nsfweOnly])
+    }, [currentSort, currentQuery, privateOnly, nsfwOnly])
 
     return <div className="flex flex-col">
         <div id="search-bar" className="flex flex-col md:flex-row md:items-center mb-6">
@@ -98,8 +98,8 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
                 </div>
                 <div>
                     <ToggleButton
-                        handleToggle={setNsfweOnly}
-                        isEnabled={nsfweOnly}
+                        handleToggle={setNsfwOnly}
+                        isEnabled={nsfwOnly}
                     />
                 </div>
             </div>

@@ -5,7 +5,6 @@ import NavBar from '@/app/NavBar';
 import { useSupabase } from '@/app/supabase-provider';
 import { NavBarSwitchLink } from '@/components/ui/switch-tab/switch-tab';
 
-
 interface LocalNavBarProps {
     world_id: string;
 }
@@ -17,6 +16,7 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
         { name: 'Overview', link: `/world/${world_id}` },
         { name: 'Pieces', link: `/world/${world_id}/pieces` },
         { name: 'Discussions', link: `/world/${world_id}/discussions` },
+        { name: 'Explore in AI', link: `/world/${world_id}/explore` }
     ];
 
     const PageTitleNavBarComponent = () => {
@@ -40,11 +40,8 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
         fetchWorld();
     }, [])
 
-
-
     const LocalNavBarComponent = () => {
-
-        return <NavBarSwitchLink tabs={tabs} />
+        return <NavBarSwitchLink tabs={tabs} pinned={true} />
     }
 
     return <NavBar

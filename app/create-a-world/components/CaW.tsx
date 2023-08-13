@@ -118,11 +118,12 @@ export default function CaW() {
                     <div id="images-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={'covers'} />
                         <ImagesUpload
-                            dimension={{ height: "h-56", width: "w-56" }}
+                            dimension={{ height: "h-80", width: "w-80" }}
                             bucket={"world"}
                             folder={`${currentDraft.id}/`}
                             initPaths={values.images}
                             setValues={(paths) => setFieldValue('images', paths)}
+                            maxNum={7}
                         />
                     </div>
 

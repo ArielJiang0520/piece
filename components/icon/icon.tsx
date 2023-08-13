@@ -26,6 +26,7 @@ import { FiEyeOff as EyeOffIcon } from 'react-icons/fi'
 import { FiEye as EyeIcon } from 'react-icons/fi'
 import { ChevronUpDownIcon as UpDownIcon } from '@heroicons/react/20/solid'
 import { LuRotateCcw as ResetIcon } from 'react-icons/lu'
+import { BsStars as StarsIcon } from 'react-icons/bs'
 
 export {
     BurgerIcon,
@@ -55,5 +56,6 @@ export {
     EyeOffIcon,
     EyeIcon,
     UpDownIcon,
-    ResetIcon
+    ResetIcon,
+    StarsIcon
 };

@@ -18,13 +18,14 @@ export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize =
 interface FieldContentDisplayProps {
     content: string,
     textSize: string,
-    bold: string
+    bold: string,
+    truncate?: number
 }
 
-export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize, bold }) => {
+export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize, bold, truncate = -1 }) => {
     return (
         <div>
-            <p className={`font-serif ${textSize} ${bold}`}>{content}</p>
+            <p className={`font-serif ${textSize} ${bold}`}>{truncate != -1 ? content.length > truncate ? `${content.slice(0, truncate)}...` : content : content}</p>
         </div>
     )
 }

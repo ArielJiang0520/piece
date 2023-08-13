@@ -75,11 +75,8 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
 
             </div>
 
-
-
             <div className="w-full">
-                <FieldContentDisplay content={world.logline} textSize="text-xs lg:text-sm" bold="font-normal" />
-
+                <FieldContentDisplay content={world.logline} textSize="text-sm" bold="font-normal" truncate={150} />
             </div>
 
             <div className="w-full">

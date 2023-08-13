@@ -5,6 +5,8 @@ import SearchBar from "@/components/ui/input/SearchBar";
 import { useEffect, useState, useRef } from 'react';
 import Masonry from 'masonry-layout';
 import Link from "next/link";
+import DropDownSelector from "@/components/ui/input/DropDownSelector";
+import { ToggleButton } from "@/components/ui/button/toggle/Toggle";
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 
 interface JoinedPiece extends Piece {
@@ -61,6 +63,30 @@ function concatLists(worlds: World[], pieces: JoinedPiece[]): ResultWorld[] {
     return result;
 }
 
+type SortFunc = { id: number, name: string, myFunc: (a: JoinedPiece, b: JoinedPiece) => number }
+
+const sortFunc: SortFunc[] = [
+    {
+        id: 1,
+        name: "Latest",
+        myFunc: (a: JoinedPiece, b: JoinedPiece) => {
+            const dateA = a.modified_at || a.created_at;
+            const dateB = b.modified_at || b.created_at;
+            // For descending order (latest to oldest)
+            return dateB.localeCompare(dateA);
+        }
+    },
+    {
+        id: 2,
+        name: "Oldest",
+        myFunc: (a: JoinedPiece, b: JoinedPiece) => {
+            const dateA = a.modified_at || a.created_at;
+            const dateB = b.modified_at || b.created_at;
+            // For ascending order 
+            return dateA.localeCompare(dateB);
+        }
+    }
+]
 
 interface MyPiecesProps {
     pieces: JoinedPiece[],
@@ -70,7 +96,11 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
     const countWorlds = concatLists(worlds, pieces);
 
     const [currentWorld, setCurrentWorld] = useState<null | ResultWorld>(null);
-    const [filteredPieces, setFilteredPieces] = useState<JoinedPiece[]>([]);
+    const [filteredPieces, setFilteredPieces] = useState<JoinedPiece[]>(pieces);
+
+    const [privateOnly, setPrivateOnly] = useState(false)
+    const [nsfwOnly, setNsfwOnly] = useState(false)
+    const [currentSort, setCurrentSort] = useState<SortFunc>(sortFunc[0])
 
     const masonryGridRef = useRef<HTMLDivElement | null>(null);
     const masonryInstanceRef = useRef<Masonry | null>(null);
@@ -87,7 +117,7 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
             if (masonryInstanceRef.current) {
                 masonryInstanceRef.current.layout!();
             }
-        }, 100);  // 100 ms delay. Adjust as needed.
+        }, 500);  // 100 ms delay. Adjust as needed.
 
         return () => {
             clearTimeout(timeout);
@@ -105,11 +135,8 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
             : [...pieces];
 
         // Sort the filtered pieces
-        updatedFilteredPieces.sort((a, b) => {
-            const dateA = a.created_at;
-            const dateB = b.created_at;
-            return dateB.localeCompare(dateA);  // Descending order
-        });
+        updatedFilteredPieces
+            .sort(currentSort.myFunc)
 
         setFilteredPieces(updatedFilteredPieces);
 
@@ -118,7 +145,7 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
             masonryInstanceRef.current.layout!();
         }
 
-    }, [currentWorld, pieces]);
+    }, [currentWorld, currentSort]);
 
     return (
         <div className="flex flex-col">
@@ -137,6 +164,47 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
                     />
                 </div>
             </div>
+
+            <div className="flex flex-col md:flex-row items-center justify-end space-y-1 md:space-x-6 md:space-y-0 text-sm">
+
+                {/* <div className="flex justify-end items-center w-full md:w-auto ">
+                    <div className="mr-2">
+                        Private Only
+                    </div>
+                    <div>
+                        <ToggleButton
+                            handleToggle={setPrivateOnly}
+                            isEnabled={privateOnly}
+                        />
+                    </div>
+
+
+                    <div className="ml-6 mr-2">
+                        NSFW Only
+                    </div>
+                    <div>
+                        <ToggleButton
+                            handleToggle={setNsfwOnly}
+                            isEnabled={nsfwOnly}
+                        />
+                    </div>
+                </div> */}
+
+                {/* <!-- Row for the Sort by bar on small screens --> */}
+                <div className="flex justify-end items-center w-full md:w-auto space-x-2">
+                    <span className="">Sort by</span>
+                    <span className="z-20">
+                        <DropDownSelector
+                            data={sortFunc}
+                            selected={currentSort}
+                            setSelected={setCurrentSort}
+                            width="w-40"
+                            nameKey="name"
+                        />
+                    </span>
+                </div>
+            </div>
+
             <div className="flex flex-row w-full justify-start items-center p-2">
                 <div className="font-mono text-xs font-medium">
                     {`${filteredPieces.length} pieces found.`}
