@@ -1,17 +1,10 @@
 'use client'
-import { Piece, World } from "@/types/types.world";
-import PieceCard from "@/components/ui/display/Piece/PieceCard";
+import { Piece, World, JoinedWorldPiece } from "@/types/types.world";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { useEffect, useState, useRef } from 'react';
-import Masonry from 'masonry-layout';
 import Link from "next/link";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
-import { ToggleButton } from "@/components/ui/button/toggle/Toggle";
-import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
-
-interface JoinedPiece extends Piece {
-    worlds: { world_name: string } | null
-}
+import PiecesMasonry from "@/components/ui/display/Piece/PiecesMasonry";
 
 interface ResultWorld {
     id: string;
@@ -19,7 +12,7 @@ interface ResultWorld {
     count: number;
 }
 
-function concatLists(worlds: World[], pieces: JoinedPiece[]): ResultWorld[] {
+function concatLists(worlds: World[], pieces: JoinedWorldPiece[]): ResultWorld[] {
     const resultMap: Map<string, ResultWorld> = new Map();
 
     // Process the worlds list
@@ -63,13 +56,13 @@ function concatLists(worlds: World[], pieces: JoinedPiece[]): ResultWorld[] {
     return result;
 }
 
-type SortFunc = { id: number, name: string, myFunc: (a: JoinedPiece, b: JoinedPiece) => number }
+type SortFunc = { id: number, name: string, myFunc: (a: JoinedWorldPiece, b: JoinedWorldPiece) => number }
 
 const sortFunc: SortFunc[] = [
     {
         id: 1,
         name: "Latest",
-        myFunc: (a: JoinedPiece, b: JoinedPiece) => {
+        myFunc: (a: JoinedWorldPiece, b: JoinedWorldPiece) => {
             const dateA = a.modified_at || a.created_at;
             const dateB = b.modified_at || b.created_at;
             // For descending order (latest to oldest)
@@ -79,7 +72,7 @@ const sortFunc: SortFunc[] = [
     {
         id: 2,
         name: "Oldest",
-        myFunc: (a: JoinedPiece, b: JoinedPiece) => {
+        myFunc: (a: JoinedWorldPiece, b: JoinedWorldPiece) => {
             const dateA = a.modified_at || a.created_at;
             const dateB = b.modified_at || b.created_at;
             // For ascending order 
@@ -89,44 +82,14 @@ const sortFunc: SortFunc[] = [
 ]
 
 interface MyPiecesProps {
-    pieces: JoinedPiece[],
+    pieces: JoinedWorldPiece[],
     worlds: World[]
 }
 export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
     const countWorlds = concatLists(worlds, pieces);
-
     const [currentWorld, setCurrentWorld] = useState<null | ResultWorld>(null);
-    const [filteredPieces, setFilteredPieces] = useState<JoinedPiece[]>(pieces);
-
-    const [privateOnly, setPrivateOnly] = useState(false)
-    const [nsfwOnly, setNsfwOnly] = useState(false)
+    const [filteredPieces, setFilteredPieces] = useState<JoinedWorldPiece[]>(pieces);
     const [currentSort, setCurrentSort] = useState<SortFunc>(sortFunc[0])
-
-    const masonryGridRef = useRef<HTMLDivElement | null>(null);
-    const masonryInstanceRef = useRef<Masonry | null>(null);
-
-    useEffect(() => {
-        if (masonryGridRef.current && !masonryInstanceRef.current) {
-            masonryInstanceRef.current = new Masonry(masonryGridRef.current, {
-                itemSelector: '.masonry-item',
-                percentPosition: true
-            });
-        }
-
-        const timeout = setTimeout(() => {
-            if (masonryInstanceRef.current) {
-                masonryInstanceRef.current.layout!();
-            }
-        }, 500);  // 100 ms delay. Adjust as needed.
-
-        return () => {
-            clearTimeout(timeout);
-            if (masonryInstanceRef.current) {
-                masonryInstanceRef.current.destroy!();
-                masonryInstanceRef.current = null;
-            }
-        };
-    }, [filteredPieces]);
 
     useEffect(() => {
         // Filter pieces based on the selected world
@@ -139,11 +102,6 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
             .sort(currentSort.myFunc)
 
         setFilteredPieces(updatedFilteredPieces);
-
-        // Trigger Masonry layout
-        if (masonryInstanceRef.current) {
-            masonryInstanceRef.current.layout!();
-        }
 
     }, [currentWorld, currentSort]);
 
@@ -166,30 +124,6 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
             </div>
 
             <div className="flex flex-col md:flex-row items-center justify-end space-y-1 md:space-x-6 md:space-y-0 text-sm">
-
-                {/* <div className="flex justify-end items-center w-full md:w-auto ">
-                    <div className="mr-2">
-                        Private Only
-                    </div>
-                    <div>
-                        <ToggleButton
-                            handleToggle={setPrivateOnly}
-                            isEnabled={privateOnly}
-                        />
-                    </div>
-
-
-                    <div className="ml-6 mr-2">
-                        NSFW Only
-                    </div>
-                    <div>
-                        <ToggleButton
-                            handleToggle={setNsfwOnly}
-                            isEnabled={nsfwOnly}
-                        />
-                    </div>
-                </div> */}
-
                 {/* <!-- Row for the Sort by bar on small screens --> */}
                 <div className="flex justify-end items-center w-full md:w-auto space-x-2">
                     <span className="">Sort by</span>
@@ -205,19 +139,16 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
                 </div>
             </div>
 
-            <div className="flex flex-row w-full justify-start items-center p-2">
-                <div className="font-mono text-xs font-medium">
-                    {`${filteredPieces.length} pieces found.`}
+
+            <div className="px-6">
+                <div className="flex flex-row w-full justify-start items-center p-2">
+                    <div className="font-mono text-xs font-medium">
+                        {`${filteredPieces.length} pieces found.`}
+                    </div>
                 </div>
+                <PiecesMasonry pieces={filteredPieces} />
             </div>
 
-            <div ref={masonryGridRef} className="masonry-grid">
-                {filteredPieces.map((piece) => (
-                    <div key={piece.id} className="masonry-item w-1/2 lg:w-1/3 p-1">
-                        <PieceCard piece={piece} />
-                    </div>
-                ))}
-            </div>
         </div>
     );
 }

@@ -1,7 +1,6 @@
 'use client'
 import { Tab } from '@headlessui/react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { StarsIcon } from '@/components/icon/icon'
 
@@ -18,17 +17,18 @@ interface SwitchTabProps {
 export function SolidSwitchTab({ titles, contents, onTabChange }: SwitchTabProps) {
     return (
         <Tab.Group onChange={onTabChange}>
-            <Tab.List className="mt-4 flex flex-row p-1 space-x-1 bg-foreground/50 rounded-md justify-center items-center">
+            <Tab.List className="w-full flex flex-row p-1 space-x-1 bg-foreground/50 rounded-md justify-between items-center whitespace-nowrap overflow-hidden">
                 {titles.map((title, index) =>
                     <Tab key={index} className={tabSwitchColor}>{title.toUpperCase()}</Tab>
                 )}
             </Tab.List>
-            <Tab.Panels className="mt-2">
+            <Tab.Panels className="w-full  mt-2">
                 {contents.map((content, index) => <Tab.Panel key={index}>{content}</Tab.Panel>)}
             </Tab.Panels>
         </Tab.Group>
     )
 }
+
 
 interface NavBarSwitchTab {
     tabs: any[],

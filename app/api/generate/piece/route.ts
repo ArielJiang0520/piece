@@ -11,21 +11,13 @@ const openai = new OpenAIApi(configuration)
 
 export async function POST(req: NextRequest): Promise<Response> {
     if (req.method === 'POST') {
-        const body = await req.json();
-        const prompt = body.prompt as string
-        const worldId = body.worldId as string
-
-        const worldDetails = await getWorldDetailsById(worldId)
-        if (!worldDetails)
-            throw Error('Unable to fetch world')
-        const world = worldDetails as World
-
+        const { prompt, world } = await req.json();
         try {
             const response = await openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
                 messages: [
                     { role: "system", content: worldPrompt(world) },
-                    { role: "user", content: prompt },
+                    { role: "user", content: prompt.prompt },
                 ],
                 max_tokens: 2048,
                 temperature: 1,

@@ -24,7 +24,7 @@ import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import OriginSwitchTab from './OriginSwitchTab';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
-import { InputDialog } from '@/components/ui/input/PopupDialog';
+import { PopupDialog } from '@/components/ui/input/PopupDialog';
 import WorldDisplay from '@/components/ui/display/World/WorldDisplay';
 
 
@@ -105,14 +105,14 @@ export default function CaW() {
         >
             {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
                 <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
-                    <div id="title-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"title"} />
-                        <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-4xl"} multiline={1} />
-                    </div>
-
-                    <div id="origin-group" className='w-full md:w-1/2 flex flex-col'>
+                    <div id="origin-group" className='w-full flex flex-col space-y-2'>
                         <FieldTitleDisplay label={'origin'} />
                         <OriginSwitchTab />
+                    </div>
+
+                    <div id="title-group" className='w-full flex flex-col space-y-2'>
+                        <FieldTitleDisplay label={"title"} />
+                        <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-4xl"} multiline={1} />
                     </div>
 
                     <div id="images-group" className='w-full flex flex-col'>
@@ -129,7 +129,7 @@ export default function CaW() {
 
                     <div id="logline-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"logline"} />
-                        <TextInput name={"logline"} placeholder={"Add your logline..."} textSize={"text-base"} multiline={2} />
+                        <TextInput name={"logline"} placeholder={"Add your logline..."} textSize={"text-base"} multiline={4} />
                     </div>
 
                     <div id="tags-group" className='w-full flex flex-col'>
@@ -163,7 +163,7 @@ export default function CaW() {
                     </div>
 
                     <div id="submit-group" className='my-4 md:my-8 mx-auto w-full md:w-2/3 flex flex-col space-y-3'>
-                        <button className="w-full p-3 primaryButton text-2xl" onClick={() => setIsReviewOpen(true)} type="button">
+                        <button className="w-full p-3 primaryButton text-2xl" onClick={() => { console.log(values); setIsReviewOpen(true) }} type="button">
                             Review & Publish
                         </button>
                         {'default' in currentDraft ? (
@@ -184,7 +184,7 @@ export default function CaW() {
 
                     {isSubmitting && <LoadingOverlay />}
 
-                    <InputDialog
+                    <PopupDialog
                         isOpen={isReviewOpen}
                         setIsOpen={setIsReviewOpen}
                         dialogTitle='Are you sure you want to publish this world?'

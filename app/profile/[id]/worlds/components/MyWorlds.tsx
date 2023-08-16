@@ -80,7 +80,7 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
             </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-end space-y-1 md:space-x-6 md:space-y-0 text-sm">
+        <div className="flex flex-col md:flex-row items-center justify-end space-y-1 md:space-x-6 md:space-y-0 text-xs">
             {/* <!-- Row for the Toggle Buttons on small screens --> */}
             <div className="flex justify-end items-center w-full md:w-auto ">
                 {isOwner && <> <div className="mr-2">
@@ -126,8 +126,7 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
             </div>
         </div>
         <div className="flex flex-col space-y-2 mt-2">
-            {filteredWorlds.map((world, idx) => <WorldCard key={idx} world={world} isOwner={isOwner} />)
-            }
+            {filteredWorlds.map((world, idx) => <WorldCard key={idx} world={world} isOwner={isOwner} />)}
         </div>
     </div>
 }

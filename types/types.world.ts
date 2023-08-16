@@ -118,6 +118,14 @@ export type PieceSettings = {
     allowComments: boolean;
 }
 
+export interface JoinedWorldPiece extends Piece {
+    worlds: { world_name: string } | null
+}
+
+export interface JoinedAuthorPiece extends Piece {
+    profiles: Profile | null
+}
+
 export interface DefaultFolder {
     id: string,
     folder_name: string,

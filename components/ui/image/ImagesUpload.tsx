@@ -101,7 +101,7 @@ export function ImagesUpload({ dimension, bucket, folder, initPaths, maxNum = 10
                     disabled={uploading || paths.length === maxNum}
                 />
             </div>
-            <ImagesDisplayRow dimension={dimension} paths={paths} del={{ hasDelete: true, onDelete: (index) => handleImageDelete(index) }} />
+            <ImagesDisplayRow bucket="world" dimension={dimension} paths={paths} del={{ hasDelete: true, onDelete: (index) => handleImageDelete(index) }} />
         </div>
     );
 }

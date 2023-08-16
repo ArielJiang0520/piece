@@ -1,6 +1,15 @@
+import { SolidSwitchTab } from "@/components/ui/switch-tab/switch-tab"
+import { getWorldDetailsById } from "@/app/supabase-server";
+import ExploreWorld from "./components/ExploreWorld";
 
 export default async function Page({ params }: { params: { id: string } }) {
-    return <div>
-        you are at the explore page for {params.id}
+    const world = await getWorldDetailsById(params.id)
+
+    if (!world) {
+        return <></>
+    }
+
+    return <div className="w-full md:w-1/2 flex flex-col gap-20 px-5 py-5 lg:py-5 text-foreground font-mono">
+        <ExploreWorld world={world} />
     </div>
 }

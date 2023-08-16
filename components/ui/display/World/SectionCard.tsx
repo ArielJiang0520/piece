@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { PlusCircleIcon, MinusIcon } from "@/components/icon/icon";
 import type { WorldDescriptionSectionCard } from "@/types/types.world";
-import { InputDialog } from "@/components/ui/input/PopupDialog";
+import { PopupDialog } from "@/components/ui/input/PopupDialog";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 
 interface SectionCardProps {
@@ -25,7 +25,7 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
             <div className='text-sm min-h-[300px] whitespace-pre-line'>
                 {cardContent}
             </div>
-            <ImagesDisplayRow paths={cardImages.slice(0, 3)} dimension={{ height: "h-48", width: "w-48" }} />
+            <ImagesDisplayRow bucket="world" paths={cardImages.slice(0, 3)} dimension={{ height: "h-48", width: "w-48" }} />
         </div>
     }
 
@@ -56,9 +56,9 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
             </div>
 
             <div id='image-display' className="flex flex-row justify-start items-start space-x-2 overflow-hidden">
-                <ImagesDisplayRow paths={cardImages.slice(0, 3)} dimension={{ height: "h-24", width: "w-24" }} />
+                <ImagesDisplayRow bucket="world" paths={cardImages.slice(0, 3)} dimension={{ height: "h-24", width: "w-24" }} />
             </div>
-            <InputDialog
+            <PopupDialog
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 dialogTitle=''

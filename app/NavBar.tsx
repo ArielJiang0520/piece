@@ -8,7 +8,7 @@ import { useSupabase } from './supabase-provider'
 
 interface NavBarProps {
     PageTitleNavBarComponent: ComponentType<any>;
-    LocalNavBarComponent: ComponentType<any>;
+    LocalNavBarComponent: ComponentType<any> | null;
     [key: string]: any;
 }
 
@@ -21,22 +21,34 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
     const menuItems = [
         {
             link: '/',
-            name: 'Home'
+            name: 'Feed'
         },
+
+        {
+            link: '/world',
+            name: 'Browse Worlds'
+        },
+
         {
             link: '/create-a-world',
             name: 'Create A World'
         },
-        {
-            link: '/',
-            name: 'Browse'
-        }
     ]
 
     const profileItems: any[] = [
         {
             link: `/profile/${user?.id}`,
             name: 'Profile'
+        },
+
+        {
+            link: `/profile/${user?.id}/worlds`,
+            name: 'My Worlds'
+        },
+
+        {
+            link: `/profile/${user?.id}/pieces`,
+            name: 'My Pieces'
         },
     ]
 
@@ -89,11 +101,9 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
             </nav>
 
 
-            <nav id="localbar" className="w-full border-b h-12 sticky top-12 z-10 bg-background p-0 text-foreground">
-
+            {LocalNavBarComponent ? <nav id="localbar" className="w-full border-b h-12 sticky top-12 z-10 bg-background p-0 text-foreground">
                 <LocalNavBarComponent {...props} />
-
-            </nav>
+            </nav> : <div className='w-full border-b h-3 sticky top-12 z-10 bg-background p-0'></div>}
 
             <SideBar onLeft={true} isMenuOpen={isLeftMenuOpen} setIsMenuOpen={setIsLeftMenuOpen} menuItems={menuItems} image={{ link: '/logo_500px.png', alt: "logo" }} />
 

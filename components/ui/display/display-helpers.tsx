@@ -8,7 +8,7 @@ interface InputTitleProps {
 export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize = "text-base" }) => {
     return (
         <div>
-            <label className={`${textSize} mb-2 text-foreground/50 font-bold whitespace-nowrap`}>
+            <label className={`${textSize}  text-foreground/50 font-bold whitespace-nowrap`}>
                 {label.toLocaleUpperCase()}
             </label>
         </div>

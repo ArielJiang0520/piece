@@ -20,13 +20,14 @@ import { RiBook2Fill as BookIcon } from 'react-icons/ri'
 import { BiSubdirectoryLeft as PointingArrowIcon } from 'react-icons/bi'
 import { RxSlash as SlashIcon } from 'react-icons/rx'
 import { PiFolderNotch as FolderIcon } from 'react-icons/pi'
-import { AiFillHeart as HeartIcon } from 'react-icons/ai'
+import { AiOutlineHeart as EmptyHeartIcon } from 'react-icons/ai'
 import { FaRegCommentDots as CommentIcon } from 'react-icons/fa'
 import { FiEyeOff as EyeOffIcon } from 'react-icons/fi'
 import { FiEye as EyeIcon } from 'react-icons/fi'
 import { ChevronUpDownIcon as UpDownIcon } from '@heroicons/react/20/solid'
 import { LuRotateCcw as ResetIcon } from 'react-icons/lu'
 import { BsStars as StarsIcon } from 'react-icons/bs'
+import { FaCrown as CrownIcon } from 'react-icons/fa'
 
 export {
     BurgerIcon,
@@ -51,11 +52,12 @@ export {
     PointingArrowIcon,
     SlashIcon,
     FolderIcon,
-    HeartIcon,
+    EmptyHeartIcon,
     CommentIcon,
     EyeOffIcon,
     EyeIcon,
     UpDownIcon,
     ResetIcon,
-    StarsIcon
+    StarsIcon,
+    CrownIcon
 };

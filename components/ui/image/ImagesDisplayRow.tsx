@@ -2,6 +2,7 @@ import { CloseIcon } from '@/components/icon/icon';
 import LazyImage from '@/components/ui/image/LazyImageClient';
 
 interface ImagesDisplayRowProps {
+    bucket: string;
     dimension: {
         height: string;
         width: string;
@@ -12,10 +13,10 @@ interface ImagesDisplayRowProps {
         onDelete: (arg: any) => void;
     };
 }
-export function ImagesDisplayRow({ dimension, paths, del = { hasDelete: false, onDelete: () => { } } }: ImagesDisplayRowProps) {
+export function ImagesDisplayRow({ bucket, dimension, paths, del = { hasDelete: false, onDelete: () => { } } }: ImagesDisplayRowProps) {
     return <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
         {paths.map((path, index) => <div key={index} className={`relative ${dimension.height} flex-shrink-0`}>
-            <LazyImage bucket="world" path={path} dimension={`${dimension.height} ${dimension.width}`} />
+            <LazyImage bucket={bucket} path={path} dimension={`${dimension.height} ${dimension.width}`} />
 
             {del.hasDelete ? <button
                 id="delete-button"

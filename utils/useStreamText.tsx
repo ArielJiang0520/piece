@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react';
 
 const useStreamText = () => {
@@ -10,7 +11,7 @@ const useStreamText = () => {
             setLines(['']);
 
             try {
-                const response = await fetch(`${window.location.origin}/${endpoint}`, {
+                const response = await fetch(`${window.location.origin}${endpoint}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -48,11 +48,11 @@ export default function PieceDisplay({ piece, world, user, preview = false }: Pi
             </div>
 
             <div id="author-group" className="w-full flex flex-col" >
-                <PieceAuthorDisplay user={user} piece={piece} />
+                <PieceAuthorDisplay author={user} piece={piece} />
             </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-                <ImagesDisplayRow dimension={{ height: "h-80", width: "w-80" }} paths={piece.images} />
+                <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={piece.images} />
             </div>
 
             <div id='logline-display' className="w-full flex flex-col">

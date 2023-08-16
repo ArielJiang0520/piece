@@ -8,7 +8,7 @@ import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import { formatTimestamp } from '@/utils/helpers';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
-import { InputDialog } from '@/components/ui/input/PopupDialog';
+import { PopupDialog } from '@/components/ui/input/PopupDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
 import { TrashIcon } from '@/components/icon/icon';
 import { useSearchParams } from 'next/navigation';
@@ -17,23 +17,15 @@ export default function LocalNavBar() {
     const searchParams = useSearchParams()
     const edit_id = searchParams.get("edit_id")
 
-    console.log(searchParams, edit_id)
-
     const PageTitleNavBarComponent = () => {
         const { currentDraft } = useDraftContext();
-        return <NavBarHeader title="Create-a-World" subtitle={edit_id ? `Editing an existing world` : (currentDraft ? `Editing draft: ${currentDraft.world_name}` : `Editing a new world`)} />
+        return <NavBarHeader title="Create-a-World" subtitle={edit_id ? `Editing ${currentDraft.world_name}` : (currentDraft ? `Editing draft: ${currentDraft.world_name}` : `Editing a new world`)} />
     }
 
-    const LocalNavBarComponent = () => {
-        if (edit_id) {
-            return <></>
-        }
+    const LocalNavBarComponent = edit_id ? null : () => {
         const router = useRouter()
-
         const { handleDraftChange, handleDraftDelete, drafts, fetchDrafts } = useDraftContext();
-
         const [selected, setSelected] = useState<World | DefaultWorld>(drafts[0]);
-
         const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
         const [isLoading, setIsLoading] = useState(false)
 
@@ -65,7 +57,7 @@ export default function LocalNavBar() {
                     display_func={(item: any) => item.default ? `${item.world_name}` : `${formatTimestamp(item.modified_at)} - ${item.world_name}`}
                 />
                 {'default' in selected ? null : <TrashIcon className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} />}
-                <InputDialog
+                <PopupDialog
                     isOpen={isDeleteDialogOpen}
                     setIsOpen={setDeleteDialogOpen}
                     dialogTitle={`Delete Draft`}

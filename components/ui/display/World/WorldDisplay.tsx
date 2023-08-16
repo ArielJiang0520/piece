@@ -17,7 +17,7 @@ const WorldMetadataDisplay = ({ world }: { world: World }) => {
             <div className="">
                 <div className='flex flex-row justify-start items-center space-x-1'>
                     <BookIcon />
-                    <span>{world.origin ? origin : "Original World"}</span>
+                    <span>{world.origin && world.origin !== "" ? world.origin : "Original World"}</span>
                 </div>
             </div>
             <div className="">
@@ -65,7 +65,7 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
             </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-                {world ? <ImagesDisplayRow paths={world.images} dimension={{ height: "h-80", width: "w-80" }} /> : <div style={{ lineHeight: 10, }}> <Skeleton /> </div>}
+                {world ? <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} /> : <div style={{ lineHeight: 10, }}> <Skeleton /> </div>}
             </div>
 
             <div id="logline-group" className='w-full flex flex-col'>

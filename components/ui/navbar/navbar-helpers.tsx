@@ -56,7 +56,7 @@ export function SideBar({ onLeft, isMenuOpen, setIsMenuOpen, menuItems, image }:
                             </li>
                             )}
                         </ul>
-                        <LogoutButton />
+                        {!onLeft && <LogoutButton />}
                     </div>
                 </motion.div>
             </div>
@@ -65,15 +65,20 @@ export function SideBar({ onLeft, isMenuOpen, setIsMenuOpen, menuItems, image }:
 }
 
 
-export const NavBarHeader = ({ title, subtitle }: { title: string, subtitle: string | null }) => {
+export const NavBarHeader = ({ title, subtitle, icon = <></> }: { title: string, subtitle: string | null | undefined, icon?: React.ReactNode }) => {
     return (
         <div className='flex flex-col font-mono text-foreground/50 justify-center pt-1 items-start'>
             <h1 className='font-bold text-xs '>
                 {title.toLocaleUpperCase()}
             </h1>
-            <h2 className='font-semibold w-48 md:w-80 font-serif text-foreground text-base whitespace-nowrap overflow-hidden overflow-ellipsis'>
-                {subtitle || <Skeleton />}
-            </h2>
+            <div className="flex flex-row items-center space-x-2">
+                <h2 className='font-semibold w-48 md:w-auto  font-serif text-foreground text-base whitespace-nowrap overflow-hidden overflow-ellipsis'>
+                    {subtitle || <Skeleton />}
+                </h2>
+                <div>
+                    {icon}
+                </div>
+            </div>
         </div>
     )
 }

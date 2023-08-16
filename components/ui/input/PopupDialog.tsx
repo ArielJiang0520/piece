@@ -1,9 +1,10 @@
 'use client'
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
-import { WorldDescriptionSectionCard } from '@/types/types.world';
+import { World, WorldDescriptionSectionCard } from '@/types/types.world';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import { useDraftContext } from '@/app/create-a-world/draft-provider';
+import { User } from '@supabase/supabase-js';
 
 interface DialogLineInputProps {
     inputValue: string,
@@ -78,7 +79,6 @@ function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
 interface DialogDisplayProps {
     children: React.ReactNode
 }
-
 function DialogDisplay({ children }: DialogDisplayProps) {
     return (
         <>{children}</>
@@ -86,7 +86,7 @@ function DialogDisplay({ children }: DialogDisplayProps) {
 }
 
 interface DialogProps {
-    dialogType: "input" | "edit-card" | "confirm" | "display"
+    dialogType: "input" | "edit-card" | "confirm" | "display" | "publish-piece";
 
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
@@ -105,12 +105,13 @@ interface DialogProps {
     };
 }
 
-export function InputDialog({
+export function PopupDialog({
     dialogType,
     isOpen, setIsOpen,
     dialogTitle, dialogContent,
     initInputValue, confirmAction,
-    overwriteConfirm = "Confirm", hideCancel = false,
+    overwriteConfirm = "Confirm",
+    hideCancel = false,
     additionalInfo = {}
 }: DialogProps) {
     const [inputValue, setInputValue] = useState(initInputValue);
@@ -144,6 +145,8 @@ export function InputDialog({
                     {dialogType === "display" && <DialogDisplay children={initInputValue} />}
 
                     {dialogType === "edit-card" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
+
+                    {dialogType === "publish-piece" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
 
                     <div className="mt-8 flex flex-row justify-end items-center space-x-4">
                         {hideCancel ? null : <button

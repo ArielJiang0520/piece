@@ -80,7 +80,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             </div>
 
             <div className="w-full">
-                <ImagesDisplayRow dimension={{ height: "h-64", width: "w-64" }} paths={world.images} />
+                <ImagesDisplayRow bucket="world" dimension={{ height: "h-64", width: "w-64" }} paths={world.images} />
             </div>
 
             <div className="w-full">

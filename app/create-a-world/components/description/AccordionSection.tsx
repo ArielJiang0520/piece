@@ -6,7 +6,7 @@ import { useState } from 'react'
 
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
-import { InputDialog } from '@/components/ui/input/PopupDialog';
+import { PopupDialog } from '@/components/ui/input/PopupDialog';
 import { SectionCard } from '../../../../components/ui/display/World/SectionCard';
 import AddCard from '@/components/ui/button/AddCard';
 
@@ -110,7 +110,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 {dropdownVisible && <DropDownMenu setDropdownVisible={setDropdownVisible} options={menuOptions} />}
                             </div>
 
-                            <InputDialog
+                            <PopupDialog
                                 isOpen={dialogueRenameIsOpen}
                                 setIsOpen={setDialogRenameIsOpen}
                                 dialogTitle={"Rename Section:"}
@@ -119,7 +119,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 confirmAction={changeTitle}
                                 dialogType='input'
                             />
-                            <InputDialog
+                            <PopupDialog
                                 isOpen={dialogueDelIsOpen}
                                 setIsOpen={setDialogDelIsOpen}
                                 dialogTitle={`Delete Section`}
@@ -147,7 +147,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                     </> :
                                     <AddCard text={"Add New Card"} onclick={onAddNewSection} width='w-64' height='h-64' />
                             }
-                            <InputDialog
+                            <PopupDialog
                                 isOpen={addCardDialogIsOpen}
                                 setIsOpen={setAddCardDialogIsOpen}
                                 dialogTitle={"Add New Card"}
@@ -157,7 +157,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 dialogType='edit-card'
                             />
                             {editingCard && (
-                                <InputDialog
+                                <PopupDialog
                                     isOpen={!!editingCard}
                                     setIsOpen={() => setEditingCard(null)}
                                     dialogTitle={`Edit Card (@${section.sectionTitle})`}
@@ -167,7 +167,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                     dialogType='edit-card'
                                 />
                             )}
-                            {delCardIndex != -1 && <InputDialog
+                            {delCardIndex != -1 && <PopupDialog
                                 isOpen={delCardIndex !== -1}
                                 setIsOpen={() => setDelCardIndex(-1)}
                                 dialogTitle={`Delete Card`}

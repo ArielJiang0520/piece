@@ -55,8 +55,9 @@ export async function getPiecesByWorld(id: string) {
     try {
         const { data, error } = await supabase
             .from('pieces')
-            .select()
+            .select('*, profiles(*)')
             .eq('world_id', id)
+            .order('created_at', { ascending: false })
         return data;
     } catch (error) {
         console.error('Error:', error);

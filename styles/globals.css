@@ -52,6 +52,12 @@
         hover:text-foreground hover:bg-background;
 }
 
+.primaryButton-pink {
+  @apply border-2 rounded-lg font-semibold  whitespace-nowrap
+        bg-brand border-brand text-background
+        hover:text-brand hover:bg-background;
+}
+
 .secondaryButton {
   @apply 
         bg-background text-foreground/80
