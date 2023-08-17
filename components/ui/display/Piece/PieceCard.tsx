@@ -1,7 +1,7 @@
 import { Piece, Profile } from "@/types/types.world";
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
-import { TagsBarSmallDisplay } from "@/components/ui/display/tags-display-helpers";
-import { IconButtonSmall } from "@/components/ui/button/IconButton";
+import { TagsBarSmallDisplay } from "@/components/ui/input/tags-helpers";
+import { IconButtonTiny } from "@/components/ui/button/button-helpers";
 import { EmptyHeartIcon, CommentIcon, CrownIcon } from "@/components/icon/icon";
 import SingleImage from "@/components/ui/image/SingleImage";
 import Image from "next/image";
@@ -65,7 +65,7 @@ export default function PieceCard({ author, piece, displayAuthor, isOwner }: Pie
 
 
                         </div>
-                        <IconButtonSmall icon={<EmptyHeartIcon className="text-foreground/50" />} title={"1.2k"} />
+                        <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"1.2k"} />
                     </div>
 
                 }

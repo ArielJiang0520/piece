@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { CloseIcon } from "@/components/icon/icon";
 import Image from 'next/image'
 import Link from 'next/link'
-import LogoutButton from "../button/LogoutButton";
+import { LogoutButton } from "../button/button-helpers";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
@@ -71,8 +71,8 @@ export const NavBarHeader = ({ title, subtitle, icon = <></> }: { title: string,
             <h1 className='font-bold text-xs '>
                 {title.toLocaleUpperCase()}
             </h1>
-            <div className="flex flex-row items-center space-x-2">
-                <h2 className='font-semibold w-48 md:w-auto  font-serif text-foreground text-base whitespace-nowrap overflow-hidden overflow-ellipsis'>
+            <div className="flex flex-row items-center justify-start space-x-2">
+                <h2 className='font-semibold font-serif text-foreground text-base whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[200px] md:max-w-full '>
                     {subtitle || <Skeleton />}
                 </h2>
                 <div>

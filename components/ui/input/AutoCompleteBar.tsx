@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 
-type Tag = {
-    id: string;
-    value: string;
-    hits: number;
-};
+// type Tag = {
+//     id: string;
+//     value: string;
+//     hits: number;
+// };
 
-const tags = ['Hopeful', 'Romantic', 'Bittersweet',
-    'Melancholic', 'Tense', 'Seductive', 'Humorous', 'Serious',
-    'Anguished', 'Suspenseful', 'Nostalgic', 'Pensive', 'Dark', 'Dramatic']
+// const tags = ['Hopeful', 'Romantic', 'Bittersweet',
+//     'Melancholic', 'Tense', 'Seductive', 'Humorous', 'Serious',
+//     'Anguished', 'Suspenseful', 'Nostalgic', 'Pensive', 'Dark', 'Dramatic']
 
-const data: Tag[] = tags.map((tag, index) => ({ id: index.toString(), value: tag, hits: Math.floor(Math.random() * 100) + 1 }));
+// const data: Tag[] = tags.map((tag, index) => ({ id: index.toString(), value: tag, hits: Math.floor(Math.random() * 100) + 1 }));
 
 
-async function fetchTags(): Promise<Tag[]> {
-    // Replace with your API endpoint.
-    // const response = await fetch(`https://api.example.com/tags`);
-    // const json = await response.json();
-    // return json.data;
-    return data
-}
+// async function fetchTags(): Promise<Tag[]> {
+//     // Replace with your API endpoint.
+//     // const response = await fetch(`https://api.example.com/tags`);
+//     // const json = await response.json();
+//     // return json.data;
+//     return data
+// }
 
 type AutocompleteBoxProps = {
     value: string[];
@@ -28,26 +28,26 @@ type AutocompleteBoxProps = {
 
 const AutocompleteBox: React.FC<AutocompleteBoxProps> = ({ value, setFieldValue }) => {
     const [inputValue, setInputValue] = useState('');
-    const [tags, setTags] = useState<Tag[]>([]);
-    const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
+    // const [tags, setTags] = useState<Tag[]>([]);
+    // const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
 
-    useEffect(() => {
-        fetchTags().then(fetchedTags => {
-            setTags(fetchedTags);
-        });
-    }, []);
+    // useEffect(() => {
+    //     fetchTags().then(fetchedTags => {
+    //         setTags(fetchedTags);
+    //     });
+    // }, []);
 
-    useEffect(() => {
-        if (inputValue === '') {
-            setFilteredTags([]);
-        } else {
-            const lowercasedInput = inputValue.toLowerCase();
-            const newFilteredTags = tags
-                .filter(tag => tag.value.toLowerCase().startsWith(lowercasedInput))
-                .sort((a, b) => b.hits - a.hits);
-            setFilteredTags(newFilteredTags);
-        }
-    }, [inputValue, tags]);
+    // useEffect(() => {
+    //     if (inputValue === '') {
+    //         setFilteredTags([]);
+    //     } else {
+    //         const lowercasedInput = inputValue.toLowerCase();
+    //         const newFilteredTags = tags
+    //             .filter(tag => tag.value.toLowerCase().startsWith(lowercasedInput))
+    //             .sort((a, b) => b.hits - a.hits);
+    //         setFilteredTags(newFilteredTags);
+    //     }
+    // }, [inputValue, tags]);
 
     const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);

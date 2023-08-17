@@ -1,5 +1,45 @@
-import { getPiecesByUser, getSession, getWorldsByUser } from "@/app/supabase-server";
+import { getSession } from "@/app/supabase-server";
 import MyPieces from "./components/MyPieces";
+import { createServerSupabaseClient } from "@/app/supabase-server";
+
+async function getPiecesByUser(id: string, isOwner: boolean) {
+    const supabase = createServerSupabaseClient();
+    try {
+        let query = supabase
+            .from('pieces')
+            .select('*, worlds(world_name)')
+            .eq('creator_id', id)
+
+        if (!isOwner) { query = query.eq('worlds.is_public', true); }
+
+        const { data, error } = await query
+
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
+async function getWorldsByUser(id: string, isOwner: boolean) {
+    const supabase = createServerSupabaseClient();
+    try {
+        let query = supabase
+            .from('worlds')
+            .select()
+            .eq('creator_id', id)
+            .eq('is_draft', false)
+
+        if (!isOwner) { query = query.eq('is_public', true) }
+
+        const { data, error } = await query
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
+
 
 export default async function Page({ params }: { params: { id: string } }) {
     const session = await getSession()

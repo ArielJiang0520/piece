@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropDownMenu";
 import { useRouter } from "next/navigation";
-import { TagsBarDisplay } from "../tags-display-helpers";
+import { TagsBarDisplay } from "../../input/tags-helpers";
 
 interface WorldCardProps {
     world: World,

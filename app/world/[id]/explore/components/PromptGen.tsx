@@ -5,9 +5,8 @@ import TextInput from '@/components/ui/input/InputTextField';
 import { EmptyPiecePayload, World } from '@/types/types.world';
 import useStreamText from '@/utils/useStreamText';
 import { useState } from 'react';
-import { PopupDialog } from '@/components/ui/input/PopupDialog';
+import PopupDialog from '@/components/ui/input/PopupDialog';
 import CaP from '@/app/create-a-piece/components/CaP';
-import { v4 as uuidv4 } from 'uuid';
 
 interface PromptPayload {
     prompt: string,
@@ -77,7 +76,7 @@ export default function PromptGen({ world }: { world: World }) {
                         setIsOpen={setIsPublishWindowOpen}
                         dialogTitle='Publishing New Piece'
                         dialogContent=''
-                        initInputValue={<CaP piece_id={uuidv4()} world={world} initValues={{ ...EmptyPiecePayload, logline: values.prompt, content: lines.join("") }} review={false} />}
+                        initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, logline: values.prompt, content: lines.join("") }} review={false} />}
                         confirmAction={() => { }}
                         dialogType='display'
 

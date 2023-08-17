@@ -2,7 +2,7 @@ import LocalNavBar from './local-navbar';
 import CaP from '@/app/create-a-piece/components/CaP';
 import { getWorldDetailsById } from '../supabase-server';
 import { EmptyPiecePayload } from '@/types/types.world';
-import { v4 as uuidv4 } from 'uuid';
+import { getId } from '@/utils/helpers';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
 
 export default async function Page({
@@ -14,7 +14,7 @@ export default async function Page({
 }) {
     if (searchParams) {
         const world = await getWorldDetailsById(searchParams.id as string)
-        const piece_id = uuidv4();
+        const piece_id = `P-${getId()}`;
 
         if (!world)
             return <></>

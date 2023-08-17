@@ -3,12 +3,10 @@ import { Disclosure } from '@headlessui/react';
 import { PencilIcon, DotsVerticalIcon, TrashIcon } from '@/components/icon/icon';
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
-
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
-import { PopupDialog } from '@/components/ui/input/PopupDialog';
-import { SectionCard } from '../../../../components/ui/display/World/SectionCard';
-import AddCard from '@/components/ui/button/AddCard';
+import PopupDialog from '@/components/ui/input/PopupDialog';
+import { SectionCard, AddSectionCard } from '@/components/ui/display/World/SectionCard';
 
 
 interface AccordionSectionProps {
@@ -130,7 +128,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             />
                         </div>
 
-                        <Disclosure.Panel className="flex flex-row w-full space-x-5 justify-start p-10 overflow-x-auto">
+                        <Disclosure.Panel className="flex flex-row w-full space-x-5 justify-start p-10 overflow-x-auto h-full">
                             {
                                 section.sectionCards.length >= 1 ?
                                     <>
@@ -143,9 +141,9 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                                 ondel={onDelCard}
                                             />
                                         )}
-                                        <AddCard text={"Add New Card"} onclick={onAddNewSection} width='w-64' height='h-64' />
+                                        <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} width='w-80' height='h-auto' />
                                     </> :
-                                    <AddCard text={"Add New Card"} onclick={onAddNewSection} width='w-64' height='h-64' />
+                                    <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} width='w-80' height='h-64' />
                             }
                             <PopupDialog
                                 isOpen={addCardDialogIsOpen}

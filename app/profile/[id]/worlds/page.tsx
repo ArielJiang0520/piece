@@ -1,6 +1,26 @@
 // /profile/[id]/worlds
-import { getSession, getWorldsByUser } from "@/app/supabase-server";
+import { getSession } from "@/app/supabase-server";
 import MyWorlds from "./components/MyWorlds";
+import { createServerSupabaseClient } from "@/app/supabase-server";
+
+async function getWorldsByUser(id: string, isOwner: boolean) {
+    const supabase = createServerSupabaseClient();
+    try {
+        let query = supabase
+            .from('worlds')
+            .select()
+            .eq('creator_id', id)
+            .eq('is_draft', false)
+
+        if (!isOwner) { query = query.eq('is_public', true) }
+
+        const { data, error } = await query
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return null;
+    }
+}
 
 export default async function Page({
     params,

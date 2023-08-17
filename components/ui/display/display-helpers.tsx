@@ -25,7 +25,13 @@ interface FieldContentDisplayProps {
 export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize, bold, truncate = -1 }) => {
     return (
         <div>
-            <p className={`font-serif ${textSize} ${bold}`}>{truncate != -1 ? content.length > truncate ? `${content.slice(0, truncate)}...` : content : content}</p>
+            <p className={`whitespace-pre-line font-serif ${textSize} ${bold}`}>
+                {truncate != -1 ?
+                    content.length > truncate ?
+                        `${content.slice(0, truncate)}...`
+                        : content
+                    : content}
+            </p>
         </div>
     )
 }

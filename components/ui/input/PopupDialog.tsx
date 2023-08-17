@@ -1,17 +1,20 @@
 'use client'
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
-import { World, WorldDescriptionSectionCard } from '@/types/types.world';
+import { EmptyFandom, Fandom, MEDIA_TYPES, WorldDescriptionSectionCard } from '@/types/types.world';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
-import { useDraftContext } from '@/app/create-a-world/draft-provider';
-import { User } from '@supabase/supabase-js';
+import { TagsBar } from './tags-helpers';
+import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
+import TextInput from './InputTextField';
+import { FieldTitleDisplay } from '../display/display-helpers';
+import SearchBar from './SearchBar';
 
-interface DialogLineInputProps {
+interface LineInputProps {
     inputValue: string,
     setInputValue: (arg: string) => void;
 }
 
-function DialogLineInput({ inputValue, setInputValue }: DialogLineInputProps) {
+function LineInput({ inputValue, setInputValue }: LineInputProps) {
     const handleInputChange = (e: any) => {
         setInputValue(e.target.value);
     };
@@ -24,13 +27,12 @@ function DialogLineInput({ inputValue, setInputValue }: DialogLineInputProps) {
     />)
 }
 
-interface DialogCardInputProps {
+interface CardInputProps {
     inputValue: WorldDescriptionSectionCard,
     setInputValue: (arg: WorldDescriptionSectionCard) => void;
 }
 
-function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
-    const { currentDraft } = useDraftContext()
+function CardInput({ inputValue, setInputValue }: CardInputProps) {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
 
@@ -65,16 +67,57 @@ function DialogCardInput({ inputValue, setInputValue }: DialogCardInputProps) {
                 onChange={handleInputChange}
             />
             <ImagesUpload
-                dimension={{ height: "h-48", width: "w-48" }}
+                dimension={{ height: "h-72", width: "w-72" }}
                 initPaths={inputValue.cardImages}
                 setValues={(paths) => handleImageChange(paths)}
-                folder={`${currentDraft.id}/`}
+                folder={``}
                 bucket={"world"}
+                maxNum={3}
             />
         </div>
     )
 }
 
+interface FandomInputProps {
+    inputValue: Fandom,
+    setInputValue: (arg: Fandom) => void;
+}
+
+function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
+            event.preventDefault();
+        }
+    };
+    return (
+        <Formik
+            initialValues={inputValue}
+            onSubmit={() => { }}
+        >
+            {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
+                <Form className='flex flex-col space-y-3 items-start' onKeyDown={handleKeyDown}>
+                    <div id="title-group" className='w-full flex flex-col space-y-1'>
+                        <FieldTitleDisplay label={"fandom name"} />
+                        <TextInput name={"name"} placeholder={"Add fandom name..."} textSize={"text-2xl"} multiline={1} />
+                    </div>
+                    <div id="tags-group" className='w-full flex flex-col'>
+                        <FieldTitleDisplay label={"any aliases?"} />
+                        <TagsBar values={values.aliases} field={"aliases"} setFieldValue={setFieldValue} />
+                    </div>
+                    <div id="media-type-group" className='w-full flex flex-col space-y-2'>
+                        <FieldTitleDisplay label={"mediat type"} />
+                        <SearchBar
+                            candidates={MEDIA_TYPES}
+                            nameKey='name'
+                            placeholder='Select a media type'
+                            onSelect={(item: any) => setFieldValue('media_type', item.name)}
+                        />
+                    </div>
+                </Form>
+            )}
+        </Formik>
+    )
+}
 
 interface DialogDisplayProps {
     children: React.ReactNode
@@ -86,7 +129,7 @@ function DialogDisplay({ children }: DialogDisplayProps) {
 }
 
 interface DialogProps {
-    dialogType: "input" | "edit-card" | "confirm" | "display" | "publish-piece";
+    dialogType: "input" | "edit-card" | "confirm" | "display" | "publish-piece" | "add-fandom";
 
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
@@ -99,20 +142,17 @@ interface DialogProps {
 
     overwriteConfirm?: string
     hideCancel?: boolean
-
-    additionalInfo?: {
-        [key: string]: any;
-    };
+    hideActionButtons?: boolean
 }
 
-export function PopupDialog({
+export default function PopupDialog({
     dialogType,
     isOpen, setIsOpen,
     dialogTitle, dialogContent,
     initInputValue, confirmAction,
     overwriteConfirm = "Confirm",
     hideCancel = false,
-    additionalInfo = {}
+    hideActionButtons = false
 }: DialogProps) {
     const [inputValue, setInputValue] = useState(initInputValue);
 
@@ -127,7 +167,7 @@ export function PopupDialog({
 
     return (
         <Dialog
-            className="relative"
+            className="relative z-10"
             open={isOpen}
             onClose={() => setIsOpen(false)}
         >
@@ -136,19 +176,22 @@ export function PopupDialog({
             <div className="fixed inset-0 flex items-center justify-center p-4">
                 <Dialog.Panel className="w-11/12 max-h-2-3-screen max-w-lg rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500 overflow-y-auto">
                     <Dialog.Title className="text-base font-semibold text-foreground">{dialogTitle}</Dialog.Title>
-                    <Dialog.Description className="text-foreground">
+                    <Dialog.Description className="text-foreground mt-4">
                         {dialogContent}
+
                     </Dialog.Description>
 
-                    {dialogType === "input" && < DialogLineInput inputValue={inputValue} setInputValue={setInputValue} />}
+                    {dialogType === "input" && < LineInput inputValue={inputValue} setInputValue={setInputValue} />}
 
                     {dialogType === "display" && <DialogDisplay children={initInputValue} />}
 
-                    {dialogType === "edit-card" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
+                    {dialogType === "edit-card" && <CardInput inputValue={inputValue} setInputValue={setInputValue} />}
 
-                    {dialogType === "publish-piece" && <DialogCardInput inputValue={inputValue} setInputValue={setInputValue} />}
+                    {dialogType === "publish-piece" && <CardInput inputValue={inputValue} setInputValue={setInputValue} />}
 
-                    <div className="mt-8 flex flex-row justify-end items-center space-x-4">
+                    {dialogType === "add-fandom" && <FandomInput inputValue={inputValue} setInputValue={setInputValue} />}
+
+                    {hideActionButtons ? null : <div className="mt-8 flex flex-row justify-end items-center space-x-4">
                         {hideCancel ? null : <button
                             onClick={() => setIsOpen(false)}
                             className="px-1 text-base secondaryButton"
@@ -162,7 +205,7 @@ export function PopupDialog({
                         >
                             {overwriteConfirm}
                         </button>
-                    </div>
+                    </div>}
                 </Dialog.Panel>
             </div>
 

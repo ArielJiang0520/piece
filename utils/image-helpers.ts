@@ -1,5 +1,4 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-import { v4 as uuidv4 } from 'uuid';
 
 export async function downloadImage(bucket_name: string, path: string) {
     const supabase = createClientComponentClient()

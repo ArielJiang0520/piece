@@ -16,7 +16,6 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
     const tabs = [
         { name: 'Overview', link: `/world/${world_id}` },
         { name: 'Pieces', link: `/world/${world_id}/pieces` },
-        { name: 'Discussions', link: `/world/${world_id}/discussions` },
         { name: 'Explore in AI', link: `/world/${world_id}/explore` }
     ];
 

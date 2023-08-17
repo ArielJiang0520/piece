@@ -2,9 +2,9 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { World, DefaultWorld } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
-import { v4 as uuidv4 } from 'uuid';
 import { deleteWorld } from '@/utils/world-helpers';
 import { useSearchParams } from 'next/navigation';
+import { getId } from '@/utils/helpers';
 
 interface DraftContextData {
     currentDraft: World | DefaultWorld;
@@ -24,7 +24,7 @@ export function DraftProvider({
     const searchParams = useSearchParams()
     const edit_id = searchParams.get("edit_id")
 
-    const initDraft = { id: uuidv4(), world_name: 'A New Draft', default: true } as DefaultWorld;
+    const initDraft = { id: `W-${getId()}`, world_name: 'A New Draft', default: true } as DefaultWorld;
 
     const [currentDraft, setCurrentDraft] = useState<World | DefaultWorld>(initDraft);
     const [drafts, setDrafts] = useState<Array<World | DefaultWorld>>([initDraft]);

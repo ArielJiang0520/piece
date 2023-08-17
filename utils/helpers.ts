@@ -10,6 +10,11 @@ export const getURL = () => {
     return url;
 };
 
+export const getId = () => {
+    const randomNumber = Math.floor(Math.random() * 99999999) + 1
+    return String(randomNumber).padStart(8, '0')
+}
+
 export const postData = async ({
     url,
     data

@@ -49,131 +49,29 @@ export interface Database {
           }
         ]
       }
-      contributions: {
+      fandoms: {
         Row: {
-          created_at: string | null
-          id: number
-          user_id: string | null
-          world_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          user_id?: string | null
-          world_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          user_id?: string | null
-          world_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "contributions_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contributions_world_id_fkey"
-            columns: ["world_id"]
-            referencedRelation: "worlds"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      drafts: {
-        Row: {
-          allow_contribution: boolean
-          allow_suggestion: boolean
+          aliases: string[]
           created_at: string
-          creator_id: string | null
-          description: Json
           id: string
-          images: string[]
-          logline: string
-          modified_at: string | null
-          nsfw: boolean
-          origin: string | null
-          public: boolean
-          tags: string[]
-          world_name: string
+          media_type: string | null
+          name: string
         }
         Insert: {
-          allow_contribution?: boolean
-          allow_suggestion?: boolean
+          aliases?: string[]
           created_at?: string
-          creator_id?: string | null
-          description?: Json
-          id?: string
-          images?: string[]
-          logline?: string
-          modified_at?: string | null
-          nsfw?: boolean
-          origin?: string | null
-          public?: boolean
-          tags?: string[]
-          world_name: string
+          id: string
+          media_type?: string | null
+          name?: string
         }
         Update: {
-          allow_contribution?: boolean
-          allow_suggestion?: boolean
+          aliases?: string[]
           created_at?: string
-          creator_id?: string | null
-          description?: Json
           id?: string
-          images?: string[]
-          logline?: string
-          modified_at?: string | null
-          nsfw?: boolean
-          origin?: string | null
-          public?: boolean
-          tags?: string[]
-          world_name?: string
+          media_type?: string | null
+          name?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "drafts_creator_id_fkey"
-            columns: ["creator_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      folder_memberships: {
-        Row: {
-          created_at: string | null
-          folder_id: string | null
-          id: number
-          piece_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          folder_id?: string | null
-          id?: number
-          piece_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          folder_id?: string | null
-          id?: number
-          piece_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "folder_memberships_folder_id_fkey"
-            columns: ["folder_id"]
-            referencedRelation: "folders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "folder_memberships_piece_id_fkey"
-            columns: ["piece_id"]
-            referencedRelation: "pieces"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       folders: {
         Row: {

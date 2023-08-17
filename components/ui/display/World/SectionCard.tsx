@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { PlusCircleIcon, MinusIcon } from "@/components/icon/icon";
 import type { WorldDescriptionSectionCard } from "@/types/types.world";
-import { PopupDialog } from "@/components/ui/input/PopupDialog";
+import PopupDialog from "@/components/ui/input/PopupDialog";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 
 interface SectionCardProps {
@@ -21,7 +21,7 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
             <div className='text-center font-serif text-2xl font-semibold'>
                 {cardTitle}
             </div>
-            <div className='w-full border-b-2 h-px my-2'></div>
+            <div className='w-full border-b h-px my-2'></div>
             <div className='text-sm min-h-[300px] whitespace-pre-line'>
                 {cardContent}
             </div>
@@ -32,7 +32,7 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
     return (
         <div
             id='card'
-            className={`relative flex-shrink-0 p-8 flex flex-col justify-start items-center space-y-2 border-2 rounded-lg w-64 ${display ? 'cursor-pointer' : ''}`}
+            className={`relative flex-shrink-0 p-8 flex flex-col justify-start items-center space-y-2 border rounded-lg w-80 ${display ? 'cursor-pointer' : ''}`}
             onClick={display ? () => { setIsOpen(true) } : () => onclick(index)}
         >
             {display ? null : <div>
@@ -49,14 +49,14 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
                 {cardTitle}
             </div>
 
-            <div className='w-full border-b-2 h-px'></div>
+            <div className='w-full border-b h-px'></div>
 
             <div className='text-xs text-left overflow-hidden overflow-ellipsis h-44 w-full whitespace-pre-line'>
                 {cardContent}
             </div>
 
             <div id='image-display' className="flex flex-row justify-start items-start space-x-2 overflow-hidden">
-                <ImagesDisplayRow bucket="world" paths={cardImages.slice(0, 3)} dimension={{ height: "h-24", width: "w-24" }} />
+                <ImagesDisplayRow bucket="world" paths={cardImages} dimension={{ height: "h-40", width: "w-40" }} />
             </div>
             <PopupDialog
                 isOpen={isOpen}
@@ -73,10 +73,16 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
     )
 }
 
+interface AddCardProps {
+    text: string;
+    width: string;
+    height: string;
+    onclick: () => void,
+}
 
-export const NewSectionCard = ({ onclick }: { onclick: () => void }) => {
+export const AddSectionCard = ({ text, width, height, onclick }: AddCardProps) => {
     return (
-        <div className='flex-shrink-0 flex flex-col justify-center items-center space-y-2 border-2 cursor-pointer rounded-lg w-64'
+        <div className={`flex-shrink-0 flex flex-col justify-center items-center space-y-2 border cursor-pointer rounded-lg ${width} ${height}`}
             onClick={onclick}>
             <div>
                 <PlusCircleIcon
@@ -85,7 +91,7 @@ export const NewSectionCard = ({ onclick }: { onclick: () => void }) => {
                 />
             </div>
             <div className='font-mono text-sm text-foreground/20'>
-                Add New Card
+                {text}
             </div>
         </div>
     )

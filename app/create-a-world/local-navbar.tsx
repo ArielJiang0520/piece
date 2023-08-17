@@ -8,7 +8,7 @@ import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import { formatTimestamp } from '@/utils/helpers';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
-import { PopupDialog } from '@/components/ui/input/PopupDialog';
+import PopupDialog from '@/components/ui/input/PopupDialog';
 import { LoadingOverlay } from '@/components/ui/widget/loading'; //TODO: Loading Overlay has bugs
 import { TrashIcon } from '@/components/icon/icon';
 import { useSearchParams } from 'next/navigation';
@@ -54,7 +54,12 @@ export default function LocalNavBar() {
                     nameKey="world_name"
                     selected={selected}
                     setSelected={setSelected}
-                    display_func={(item: any) => item.default ? `${item.world_name}` : `${formatTimestamp(item.modified_at)} - ${item.world_name}`}
+                    display_func={(item: World | DefaultWorld) =>
+                        'default' in item ?
+                            `${item.world_name}` :
+                            `${formatTimestamp(item.draft_modified_at ?
+                                item.draft_modified_at :
+                                item.draft_created_at)} - ${item.world_name}`}
                 />
                 {'default' in selected ? null : <TrashIcon className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} />}
                 <PopupDialog

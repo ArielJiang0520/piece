@@ -1,7 +1,7 @@
 import type { Piece, World } from "@/types/types.world"
 import { FolderIcon, BookIcon, SlashIcon } from "@/components/icon/icon"
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
-import { TagsBarDisplay } from "@/components/ui/display/tags-display-helpers";
+import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
 import { PieceAuthorDisplay } from "@/components/ui/display/user-display-helpers";
 import type { User } from "@supabase/supabase-js";

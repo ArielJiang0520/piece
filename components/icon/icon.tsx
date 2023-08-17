@@ -28,6 +28,7 @@ import { ChevronUpDownIcon as UpDownIcon } from '@heroicons/react/20/solid'
 import { LuRotateCcw as ResetIcon } from 'react-icons/lu'
 import { BsStars as StarsIcon } from 'react-icons/bs'
 import { FaCrown as CrownIcon } from 'react-icons/fa'
+import { BiPlus as PlusIcon } from 'react-icons/bi'
 
 export {
     BurgerIcon,
@@ -59,5 +60,6 @@ export {
     UpDownIcon,
     ResetIcon,
     StarsIcon,
-    CrownIcon
+    CrownIcon,
+    PlusIcon
 };

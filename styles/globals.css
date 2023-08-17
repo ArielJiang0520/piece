@@ -60,7 +60,7 @@
 
 .secondaryButton {
   @apply 
-        bg-background text-foreground/80
+        bg-background text-foreground/80 whitespace-nowrap
         hover:underline;
 }
 

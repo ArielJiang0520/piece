@@ -4,10 +4,10 @@ import { EyeIcon, AccordionIcon } from '@/components/icon/icon';
 import TextInput from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
-import { TagsBar } from '@/components/ui/display/tags-display-helpers';
-import { PopupDialog } from '@/components/ui/input/PopupDialog';
+import { TagsBar } from '@/components/ui/input/tags-helpers';
+import PopupDialog from '@/components/ui/input/PopupDialog';
 import { useEffect, useRef, useState } from 'react';
-import { publishPiece } from '@/utils/world-helpers';
+import { publishPiece } from '@/utils/piece-helpers';
 import { PiecePayload, PieceSettingsAsks, cast_to_piece, World } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
 import { useRouter } from 'next/navigation';
@@ -18,12 +18,11 @@ import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import FolderSelector from './FolderSelector';
 
 interface CaPProps {
-    piece_id: string,
     world: World,
     initValues: PiecePayload;
     review?: boolean
 }
-export default function CaP({ piece_id, world, initValues, review = true }: CaPProps) {
+export default function CaP({ world, initValues, review = true }: CaPProps) {
 
     const [isPreviewPieceOpen, setIsPreviewPieceOpen] = useState(false)
 
@@ -42,7 +41,7 @@ export default function CaP({ piece_id, world, initValues, review = true }: CaPP
     const onPublishPiece = async (values: PiecePayload, setSubmitting: (isSubmitting: boolean) => void) => {
         setSubmitting(true)
         try {
-            await publishPiece(values, piece_id, world.id, user.id)
+            await publishPiece(values, world.id, user.id)
         } catch (error) {
             alert(`Error: ${(error as Error).message}`);
         } finally {
@@ -84,7 +83,7 @@ export default function CaP({ piece_id, world, initValues, review = true }: CaPP
                             <ImagesUpload
                                 dimension={{ height: "h-56", width: "w-56" }}
                                 bucket={"world"}
-                                folder={`${world.id}/${piece_id}`}
+                                folder={``}
                                 initPaths={values.images}
                                 setValues={(paths) => setFieldValue('images', paths)}
                                 maxNum={10}

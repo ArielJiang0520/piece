@@ -1,8 +1,20 @@
 import type { Piece, PiecePayload, WorldPayload } from "@/types/types.world"
-import { postData, updateData, deleteData } from "./helpers";
+import { postData, updateData, deleteData, getId } from "./helpers";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/types/supabase";
+import { cache } from 'react';
 
-export const saveNewDraft = async (values: WorldPayload, wid: string, uid: string) => {
+export const createClientSupabaseClient = cache(() =>
+    createClientComponentClient<Database>()
+);
+
+
+// create a new row in worlds table (draft)
+// return the created world's ID
+export const createNewWorld = async (values: WorldPayload, uid: string, is_draft: boolean): Promise<string> => {
+    const supabase = createClientSupabaseClient()
     const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
+    const wid = `W-${getId()}`
 
     let world_data = {
         id: wid,
@@ -17,46 +29,35 @@ export const saveNewDraft = async (values: WorldPayload, wid: string, uid: strin
         nsfw: settings.NSFW,
         allow_contribution: settings.allowContribution,
         allow_suggestion: settings.allowSuggestion,
-        is_draft: true,
+    }
+
+    let draft_data = {
+        is_draft: true, // draft
         draft_created_at: new Date().toISOString(),
         draft_modified_at: null,
     }
 
-    await postData({
-        url: '/api/create-a-world',
-        data: world_data
-    });
-}
+    const { data, error } = await supabase
+        .from('worlds')
+        .insert(is_draft ? { ...world_data, ...draft_data } : world_data)
+        .select('id')
+        .single()
 
-export const publishWorld = async (values: WorldPayload, wid: string, uid: string) => {
-    const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
-
-    let world_data = {
-        id: wid,
-        origin: origin,
-        images: images,
-        world_name: title,
-        creator_id: uid,
-        logline: logline,
-        tags: tags,
-        description: description,
-        is_public: settings.public,
-        nsfw: settings.NSFW,
-        allow_contribution: settings.allowContribution,
-        allow_suggestion: settings.allowSuggestion,
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
     }
 
-    await postData({
-        url: '/api/create-a-world',
-        data: world_data
-    });
+    return data.id
+
 }
 
-export const overwriteWorld = async (values: WorldPayload, wid: string) => {
+// Edit an existing row in the table. 
+export const editWorld = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
+    const supabase = createClientComponentClient()
     const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
 
     let world_data = {
-        id: wid,
         origin: origin,
         images: images,
         world_name: title,
@@ -67,106 +68,68 @@ export const overwriteWorld = async (values: WorldPayload, wid: string) => {
         nsfw: settings.NSFW,
         allow_contribution: settings.allowContribution,
         allow_suggestion: settings.allowSuggestion,
+
+    }
+
+    let modified_at_data = is_draft ? {
+        draft_modified_at: new Date().toISOString(),
+    } : {
         modified_at: new Date().toISOString(),
     }
 
-    await updateData({
-        url: '/api/create-a-world',
-        data: world_data,
-        id: wid,
-    });
-}
+    const { data, error, status } = await supabase
+        .from('worlds')
+        .update({ ...world_data, ...modified_at_data })
+        .eq('id', wid)
+        .select('id')
+        .single()
 
-
-export const overwriteDraft = async (values: WorldPayload, wid: string) => {
-    const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
-
-    let world_data = {
-        origin: origin,
-        images: images,
-        world_name: title,
-        logline: logline,
-        tags: tags,
-        description: description,
-        is_public: settings.public,
-        nsfw: settings.NSFW,
-        allow_contribution: settings.allowContribution,
-        allow_suggestion: settings.allowSuggestion,
-        draft_modified_at: new Date().toISOString(),
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
     }
 
-    await updateData({
-        url: '/api/create-a-world',
-        data: world_data,
-        id: wid,
-    });
+    return data.id
 }
 
-export const publishDraft = async (wid: string) => {
+// Only toggle is_draft to false
+export const publishDraft = async (wid: string): Promise<string> => {
+    const supabase = createClientComponentClient()
     let world_data = {
         is_draft: false,
         created_at: new Date().toISOString(),
-        modified_at: new Date().toISOString(),
-    }
-
-    await updateData({
-        url: '/api/create-a-world',
-        data: world_data,
-        id: wid,
-    });
-}
-
-export const deleteWorld = async (wid: string) => {
-    await deleteData({
-        url: 'api/create-a-world',
-        id: wid
-    })
-}
-
-export const editWorld = async (values: WorldPayload, wid: string) => {
-    const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
-
-    let world_data = {
-        origin: origin,
-        images: images,
-        world_name: title,
-        logline: logline,
-        tags: tags,
-        description: description,
-        is_public: settings.public,
-        nsfw: settings.NSFW,
-        allow_contribution: settings.allowContribution,
-        allow_suggestion: settings.allowSuggestion,
-        modified_at: new Date().toISOString(),
-    }
-
-    await updateData({
-        url: '/api/create-a-world',
-        data: world_data,
-        id: wid,
-    });
-}
-
-export const publishPiece = async (values: PiecePayload, pid: string, wid: string, uid: string) => {
-    const { title, logline, tags, content, images, settings } = values as PiecePayload;
-
-    let piece_data = {
-        id: pid,
-        world_id: wid,
-        creator_id: uid,
-        title: title,
-        logline: logline,
-        tags: tags,
-        content: content,
-        images: images,
-        nsfw: settings.NSFW,
-        allow_comments: settings.allowComments,
-        created_at: new Date().toISOString(),
         modified_at: null,
-    } as Piece
+    }
 
-    await postData({
-        url: '/api/create-a-piece',
-        data: piece_data
-    });
+    const { data, error, status } = await supabase
+        .from('worlds')
+        .update(world_data)
+        .eq('id', wid)
+        .select('id')
+        .single()
+
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
+    }
+
+    return data.id
 }
+
+// Delete an existing row in the table
+export const deleteWorld = async (wid: string): Promise<number> => {
+    const supabase = createClientComponentClient()
+    const { error, status } = await supabase
+        .from('worlds')
+        .delete()
+        .eq('id', wid)
+
+    if (error) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
+    }
+    return status
+}
+
+
+

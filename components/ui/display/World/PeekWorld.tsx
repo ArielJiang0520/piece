@@ -3,7 +3,7 @@ import { World } from "@/types/types.world"
 import { useState } from "react"
 import { EyeIcon } from "@/components/icon/icon"
 import { FieldTitleDisplay } from "../display-helpers"
-import { PopupDialog } from "@/components/ui/input/PopupDialog"
+import PopupDialog from "@/components/ui/input/PopupDialog"
 import WorldDisplay from "./WorldDisplay"
 
 interface PeekWorldProps {
@@ -24,7 +24,7 @@ export default function PeekWorld({ world, iconOnly = false }: PeekWorldProps) {
         <PopupDialog
             isOpen={isReviewWorldOpen}
             setIsOpen={setIsReviewWorldOpen}
-            dialogTitle='You are creating a piece for...'
+            dialogTitle=''
             dialogContent=''
             initInputValue={<WorldDisplay world={world} preview={true} />}
             confirmAction={() => setIsReviewWorldOpen(false)}

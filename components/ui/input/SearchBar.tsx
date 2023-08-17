@@ -15,11 +15,13 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
     const [query, setQuery] = useState('')
 
     useEffect(() => {
-        onSelect(selectedItem)
+        if (selectedItem) {
+            onSelect(selectedItem);
+        }
     }, [selectedItem])
 
     // filter either by first letters or whole words
-    const filteredItem =
+    const filteredItems =
         query === ''
             ? candidates
             : candidates.filter((item) => {
@@ -60,22 +62,29 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
                         leaveFrom="transform scale-100 opacity-100"
                         leaveTo="transform scale-95 opacity-0"
                     >
-                        <Combobox.Options className={`absolute bg-background border shadow-md overflow-auto rounded-2xl py-2 focus:outline-none w-full`}>
-                            {filteredItem.map((item) => (
-                                <Combobox.Option
-                                    key={item.id}
-                                    value={item}
-                                    className="ui-active:bg-foreground/20 ui-active:text-foreground ui-not-active:bg-background ui-not-active:text-foreground"
-                                >
-                                    <div className='px-3 py-2 flex flex-row justify-between items-center'>
-                                        <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-1'>
-                                            {display_func ? display_func(item) : item[nameKey]}
+                        {filteredItems.length === 0 && query !== '' ? (
+                            <div className={`absolute bg-background border shadow-md overflow-auto rounded-2xl py-2 focus:outline-none w-full`}>
+                                <div className='px-3 py-2 flex flex-row justify-between items-center'>
+                                    Nothing found.
+                                </div>
+                            </div>
+                        ) :
+                            <Combobox.Options className={`absolute bg-background border shadow-md overflow-auto rounded-2xl py-2 focus:outline-none w-full z-20`}>
+                                {filteredItems.map((item) => (
+                                    <Combobox.Option
+                                        key={item.id}
+                                        value={item}
+                                        className="ui-active:bg-foreground/20 ui-active:text-foreground ui-not-active:bg-background ui-not-active:text-foreground"
+                                    >
+                                        <div className='px-3 py-2 flex flex-row justify-between items-center'>
+                                            <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-1'>
+                                                {display_func ? display_func(item) : item[nameKey]}
+                                            </div>
+                                            <CheckIcon className={`${item.id === selectedItem?.id ? "block" : "hidden"} w-3 h-3 mx-2 flex-shrink-0`} />
                                         </div>
-                                        <CheckIcon className={`${item.id === selectedItem?.id ? "block" : "hidden"} w-3 h-3 mx-2 flex-shrink-0`} />
-                                    </div>
-                                </Combobox.Option>
-                            ))}
-                        </Combobox.Options>
+                                    </Combobox.Option>
+                                ))}
+                            </Combobox.Options>}
                     </Transition>
                 </div>
                 <ResetIcon className='text-foreground/50 cursor-pointer' onClick={() => setSelectedItem(null)} />

@@ -4,7 +4,7 @@ export type World = Database['public']['Tables']['worlds']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Piece = Database['public']['Tables']['pieces']['Row']
 export type Folder = Database['public']['Tables']['folders']['Row']
-
+export type Fandom = Database['public']['Tables']['fandoms']['Row']
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,
@@ -163,4 +163,15 @@ export function cast_to_piece(payload: PiecePayload) {
         nsfw: payload.settings.NSFW,
         allow_comments: payload.settings.allowComments,
     } as Piece
+}
+
+const media_types_string = ['video games', 'books', 'movies/TV shows', 'japanese anime', 'cartoon/comics']
+export const MEDIA_TYPES = media_types_string.map((type, index) => { return { id: index, name: type } })
+
+export const EmptyFandom: Fandom = {
+    name: '',
+    aliases: [],
+    media_type: null,
+    created_at: '',
+    id: ''
 }
