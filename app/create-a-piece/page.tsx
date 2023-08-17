@@ -14,7 +14,6 @@ export default async function Page({
 }) {
     if (searchParams) {
         const world = await getWorldDetailsById(searchParams.id as string)
-        const piece_id = `P-${getId()}`;
 
         if (!world)
             return <></>
@@ -24,7 +23,7 @@ export default async function Page({
                 <LocalNavBar worldName={world?.world_name} />
                 <div className="w-full md:w-2/3 flex flex-col gap-15 px-5 py-5 lg:py-5 text-foreground font-mono">
                     <PeekWorld world={world} />
-                    <CaP piece_id={piece_id} world={world} initValues={EmptyPiecePayload} />
+                    <CaP world={world} initValues={EmptyPiecePayload} />
                 </div>
             </>
         )
