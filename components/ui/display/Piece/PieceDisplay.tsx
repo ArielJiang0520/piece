@@ -1,4 +1,4 @@
-import type { Piece, World } from "@/types/types.world"
+import type { Piece, Profile, World } from "@/types/types.world"
 import { FolderIcon, BookIcon, SlashIcon } from "@/components/icon/icon"
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
@@ -32,10 +32,10 @@ const PieceMetadataDisplay = ({ piece, world }: { piece: Piece, world: World }) 
 interface PieceDisplayProps {
     piece: Piece;
     world: World;
-    user: User;
+    author: Profile;
     preview?: boolean
 }
-export default function PieceDisplay({ piece, world, user, preview = false }: PieceDisplayProps) {
+export default function PieceDisplay({ piece, world, author, preview = false }: PieceDisplayProps) {
     return (
         <div className='flex flex-col space-y-3 items-start'>
             <div id="title-group" className='w-full flex flex-row flex-wrap items-center justify-start'>
@@ -48,7 +48,7 @@ export default function PieceDisplay({ piece, world, user, preview = false }: Pi
             </div>
 
             <div id="author-group" className="w-full flex flex-col" >
-                <PieceAuthorDisplay author={user} piece={piece} />
+                <PieceAuthorDisplay author={author} piece={piece} />
             </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">

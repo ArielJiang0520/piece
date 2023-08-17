@@ -1,3 +1,4 @@
+import { User } from "@supabase/supabase-js"
 import { Database } from "./supabase"
 
 export type World = Database['public']['Tables']['worlds']['Row']
@@ -174,4 +175,15 @@ export const EmptyFandom: Fandom = {
     media_type: null,
     created_at: '',
     id: ''
+}
+
+export function user_to_profile(user: User) {
+    return {
+        avatar_url: user.user_metadata.avatar_url,
+        full_name: user.user_metadata.name,
+        id: user.id,
+        updated_at: null,
+        username: user.user_metadata.name,
+        website: null,
+    } as Profile
 }

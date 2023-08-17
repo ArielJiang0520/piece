@@ -8,7 +8,7 @@ import { TagsBar } from '@/components/ui/input/tags-helpers';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { useEffect, useRef, useState } from 'react';
 import { publishPiece } from '@/utils/piece-helpers';
-import { PiecePayload, PieceSettingsAsks, cast_to_piece, World } from '@/types/types.world';
+import { PiecePayload, PieceSettingsAsks, cast_to_piece, World, user_to_profile } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
 import { useRouter } from 'next/navigation';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
@@ -102,7 +102,7 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                                 value={values.tags}
                                 setFieldValue={setFieldValue}
                             />
-                            <TagsBar tags={values.tags} setFieldValue={setFieldValue} />
+                            <TagsBar values={values.tags} field={"tags"} setFieldValue={setFieldValue} />
                         </div>
 
                         <div id="content-group" className='w-full flex flex-col'>
@@ -140,7 +140,7 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                             setIsOpen={setIsPreviewPieceOpen}
                             dialogTitle='Are you sure you want to publish this piece?'
                             dialogContent=''
-                            initInputValue={<PieceDisplay piece={cast_to_piece(values)} world={world} user={user} preview={true} />}
+                            initInputValue={<PieceDisplay piece={cast_to_piece(values)} world={world} author={user_to_profile(user)} preview={true} />}
                             confirmAction={() => onPublishPiece(values, setSubmitting)}
                             dialogType='display'
                         />
