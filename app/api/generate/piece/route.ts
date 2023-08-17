@@ -1,8 +1,8 @@
 import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge"
 import type { NextRequest } from 'next/server'
 import { worldPrompt } from "@/utils/prompt"
-import { getWorldDetailsById } from "@/app/supabase-server"
-import { World } from "@/types/types.world"
+
+export const runtime = 'edge'
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -48,9 +48,5 @@ export async function POST(req: NextRequest): Promise<Response> {
             status: 405
         });
     }
-}
-
-export const config = {
-    runtime: "edge",
 }
 
