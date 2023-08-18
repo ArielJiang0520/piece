@@ -89,32 +89,39 @@ function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
             event.preventDefault();
         }
     };
+
     return (
         <Formik
             initialValues={inputValue}
-            onSubmit={() => { }}
+            onSubmit={(values) => { setInputValue(values) }}
         >
-            {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
-                <Form className='flex flex-col space-y-3 items-start' onKeyDown={handleKeyDown}>
-                    <div id="title-group" className='w-full flex flex-col space-y-1'>
-                        <FieldTitleDisplay label={"fandom name"} />
-                        <TextInput name={"name"} placeholder={"Add fandom name..."} textSize={"text-2xl"} multiline={1} />
-                    </div>
-                    <div id="tags-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"any aliases?"} />
-                        <TagsBar values={values.aliases} field={"aliases"} setFieldValue={setFieldValue} />
-                    </div>
-                    <div id="media-type-group" className='w-full flex flex-col space-y-2'>
-                        <FieldTitleDisplay label={"mediat type"} />
-                        <SearchBar
-                            candidates={MEDIA_TYPES}
-                            nameKey='name'
-                            placeholder='Select a media type'
-                            onSelect={(item: any) => setFieldValue('media_type', item.name)}
-                        />
-                    </div>
-                </Form>
-            )}
+            {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting, handleChange }) => {
+                useEffect(() => {
+                    setInputValue(values);
+                }, [values]);
+
+                return (
+                    <Form className='flex flex-col space-y-3 items-start' onKeyDown={handleKeyDown}>
+                        <div id="title-group" className='w-full flex flex-col space-y-1'>
+                            <FieldTitleDisplay label={"fandom name"} />
+                            <TextInput name={"name"} placeholder={"Add fandom name"} textSize={"text-2xl"} multiline={1} />
+                        </div>
+                        <div id="tags-group" className='w-full flex flex-col'>
+                            <FieldTitleDisplay label={"any aliases?"} />
+                            <TagsBar values={values.aliases} field={"aliases"} setFieldValue={setFieldValue} />
+                        </div>
+                        <div id="media-type-group" className='w-full flex flex-col space-y-2'>
+                            <FieldTitleDisplay label={"media type"} />
+                            <SearchBar
+                                candidates={MEDIA_TYPES}
+                                nameKey='name'
+                                placeholder='Select a media type'
+                                onSelect={(item: any) => setFieldValue('media_type', item.name)}
+                            />
+                        </div>
+                    </Form>
+                )
+            }}
         </Formik>
     )
 }

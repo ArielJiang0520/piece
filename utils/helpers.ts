@@ -1,3 +1,11 @@
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/types/supabase";
+import { cache } from 'react';
+
+export const createClientSupabaseClient = cache(() =>
+    createClientComponentClient<Database>()
+);
+
 export const getURL = () => {
     let url =
         process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.

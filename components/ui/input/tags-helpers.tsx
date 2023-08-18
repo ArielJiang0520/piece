@@ -33,7 +33,7 @@ export function TagsBar({ values, field, setFieldValue }: TagsBarProps) {
             <input
                 className='text-lg w-full singleLineInput'
                 type="text"
-                placeholder={`Add ${field}...`}
+                placeholder={`Add ${field}`}
                 value={inputValue}
                 onChange={onInputChange}
                 onKeyDown={onKeyDown}

@@ -9,9 +9,12 @@ interface SearchBarProps {
     placeholder: string,
     onSelect: (arg: any) => void;
     display_func?: ((arg?: any) => any) | null;
+    defaultSelectedId?: string | null
 }
-export default function SearchBar({ candidates, nameKey, placeholder, onSelect, display_func = null }: SearchBarProps) {
+export default function SearchBar({ candidates, nameKey, placeholder, onSelect, display_func = null, defaultSelectedId = null }: SearchBarProps) {
     const [selectedItem, setSelectedItem] = useState<null | any>(null)
+    // if (defaultSelectedId)
+    //     setSelectedItem(candidates.find(obj => obj.id === defaultSelectedId))
     const [query, setQuery] = useState('')
 
     useEffect(() => {
@@ -25,23 +28,47 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
         query === ''
             ? candidates
             : candidates.filter((item) => {
-                const lowerName = item[nameKey].toLowerCase();
                 const lowerQuery = query.toLowerCase();
+
+                // Check main nameKey
+                const lowerName = item[nameKey].toLowerCase();
                 if (lowerName.startsWith(lowerQuery)) {
                     return true;
                 }
-
                 const nameSegments = lowerName.split(' ');
-                return nameSegments.some((segment: string) => segment.startsWith(lowerQuery));
+                if (nameSegments.some((segment: string) => segment.startsWith(lowerQuery))) {
+                    return true;
+                }
+
+                // Check aliases
+                if (item.aliases && item.aliases.length) {
+                    for (const alias of item.aliases) {
+                        const lowerAlias = alias.toLowerCase();
+                        if (lowerAlias.startsWith(lowerQuery)) {
+                            return true;
+                        }
+                        const aliasSegments = lowerAlias.split(' ');
+                        if (aliasSegments.some((segment: string) => segment.startsWith(lowerQuery))) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
             });
 
     return (
-        <Combobox value={selectedItem} onChange={setSelectedItem} nullable>
-            <div className='flex flex-row justify-start items-center space-x-3 w-full'>
-
+        <Combobox value={selectedItem} onChange={setSelectedItem} nullable >
+            <div className='flex flex-row justify-start items-center space-x-3 w-full text-foreground'>
                 <div className='relative text-sm flex-grow'>
                     <div className='relative cursor-default overflow-hidden'>
-                        <Combobox.Input className={`border rounded-2xl py-2 px-3 focus:outline-none w-full`}
+                        <Combobox.Input
+                            onKeyDown={(event) => {
+                                if (event.key === ' ') {
+                                    event.stopPropagation();
+                                }
+                            }}
+                            className={`border rounded-2xl py-2 px-3 focus:outline-none w-full bg-background`}
                             onChange={(event) => setQuery(event.target.value)}
                             displayValue={(item: any) => item ? item[nameKey] : null}
                             placeholder={placeholder}
@@ -74,7 +101,7 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
                                     <Combobox.Option
                                         key={item.id}
                                         value={item}
-                                        className="ui-active:bg-foreground/20 ui-active:text-foreground ui-not-active:bg-background ui-not-active:text-foreground"
+                                        className={`${item.id === selectedItem?.id ? "bg-foreground/20 text-foreground" : "bg-background text-foreground"}`}
                                     >
                                         <div className='px-3 py-2 flex flex-row justify-between items-center'>
                                             <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-1'>

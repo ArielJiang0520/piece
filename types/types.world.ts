@@ -55,7 +55,20 @@ export const EmptyWorldPayload: WorldPayload = {
     title: "",
     logline: "",
     tags: [],
-    description: [],
+    description: [
+        {
+            sectionTitle: "Characters",
+            sectionCards: []
+        },
+        {
+            sectionTitle: "Back story",
+            sectionCards: []
+        },
+        {
+            sectionTitle: "Additional Settings",
+            sectionCards: []
+        }
+    ],
     settings: {
         public: true,
         NSFW: false,

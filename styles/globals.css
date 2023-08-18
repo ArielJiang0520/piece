@@ -14,7 +14,7 @@
     --brand: 330 81% 60%;
   }
 
-  @media (prefers-color-scheme: light) {
+  @media (prefers-color-scheme: dark) {
     :root {
       --background: 200 50% 3%;
       --btn-background: 200 10% 9%;

@@ -1,13 +1,6 @@
 import type { Piece, PiecePayload, WorldPayload } from "@/types/types.world"
 import { postData, updateData, deleteData, getId } from "./helpers";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/types/supabase";
-import { cache } from 'react';
-
-export const createClientSupabaseClient = cache(() =>
-    createClientComponentClient<Database>()
-);
-
+import { createClientSupabaseClient } from './helpers'
 
 // create a new row in worlds table (draft)
 // return the created world's ID
@@ -54,7 +47,7 @@ export const createNewWorld = async (values: WorldPayload, uid: string, is_draft
 
 // Edit an existing row in the table. 
 export const editWorld = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
-    const supabase = createClientComponentClient()
+    const supabase = createClientSupabaseClient()
     const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
 
     let world_data = {
@@ -94,7 +87,7 @@ export const editWorld = async (values: WorldPayload, wid: string, is_draft: boo
 
 // Only toggle is_draft to false
 export const publishDraft = async (wid: string): Promise<string> => {
-    const supabase = createClientComponentClient()
+    const supabase = createClientSupabaseClient()
     let world_data = {
         is_draft: false,
         created_at: new Date().toISOString(),
@@ -118,7 +111,7 @@ export const publishDraft = async (wid: string): Promise<string> => {
 
 // Delete an existing row in the table
 export const deleteWorld = async (wid: string): Promise<number> => {
-    const supabase = createClientComponentClient()
+    const supabase = createClientSupabaseClient()
     const { error, status } = await supabase
         .from('worlds')
         .delete()

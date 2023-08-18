@@ -37,6 +37,8 @@ export const metadata = {
   description: meta.description,
 };
 
+export const dynamic = 'force-dynamic'
+
 export default function RootLayout({
   children,
 }: {
