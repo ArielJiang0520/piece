@@ -29,6 +29,10 @@ import { LuRotateCcw as ResetIcon } from 'react-icons/lu'
 import { BsStars as StarsIcon } from 'react-icons/bs'
 import { FaCrown as CrownIcon } from 'react-icons/fa'
 import { BiPlus as PlusIcon } from 'react-icons/bi'
+import { FaHandshake as HandShakeIcon } from 'react-icons/fa'
+import { FaHandshakeSlash as HandShakeSlashIcon } from 'react-icons/fa'
+import { LuLightbulb as LightBulbIcon } from 'react-icons/lu'
+import { LuLightbulbOff as LightBulbOffIcon } from 'react-icons/lu'
 
 export {
     BurgerIcon,
@@ -61,5 +65,9 @@ export {
     ResetIcon,
     StarsIcon,
     CrownIcon,
-    PlusIcon
+    PlusIcon,
+    HandShakeIcon,
+    HandShakeSlashIcon,
+    LightBulbIcon,
+    LightBulbOffIcon
 };

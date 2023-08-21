@@ -42,7 +42,7 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
     }
 
     const PageTitleNavBarComponent = () => {
-        return <NavBarHeader title={"world"} subtitle={world?.world_name} icon={<PeekWorld world={world} iconOnly={true} />} />
+        return <NavBarHeader title={"world"} subtitle={world?.name} icon={<PeekWorld world={world} iconOnly={true} />} />
     }
 
     const LocalNavBarComponent = () => {

@@ -1,13 +1,15 @@
 'use client'
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
-import { EmptyFandom, Fandom, MEDIA_TYPES, WorldDescriptionSectionCard } from '@/types/types.world';
+import { EmptyFandom, Fandom, FandomMediaType, WorldDescriptionSectionCard } from '@/types/types.world';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import { TagsBar } from './tags-helpers';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import TextInput from './InputTextField';
 import { FieldTitleDisplay } from '../display/display-helpers';
 import SearchBar from './SearchBar';
+import { fetch_all_fandom_media_types } from '@/utils/data-helpers';
+import { useData } from '@/app/data-providers';
 
 interface LineInputProps {
     inputValue: string,
@@ -66,6 +68,7 @@ function CardInput({ inputValue, setInputValue }: CardInputProps) {
                 value={inputValue.cardContent}
                 onChange={handleInputChange}
             />
+            <FieldTitleDisplay label={"related images"} />
             <ImagesUpload
                 dimension={{ height: "h-72", width: "w-72" }}
                 initPaths={inputValue.cardImages}
@@ -78,15 +81,21 @@ function CardInput({ inputValue, setInputValue }: CardInputProps) {
     )
 }
 
+
 interface FandomInputProps {
     inputValue: Fandom,
     setInputValue: (arg: Fandom) => void;
 }
 
 function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
+    const { fandomMediaTypes } = useData();
+
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
             event.preventDefault();
+        }
+        if (event.key === ' ') {
+            event.stopPropagation();
         }
     };
 
@@ -108,15 +117,19 @@ function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
                         </div>
                         <div id="tags-group" className='w-full flex flex-col'>
                             <FieldTitleDisplay label={"any aliases?"} />
-                            <TagsBar values={values.aliases} field={"aliases"} setFieldValue={setFieldValue} />
+                            <TagsBar
+                                values={values.aliases}
+                                placeholder='Add your alias and hit enter'
+                                handleValuesChange={(input: string[]) => setFieldValue('aliases', input)}
+                            />
                         </div>
                         <div id="media-type-group" className='w-full flex flex-col space-y-2'>
                             <FieldTitleDisplay label={"media type"} />
                             <SearchBar
-                                candidates={MEDIA_TYPES}
+                                candidates={fandomMediaTypes}
                                 nameKey='name'
                                 placeholder='Select a media type'
-                                onSelect={(item: any) => setFieldValue('media_type', item.name)}
+                                onSelect={(item: any) => setFieldValue('media_type', item.id)}
                             />
                         </div>
                     </Form>
@@ -125,6 +138,7 @@ function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
         </Formik>
     )
 }
+
 
 interface DialogDisplayProps {
     children: React.ReactNode

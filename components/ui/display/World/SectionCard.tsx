@@ -17,7 +17,8 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
     const [isOpen, setIsOpen] = useState(false)
 
     function DisplayCard() {
-        return <div className='flex flex-col w-full space-y-2'>
+        return <div className='flex flex-col w-full space-y-4'>
+            <ImagesDisplayRow bucket="world" paths={cardImages} dimension={{ height: "h-64", width: "w-64" }} />
             <div className='text-center font-serif text-2xl font-semibold'>
                 {cardTitle}
             </div>
@@ -25,14 +26,13 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
             <div className='text-sm min-h-[300px] whitespace-pre-line'>
                 {cardContent}
             </div>
-            <ImagesDisplayRow bucket="world" paths={cardImages.slice(0, 3)} dimension={{ height: "h-48", width: "w-48" }} />
         </div>
     }
 
     return (
         <div
             id='card'
-            className={`relative flex-shrink-0 p-8 flex flex-col justify-start items-center space-y-2 border rounded-lg w-80 ${display ? 'cursor-pointer' : ''}`}
+            className={`relative p-8 flex flex-col justify-start items-center space-y-2 border rounded-lg h-full ${display ? 'cursor-pointer' : ''}`}
             onClick={display ? () => { setIsOpen(true) } : () => onclick(index)}
         >
             {display ? null : <div>
@@ -45,19 +45,22 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
                 />
             </div>}
 
-            <div className='text-center leading-snug text-2xl overflow-hidden overflow-ellipsis whitespace-nowrap w-full h-12'>
+
+            <div id='image-display' className="flex flex-row justify-start items-start space-x-2 overflow-hidden">
+                <ImagesDisplayRow bucket="world" paths={cardImages} dimension={{ height: "h-64", width: "w-64" }} />
+            </div>
+
+            <div className='text-center leading-snug text-2xl overflow-hidden overflow-ellipsis whitespace-nowrap w-full'>
                 {cardTitle}
             </div>
 
             <div className='w-full border-b h-px'></div>
 
-            <div className='text-xs text-left overflow-hidden overflow-ellipsis h-44 w-full whitespace-pre-line'>
+            <div className='text-sm text-left overflow-hidden overflow-ellipsis w-full whitespace-pre-line max-h-[200px]'>
                 {cardContent}
             </div>
 
-            <div id='image-display' className="flex flex-row justify-start items-start space-x-2 overflow-hidden">
-                <ImagesDisplayRow bucket="world" paths={cardImages} dimension={{ height: "h-40", width: "w-40" }} />
-            </div>
+
             <PopupDialog
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -75,14 +78,12 @@ export const SectionCard = ({ index, card, onclick, ondel, display = false }: Se
 
 interface AddCardProps {
     text: string;
-    width: string;
-    height: string;
     onclick: () => void,
 }
 
-export const AddSectionCard = ({ text, width, height, onclick }: AddCardProps) => {
+export const AddSectionCard = ({ text, onclick }: AddCardProps) => {
     return (
-        <div className={`flex-shrink-0 flex flex-col justify-center items-center space-y-2 border cursor-pointer rounded-lg ${width} ${height}`}
+        <div className={`p-8 flex flex-col justify-center items-center space-y-2 border cursor-pointer rounded-lg h-full min-h-[300px]`}
             onClick={onclick}>
             <div>
                 <PlusCircleIcon

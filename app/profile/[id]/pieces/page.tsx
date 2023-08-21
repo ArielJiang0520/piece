@@ -7,7 +7,7 @@ async function getPiecesByUser(id: string, isOwner: boolean) {
     try {
         let query = supabase
             .from('pieces')
-            .select('*, worlds(world_name)')
+            .select('*, worlds(name)')
             .eq('creator_id', id)
 
         if (!isOwner) { query = query.eq('worlds.is_public', true); }

@@ -10,12 +10,15 @@ interface SearchBarProps {
     onSelect: (arg: any) => void;
     display_func?: ((arg?: any) => any) | null;
     defaultSelectedId?: string | null
+    allowCreatingNew?: boolean
 }
-export default function SearchBar({ candidates, nameKey, placeholder, onSelect, display_func = null, defaultSelectedId = null }: SearchBarProps) {
-    const [selectedItem, setSelectedItem] = useState<null | any>(null)
-    // if (defaultSelectedId)
-    //     setSelectedItem(candidates.find(obj => obj.id === defaultSelectedId))
+export default function SearchBar({ candidates, nameKey, placeholder, onSelect, display_func = null, defaultSelectedId = null, allowCreatingNew = false }: SearchBarProps) {
+    const [selectedItem, setSelectedItem] = useState<null | any>(candidates.find(item => item.id === defaultSelectedId) || null)
     const [query, setQuery] = useState('')
+
+    useEffect(() => {
+        setSelectedItem(candidates.find(item => item.id === defaultSelectedId) || null);
+    }, [defaultSelectedId, candidates]);
 
     useEffect(() => {
         if (selectedItem) {
@@ -53,14 +56,13 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
                         }
                     }
                 }
-
                 return false;
             });
 
     return (
-        <Combobox value={selectedItem} onChange={setSelectedItem} nullable >
+        <Combobox onChange={setSelectedItem} name="origin" value={selectedItem} >
             <div className='flex flex-row justify-start items-center space-x-3 w-full text-foreground'>
-                <div className='relative text-sm flex-grow'>
+                <div className='relative text-sm flex-grow z-10'>
                     <div className='relative cursor-default overflow-hidden'>
                         <Combobox.Input
                             onKeyDown={(event) => {
@@ -89,29 +91,37 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
                         leaveFrom="transform scale-100 opacity-100"
                         leaveTo="transform scale-95 opacity-0"
                     >
-                        {filteredItems.length === 0 && query !== '' ? (
+                        {filteredItems.length === 0 && query !== '' && !allowCreatingNew ? (
                             <div className={`absolute bg-background border shadow-md overflow-auto rounded-2xl py-2 focus:outline-none w-full`}>
                                 <div className='px-3 py-2 flex flex-row justify-between items-center'>
                                     Nothing found.
                                 </div>
                             </div>
                         ) :
-                            <Combobox.Options className={`absolute bg-background border shadow-md overflow-auto rounded-2xl py-2 focus:outline-none w-full z-20`}>
-                                {filteredItems.map((item) => (
+                            <Combobox.Options className={`absolute bg-background border shadow-md overflow-auto rounded-2xl py-2 focus:outline-none w-full overflow-y-auto h-40`}>
+                                {query.length > 0 && allowCreatingNew && (
+                                    <Combobox.Option value={{ id: null, name: query }}>
+                                        <div className='px-3 py-2 flex flex-row justify-between items-center font-semibold cursor-pointer'>
+                                            Create "{query}"
+                                        </div>
+                                    </Combobox.Option>
+                                )}
+                                {filteredItems.map((item, _) => (
                                     <Combobox.Option
                                         key={item.id}
                                         value={item}
                                         className={`${item.id === selectedItem?.id ? "bg-foreground/20 text-foreground" : "bg-background text-foreground"}`}
                                     >
                                         <div className='px-3 py-2 flex flex-row justify-between items-center'>
-                                            <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-1'>
+                                            <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-1 capitalize'>
                                                 {display_func ? display_func(item) : item[nameKey]}
                                             </div>
                                             <CheckIcon className={`${item.id === selectedItem?.id ? "block" : "hidden"} w-3 h-3 mx-2 flex-shrink-0`} />
                                         </div>
                                     </Combobox.Option>
                                 ))}
-                            </Combobox.Options>}
+                            </Combobox.Options>
+                        }
                     </Transition>
                 </div>
                 <ResetIcon className='text-foreground/50 cursor-pointer' onClick={() => setSelectedItem(null)} />

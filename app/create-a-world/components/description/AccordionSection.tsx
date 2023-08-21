@@ -89,7 +89,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                         <div id="accordion-panel" className="flex flex-row justify-between items-center w-full ">
                             <div className='flex flex-row items-center space-x-2'>
                                 <div
-                                    className="font-bold text-xl md:text-3xl overflow-hidden max-w-xs md:max-w-lg whitespace-nowrap overflow-ellipsis"
+                                    className="font-bold text-2xl md:text-3xl overflow-hidden max-w-xs md:max-w-lg whitespace-nowrap overflow-ellipsis"
                                 >
                                     {section.sectionTitle}
                                 </div>
@@ -128,11 +128,12 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             />
                         </div>
 
-                        <Disclosure.Panel className="flex flex-row w-full space-x-5 justify-start p-10 overflow-x-auto h-full">
+                        <Disclosure.Panel className="py-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row w-full gap-4">
                             {
                                 section.sectionCards.length >= 1 ?
                                     <>
                                         {section.sectionCards.map((card, index) =>
+
                                             <SectionCard
                                                 key={index}
                                                 index={index}
@@ -140,44 +141,50 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                                 onclick={onEditCard}
                                                 ondel={onDelCard}
                                             />
+
                                         )}
-                                        <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} width='w-80' height='h-auto' />
+
+                                        <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} />
+
                                     </> :
-                                    <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} width='w-80' height='h-64' />
+
+                                    <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} />
+
                             }
-                            <PopupDialog
-                                isOpen={addCardDialogIsOpen}
-                                setIsOpen={setAddCardDialogIsOpen}
-                                dialogTitle={"Add New Card"}
-                                dialogContent={""}
-                                initInputValue={{ cardTitle: "", cardContent: "", cardImages: [] } as WorldDescriptionSectionCard}
-                                confirmAction={saveNewCard}
-                                dialogType='edit-card'
-                            />
-                            {editingCard && (
-                                <PopupDialog
-                                    isOpen={!!editingCard}
-                                    setIsOpen={() => setEditingCard(null)}
-                                    dialogTitle={`Edit Card (@${section.sectionTitle})`}
-                                    dialogContent={""}
-                                    initInputValue={editingCard.card}
-                                    confirmAction={saveEditedCard}
-                                    dialogType='edit-card'
-                                />
-                            )}
-                            {delCardIndex != -1 && <PopupDialog
-                                isOpen={delCardIndex !== -1}
-                                setIsOpen={() => setDelCardIndex(-1)}
-                                dialogTitle={`Delete Card`}
-                                dialogContent={`Are you sure you want to delete "${section.sectionCards[delCardIndex].cardTitle}"?`}
-                                initInputValue={delCardIndex}
-                                confirmAction={deleteCard}
-                                dialogType='confirm'
-                            />}
+
                         </Disclosure.Panel>
                     </>
                 )}
             </Disclosure>
+            <PopupDialog
+                isOpen={addCardDialogIsOpen}
+                setIsOpen={setAddCardDialogIsOpen}
+                dialogTitle={"Add New Card"}
+                dialogContent={""}
+                initInputValue={{ cardTitle: "", cardContent: "", cardImages: [] } as WorldDescriptionSectionCard}
+                confirmAction={saveNewCard}
+                dialogType='edit-card'
+            />
+            {editingCard && (
+                <PopupDialog
+                    isOpen={!!editingCard}
+                    setIsOpen={() => setEditingCard(null)}
+                    dialogTitle={`Edit Card (@${section.sectionTitle})`}
+                    dialogContent={""}
+                    initInputValue={editingCard.card}
+                    confirmAction={saveEditedCard}
+                    dialogType='edit-card'
+                />
+            )}
+            {delCardIndex != -1 && <PopupDialog
+                isOpen={delCardIndex !== -1}
+                setIsOpen={() => setDelCardIndex(-1)}
+                dialogTitle={`Delete Card`}
+                dialogContent={`Are you sure you want to delete "${section.sectionCards[delCardIndex].cardTitle}"?`}
+                initInputValue={delCardIndex}
+                confirmAction={deleteCard}
+                dialogType='confirm'
+            />}
         </li>
     );
 }

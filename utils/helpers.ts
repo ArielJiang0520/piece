@@ -23,6 +23,27 @@ export const getId = () => {
     return String(randomNumber).padStart(8, '0')
 }
 
+export function saveToLocalStorage(key: string, value: any) {
+    try {
+        const serializedValue = JSON.stringify(value);
+        localStorage.setItem(key, serializedValue);
+    } catch (error) {
+        console.error("Error saving to localStorage:", error);
+    }
+}
+
+export function getFromLocalStorage<T>(key: string): any | null {
+    try {
+        const serializedValue = localStorage.getItem(key);
+        if (serializedValue === null)
+            return null;
+        return JSON.parse(serializedValue);
+    } catch (error) {
+        console.error("Error reading from localStorage:", error);
+        return null;
+    }
+}
+
 export const postData = async ({
     url,
     data
@@ -106,6 +127,15 @@ export const deleteData = async ({
 
 
 
+export function titleCase(str: string, delimiter: string = '/'): string {
+    return str.split(delimiter)
+        .map(subStr =>
+            subStr.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ')
+        )
+        .join(delimiter);
+}
 
 
 export function renameKeyInObjectsArray(
@@ -149,4 +179,32 @@ export function formatTimestamp(timestamp: string | null, dateOnly: boolean = fa
 // await sleep(10000); // Sleep for 10 seconds
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function groupByKey(items: any[], groupByKey: string): { [key: string]: any[] } {
+    return items.reduce((acc, item) => {
+        const key = item[groupByKey];
+
+        // Skip items where key is null
+        if (key === null || key === undefined) {
+            return acc;
+        }
+
+        // Ensure that the key exists in the accumulator
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+
+        // Push the current item to the group
+        acc[key].push(item);
+
+        return acc;
+    }, {});
+}
+
+export function createLookupTable(items: any[]): { [id: string]: any } {
+    return items.reduce((acc, item) => {
+        acc[item.id] = item;
+        return acc;
+    }, {} as { [id: string]: any });
 }

@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import { Alike, Montserrat, Domine } from 'next/font/google'
 import SupabaseProvider from './supabase-provider';
+import DataProvider from './data-providers';
 import NextTopLoader from 'nextjs-toploader';
 
 const alike = Alike({
@@ -50,10 +51,12 @@ export default function RootLayout({
 
       <body>
         <SupabaseProvider>
-          <main className="min-h-screen bg-background flex flex-col items-center">
-            <NextTopLoader />
-            {children}
-          </main>
+          <DataProvider>
+            <main className="min-h-screen bg-background flex flex-col items-center">
+              <NextTopLoader />
+              {children}
+            </main>
+          </DataProvider>
         </SupabaseProvider>
       </body>
     </html>

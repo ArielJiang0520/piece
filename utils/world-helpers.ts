@@ -1,22 +1,25 @@
-import type { Piece, PiecePayload, WorldPayload } from "@/types/types.world"
-import { postData, updateData, deleteData, getId } from "./helpers";
+import type { WorldPayload } from "@/types/types.world"
+import { getId } from "./helpers";
 import { createClientSupabaseClient } from './helpers'
 
 // create a new row in worlds table (draft)
 // return the created world's ID
-export const createNewWorld = async (values: WorldPayload, uid: string, is_draft: boolean): Promise<string> => {
+export const insert_world = async (values: WorldPayload, uid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
+    const { origin, images, name, characters, tags, relationships, relationship_types, logline, description, settings } = values as WorldPayload;
     const wid = `W-${getId()}`
 
     let world_data = {
         id: wid,
         origin: origin,
         images: images,
-        world_name: title,
+        name: name,
+        characters: characters,
+        tags: tags,
+        relationship_types: relationship_types,
+        relationships: relationships,
         creator_id: uid,
         logline: logline,
-        tags: tags,
         description: description,
         is_public: settings.public,
         nsfw: settings.NSFW,
@@ -30,6 +33,7 @@ export const createNewWorld = async (values: WorldPayload, uid: string, is_draft
         draft_modified_at: null,
     }
 
+    // upload world
     const { data, error } = await supabase
         .from('worlds')
         .insert(is_draft ? { ...world_data, ...draft_data } : world_data)
@@ -41,21 +45,75 @@ export const createNewWorld = async (values: WorldPayload, uid: string, is_draft
         throw Error(error.message)
     }
 
-    return data.id
 
+    // update tags
+    if (!is_draft) {
+        await upsert_tags(tags);
+
+        if (origin) {
+            await upsert_characters(characters, origin);
+            await upsert_relationships(relationships, origin);
+        }
+    }
+
+    return data.id
 }
 
-// Edit an existing row in the table. 
-export const editWorld = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
+
+const upsert_tags = async (tags: string[]) => {
     const supabase = createClientSupabaseClient()
-    const { origin, images, title, logline, tags, description, settings } = values as WorldPayload;
+    const { status, error } = await supabase
+        .rpc('upsert_tags', { tags_list: tags })
+
+    if (error) {
+        console.error(JSON.stringify(error))
+    }
+
+    return status
+}
+
+
+const upsert_characters = async (characters: string[], fandom_id: string) => {
+    const supabase = createClientSupabaseClient()
+    const { status, error } = await supabase
+        .rpc('upsert_characters', { character_names: characters, p_fandom_id: fandom_id })
+
+    if (error) {
+        console.error(JSON.stringify(error))
+    }
+
+    return status
+}
+
+
+const upsert_relationships = async (relationships: string[], fandom_id: string) => {
+    const supabase = createClientSupabaseClient()
+    const { status, error } = await supabase
+        .rpc('upsert_relationships', { relationship_names: relationships, p_fandom_id: fandom_id })
+
+    if (error) {
+        console.error(JSON.stringify(error))
+    }
+
+    return status
+}
+
+
+
+// Edit an existing row in the table. 
+export const update_world = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
+    const supabase = createClientSupabaseClient()
+    const { origin, images, name, characters, tags, relationships, relationship_types, logline, description, settings } = values as WorldPayload;
 
     let world_data = {
         origin: origin,
         images: images,
-        world_name: title,
+        name: name,
         logline: logline,
         tags: tags,
+        relationship_types: relationship_types,
+        relationships: relationships,
+        characters: characters,
         description: description,
         is_public: settings.public,
         nsfw: settings.NSFW,
@@ -86,7 +144,7 @@ export const editWorld = async (values: WorldPayload, wid: string, is_draft: boo
 }
 
 // Only toggle is_draft to false
-export const publishDraft = async (wid: string): Promise<string> => {
+export const publish_draft = async (wid: string): Promise<string> => {
     const supabase = createClientSupabaseClient()
     let world_data = {
         is_draft: false,
@@ -110,7 +168,7 @@ export const publishDraft = async (wid: string): Promise<string> => {
 }
 
 // Delete an existing row in the table
-export const deleteWorld = async (wid: string): Promise<number> => {
+export const delete_world = async (wid: string): Promise<number> => {
     const supabase = createClientSupabaseClient()
     const { error, status } = await supabase
         .from('worlds')

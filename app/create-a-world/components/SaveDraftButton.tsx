@@ -1,7 +1,7 @@
 
 
 import { DefaultWorld, World, WorldPayload } from "@/types/types.world"
-import { createNewWorld, editWorld } from "@/utils/world-helpers"
+import { insert_world, update_world } from "@/utils/world-helpers"
 import { useRouter } from "next/navigation"
 
 interface SaveDraftButtonProps {
@@ -17,7 +17,7 @@ export default function SaveDraftButton({ uid, setSubmitting, values, currentDra
     const handleSaveNewDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
         setSubmitting(true)
         try {
-            await createNewWorld(values, uid, true)
+            await insert_world(values, uid, true)
         } catch (error) {
             alert(`Error: ${(error as Error).message}`);
         } finally {
@@ -30,7 +30,7 @@ export default function SaveDraftButton({ uid, setSubmitting, values, currentDra
     const handleOverwriteDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
         setSubmitting(true)
         try {
-            await editWorld(values, currentDraft.id, true)
+            await update_world(values, currentDraft.id, true)
         } catch (error) {
             alert(`Error: ${JSON.stringify(error)}`);
         } finally {

@@ -52,7 +52,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             <div className="flex flex-row w-full justify-between items-center">
 
                 <div className="flex flex-row text-left w-56 md:w-80 ">
-                    <FieldContentDisplay textSize="text-xl" content={world.world_name} bold={"font-bold"} />
+                    <FieldContentDisplay textSize="text-xl" content={world.name} bold={"font-bold"} />
                 </div>
 
                 <div className="flex flex-row justify-end items-center text-right space-x-1">

@@ -46,8 +46,8 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
             id: 3,
             name: "Alphabetical",
             myFunc: (a: World, b: World) => {
-                const dateA = a.world_name;
-                const dateB = b.world_name;
+                const dateA = a.name;
+                const dateB = b.name;
                 // For ascending order
                 return dateA.localeCompare(dateB);
             }
@@ -73,7 +73,7 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
             <div className="flex-grow w-full md:mr-4 order-2 md:order-1 z-30">
                 <SearchBar
                     candidates={worlds}
-                    nameKey="world_name"
+                    nameKey="name"
                     placeholder={"Find your world..."}
                     onSelect={setCurrentQuery}
                 />

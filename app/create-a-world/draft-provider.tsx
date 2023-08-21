@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { World, DefaultWorld } from '@/types/types.world';
 import { useSupabase } from '@/app/supabase-provider';
-import { deleteWorld } from '@/utils/world-helpers';
+import { delete_world } from '@/utils/world-helpers';
 import { useSearchParams } from 'next/navigation';
 import { getId } from '@/utils/helpers';
 
@@ -24,7 +24,7 @@ export function DraftProvider({
     const searchParams = useSearchParams()
     const edit_id = searchParams.get("edit_id")
 
-    const initDraft = { id: `W-${getId()}`, world_name: 'A New Draft', default: true } as DefaultWorld;
+    const initDraft = { id: `W-${getId()}`, name: 'A New Draft', default: true } as DefaultWorld;
 
     const [currentDraft, setCurrentDraft] = useState<World | DefaultWorld>(initDraft);
     const [drafts, setDrafts] = useState<Array<World | DefaultWorld>>([initDraft]);
@@ -38,7 +38,7 @@ export function DraftProvider({
         if (selectedOption.default) {
             return
         } else {
-            deleteWorld(selectedOption.id)
+            delete_world(selectedOption.id)
         }
     }
 

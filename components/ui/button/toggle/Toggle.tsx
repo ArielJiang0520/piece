@@ -10,9 +10,8 @@ export const ToggleButton = ({ handleToggle, isEnabled }: ToggleProps) => {
         <Switch
             checked={isEnabled}
             onChange={handleToggle}
-            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors 
-            focus:outline-none focus:ring-foreground
-            ${isEnabled ? 'bg-foreground' : 'bg-foreground/20'}`}
+            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-foreground
+                ${isEnabled ? 'bg-foreground' : 'bg-foreground/20'}`}
         >
             {/* <span className="sr-only">Enable notifications</span> */}
             <span id="dot"

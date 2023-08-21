@@ -20,7 +20,7 @@ export default async function Page({
 
         return (
             <>
-                <LocalNavBar worldName={world?.world_name} />
+                <LocalNavBar worldName={world?.name} />
                 <div className="w-full md:w-2/3 flex flex-col gap-15 px-5 py-5 lg:py-5 text-foreground font-mono">
                     <PeekWorld world={world} />
                     <CaP world={world} initValues={EmptyPiecePayload} />

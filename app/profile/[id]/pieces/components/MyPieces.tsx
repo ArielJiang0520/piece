@@ -19,7 +19,7 @@ function concatLists(worlds: World[], pieces: JoinedWorldPiece[]): ResultWorld[]
     for (const world of worlds) {
         resultMap.set(world.id, {
             id: world.id,
-            name: world.world_name,
+            name: world.name,
             count: 0
         });
     }
@@ -44,7 +44,7 @@ function concatLists(worlds: World[], pieces: JoinedWorldPiece[]): ResultWorld[]
             } else {
                 resultMap.set(piece.world_id, {
                     id: piece.world_id,
-                    name: piece.worlds.world_name,
+                    name: piece.worlds.name,
                     count: 0
                 });
             }

@@ -69,7 +69,7 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
 
     return (
         <div className='flex flex-col justify-start'>
-            <ul className='my-5 font-serif space-y-2'>
+            <ul className='font-serif space-y-3'>
                 {sections.map((section, index) => (
                     <AccordionSection key={index} index={index} section={section}
                         delSection={delSection}
@@ -82,7 +82,7 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
                 <input
                     type="text"
                     value={newSectionName}
-                    className="text-xl md:text-3xl singleLineInput"
+                    className="text-2xl md:text-3xl singleLineInput"
                     placeholder="Add a new section..."
                     onChange={handleSectionNameChange}
                     onKeyDown={addSection}

@@ -9,6 +9,34 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      characters: {
+        Row: {
+          created_at: string
+          fandom_id: string
+          hits: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          fandom_id: string
+          hits?: number
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          fandom_id?: string
+          hits?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "characters_fandom_id_fkey"
+            columns: ["fandom_id"]
+            referencedRelation: "fandoms"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       comments: {
         Row: {
           content: string
@@ -56,6 +84,7 @@ export interface Database {
           id: string
           media_type: string | null
           name: string
+          num_of_worlds: number
         }
         Insert: {
           aliases?: string[]
@@ -63,12 +92,39 @@ export interface Database {
           id: string
           media_type?: string | null
           name?: string
+          num_of_worlds?: number
         }
         Update: {
           aliases?: string[]
           created_at?: string
           id?: string
           media_type?: string | null
+          name?: string
+          num_of_worlds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fandoms_media_type_fkey"
+            columns: ["media_type"]
+            referencedRelation: "fandoms_media_types"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fandoms_media_types: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
           name?: string
         }
         Relationships: []
@@ -245,6 +301,34 @@ export interface Database {
           }
         ]
       }
+      relationships: {
+        Row: {
+          created_at: string
+          fandom_id: string
+          hits: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          fandom_id: string
+          hits?: number
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          fandom_id?: string
+          hits?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relationships_fandom_id_fkey"
+            columns: ["fandom_id"]
+            referencedRelation: "fandoms"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       stars: {
         Row: {
           created_at: string | null
@@ -313,10 +397,57 @@ export interface Database {
           }
         ]
       }
+      tags: {
+        Row: {
+          category: string | null
+          created_at: string
+          hits: number
+          name: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          hits?: number
+          name?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          hits?: number
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tags_category_fkey"
+            columns: ["category"]
+            referencedRelation: "tags_categories"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      tags_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       worlds: {
         Row: {
           allow_contribution: boolean
           allow_suggestion: boolean
+          characters: string[]
           created_at: string
           creator_id: string | null
           description: Json
@@ -328,14 +459,17 @@ export interface Database {
           is_public: boolean
           logline: string
           modified_at: string | null
+          name: string
           nsfw: boolean
           origin: string | null
+          relationship_types: string[]
+          relationships: string[]
           tags: string[]
-          world_name: string
         }
         Insert: {
           allow_contribution?: boolean
           allow_suggestion?: boolean
+          characters: string[]
           created_at?: string
           creator_id?: string | null
           description?: Json
@@ -347,14 +481,17 @@ export interface Database {
           is_public?: boolean
           logline?: string
           modified_at?: string | null
+          name: string
           nsfw?: boolean
           origin?: string | null
-          tags?: string[]
-          world_name: string
+          relationship_types?: string[]
+          relationships: string[]
+          tags: string[]
         }
         Update: {
           allow_contribution?: boolean
           allow_suggestion?: boolean
+          characters?: string[]
           created_at?: string
           creator_id?: string | null
           description?: Json
@@ -366,16 +503,24 @@ export interface Database {
           is_public?: boolean
           logline?: string
           modified_at?: string | null
+          name?: string
           nsfw?: boolean
           origin?: string | null
+          relationship_types?: string[]
+          relationships?: string[]
           tags?: string[]
-          world_name?: string
         }
         Relationships: [
           {
             foreignKeyName: "worlds_creator_id_fkey"
             columns: ["creator_id"]
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "worlds_origin_fkey"
+            columns: ["origin"]
+            referencedRelation: "fandoms"
             referencedColumns: ["id"]
           }
         ]
@@ -385,7 +530,26 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_characters: {
+        Args: {
+          character_names: string[]
+          p_fandom_id: string
+        }
+        Returns: undefined
+      }
+      upsert_relationships: {
+        Args: {
+          relationship_names: string[]
+          p_fandom_id: string
+        }
+        Returns: undefined
+      }
+      upsert_tags: {
+        Args: {
+          tags_list: string[]
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

@@ -4,23 +4,29 @@ import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayloa
 // Need to handle input error
 // Need to add "?" icon for instruction
 import { useEffect, useRef, useState } from 'react';
-import { useDraftContext } from '../draft-provider';
+
 import { useSupabase } from '@/app/supabase-provider';
 import Link from 'next/link';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
 // UI
 import TextInput from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
-import { TagsBar } from '@/components/ui/input/tags-helpers';
 import DescriptionSections from './description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
-import ChooseAnOrigin from './ChooseAnOrigin';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import { Tab } from '@headlessui/react'
+
+// local import
+import { useDraftContext } from '../draft-provider';
 import PublishButton from './PublishButton';
 import PreviewButton from './PreviewButton';
 import SaveDraftButton from './SaveDraftButton';
+import ChooseAnOrigin from './ChooseAnOrigin';
+import ChooseTags from './ChooseTags';
+import ChooseCharacters from './ChooseCharacters';
+import ChooseRelationshipTypes from './ChooseRelationshipTypes';
+import ChooseRelationships from './ChooseRelationships';
 
 export default function CaW() {
     const { currentDraft, fetchDrafts } = useDraftContext();
@@ -68,48 +74,28 @@ export default function CaW() {
                 <Form className='' onKeyDown={handleKeyDown}>
                     <Tab.Group>
                         <Tab.List className={`flex flex-row space-x-8 overflow-hidden overflow-x-auto`}>
-                            <StyledTab text={`origin & genre`} />
-                            <StyledTab text={`basics`} />
-                            <StyledTab text={`images`} />
-                            <StyledTab text={`description`} />
-                            <StyledTab text={`settings`} />
+                            <StyledTab text={`setup`} />
+                            <StyledTab text={`introduction`} />
+                            <StyledTab text={`tags`} />
+                            <StyledTab text={`details`} />
                         </Tab.List>
+
                         <Tab.Panels >
                             <TabPanel>
-                                <div id="origin-group" className='w-full flex flex-col space-y-2'>
+                                <div id="origin-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
                                     <FieldTitleDisplay label={'origin'} />
                                     <ChooseAnOrigin />
                                 </div>
 
-                                <div id="genre-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"genre"} />
-                                </div>
-
-                            </TabPanel>
-                            <TabPanel>
-                                <div id="title-group" className='w-full flex flex-col space-y-2'>
-                                    <FieldTitleDisplay label={"title"} />
-                                    <TextInput name={"title"} placeholder={"Add your title"} textSize={"text-lg"} multiline={1} />
-                                </div>
-
-                                <div id="logline-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"logline"} />
-                                    <TextInput name={"logline"} placeholder={"A few lines about your world"} textSize={"text-lg"} multiline={4} />
-                                </div>
-
-                                <div id="tags-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"Characters"} />
-                                    <TagsBar values={values.tags} field={"tags"} setFieldValue={setFieldValue} />
-                                </div>
-
-                                <div id="tags-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"tags"} />
-                                    <TagsBar values={values.tags} field={"tags"} setFieldValue={setFieldValue} />
+                                <div id="settings-group" className='w-full flex flex-col'>
+                                    <FieldTitleDisplay label={"Privacy Settings"} />
+                                    <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
                                 </div>
                             </TabPanel>
+
                             <TabPanel>
                                 <div id="images-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"Upload your cover images"} />
+                                    <FieldTitleDisplay label={"cover images"} />
                                     <ImagesUpload
                                         dimension={{ height: "h-80", width: "w-80" }}
                                         bucket={"world"}
@@ -119,17 +105,57 @@ export default function CaW() {
                                         maxNum={7}
                                     />
                                 </div>
+
+                                <div id="title-group" className='w-full flex flex-col'>
+                                    <FieldTitleDisplay label={"title"} />
+                                    <TextInput name={"name"} placeholder={"Add the title of your world"} textSize={"text-xl"} multiline={1} />
+                                </div>
+
+                                <div id="logline-group" className='w-full flex flex-col'>
+                                    <FieldTitleDisplay label={"summary"} />
+                                    <TextInput name={"logline"}
+                                        placeholder={"Add a few lines about your world"}
+                                        textSize={"text-md"} multiline={4}
+                                    />
+                                </div>
+
+
                             </TabPanel>
+
+                            <TabPanel>
+
+                                <div id="characters-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
+                                    <FieldTitleDisplay label={"Characters"} />
+                                    <ChooseCharacters />
+                                </div>
+
+                                <div id="relationship-types-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
+                                    <FieldTitleDisplay label={'relationship types'} />
+                                    <ChooseRelationshipTypes />
+                                </div>
+
+                                {values.relationship_types[0] !== 'No Relationship' &&
+                                    <div id="relationships-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
+                                        <FieldTitleDisplay label={'relationships'} />
+                                        <ChooseRelationships />
+                                    </div>
+                                }
+
+                                <div id="genre-group" className='w-full max-w-2xl flex-col space-y-2'>
+                                    <FieldTitleDisplay label={"tags"} />
+                                    <ChooseTags />
+                                </div>
+
+
+
+                            </TabPanel>
+
                             <TabPanel>
                                 <div id="description-group" className='w-full flex flex-col'>
                                     <DescriptionSections formSections={values.description} setFieldValue={setFieldValue} />
                                 </div>
                             </TabPanel>
-                            <TabPanel>
-                                <div id="settings-group" className='w-full flex flex-col'>
-                                    <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
-                                </div>
-                            </TabPanel>
+
                         </Tab.Panels>
                     </Tab.Group>
 

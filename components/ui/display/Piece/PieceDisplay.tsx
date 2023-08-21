@@ -13,14 +13,14 @@ const PieceMetadataDisplay = ({ piece, world }: { piece: Piece, world: World }) 
             <Link href={`/world/${world.id}`}>
                 <div className="cursor-pointer flex flex-row items-center justify-start space-x-1 w-64">
                     <BookIcon className="flex-shrink-0" />
-                    <div className="overflow-hidden whitespace-nowrap overflow-ellipsis">{world.world_name}</div>
+                    <div className="overflow-hidden whitespace-nowrap overflow-ellipsis">{world.name}</div>
                 </div>
             </Link>
             {/* <SlashIcon className="flex-shrink-0" /> */}
             {/* <Link href={`/world/${world.id}`}>
                 <div className="cursor-pointer flex flex-row items-center justify-start space-x-1 w-28">
                     <FolderIcon className="flex-shrink-0" />
-                    <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{world.world_name}</span>
+                    <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{world.name}</span>
                 </div>
             </Link> */}
         </div>

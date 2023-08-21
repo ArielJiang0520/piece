@@ -19,7 +19,7 @@ export default function LocalNavBar() {
 
     const PageTitleNavBarComponent = () => {
         const { currentDraft } = useDraftContext();
-        return <NavBarHeader title="Create-a-World" subtitle={edit_id ? `Editing ${currentDraft.world_name}` : (currentDraft ? `Editing draft: ${currentDraft.world_name}` : `Editing a new world`)} />
+        return <NavBarHeader title="Create-a-World" subtitle={edit_id ? `Editing ${currentDraft.name}` : (currentDraft ? `Editing draft: ${currentDraft.name}` : `Editing a new world`)} />
     }
 
     const LocalNavBarComponent = edit_id ? null : () => {
@@ -51,22 +51,22 @@ export default function LocalNavBar() {
                 <DropDownSelector
                     data={drafts}
                     width='w-56'
-                    nameKey="world_name"
+                    nameKey="name"
                     selected={selected}
                     setSelected={setSelected}
                     display_func={(item: World | DefaultWorld) =>
                         'default' in item ?
-                            `${item.world_name}` :
+                            `${item.name}` :
                             `${formatTimestamp(item.draft_modified_at ?
                                 item.draft_modified_at :
-                                item.draft_created_at)} - ${item.world_name}`}
+                                item.draft_created_at)} - ${item.name}`}
                 />
                 {'default' in selected ? null : <TrashIcon className='cursor-pointer flex-shrink-0 flex-grow-0' onClick={onDraftDelete} />}
                 <PopupDialog
                     isOpen={isDeleteDialogOpen}
                     setIsOpen={setDeleteDialogOpen}
                     dialogTitle={`Delete Draft`}
-                    dialogContent={`Are you sure you want to delete draft "${selected.world_name}"?`}
+                    dialogContent={`Are you sure you want to delete draft "${selected.name}"?`}
                     initInputValue={selected}
                     confirmAction={confirmAction}
                     dialogType='confirm'

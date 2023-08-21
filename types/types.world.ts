@@ -6,6 +6,11 @@ export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Piece = Database['public']['Tables']['pieces']['Row']
 export type Folder = Database['public']['Tables']['folders']['Row']
 export type Fandom = Database['public']['Tables']['fandoms']['Row']
+export type FandomMediaType = Database['public']['Tables']['fandoms_media_types']['Row']
+export type Tag = Database['public']['Tables']['tags']['Row']
+export type TagCategory = Database['public']['Tables']['tags_categories']['Row']
+export type Character = Database['public']['Tables']['characters']['Row']
+export type Relationship = Database['public']['Tables']['relationships']['Row']
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,
@@ -35,33 +40,42 @@ export const WorldSettingsAsks = {
 
 export interface DefaultWorld {
     id: string,
-    world_name: string,
+    name: string,
     default: boolean
 }
 
+export type RelationshipType = 'No Relationship' | 'M/M' | 'M/F' | 'F/F' | 'Others'
+
 export type WorldPayload = {
-    origin: string | null,
-    images: string[],
-    title: string,
-    logline: string,
+    origin: string | null, // fandom.id
     tags: string[],
+    characters: string[],
+    relationship_types: RelationshipType[],
+    relationships: string[],
+    images: string[],
+    name: string,
+    logline: string,
     description: WorldDescriptionSection[],
     settings: WorldSettings
 }
 
 export const EmptyWorldPayload: WorldPayload = {
     origin: null,
-    images: [],
-    title: "",
-    logline: "",
     tags: [],
+    characters: [],
+    relationship_types: ['No Relationship'],
+    relationships: [],
+    images: [],
+    name: "",
+    logline: "",
     description: [
+
         {
-            sectionTitle: "Characters",
+            sectionTitle: "Premise",
             sectionCards: []
         },
         {
-            sectionTitle: "Back story",
+            sectionTitle: "Characters",
             sectionCards: []
         },
         {
@@ -80,10 +94,13 @@ export const EmptyWorldPayload: WorldPayload = {
 export function cast_to_worldpayload(world: World) {
     return {
         origin: world.origin,
-        images: world.images,
-        title: world.world_name,
-        logline: world.logline,
         tags: world.tags,
+        characters: world.characters,
+        relationship_types: world.relationship_types,
+        relationships: world.relationships,
+        images: world.images,
+        name: world.name,
+        logline: world.logline,
         description: world.description as WorldDescriptionSection[],
         settings: {
             public: world.is_public,
@@ -109,8 +126,11 @@ export function cast_to_world(payload: WorldPayload, uid: string) {
         nsfw: payload.settings.NSFW,
         origin: payload.origin,
         is_public: payload.settings.public,
+        relationship_types: payload.relationship_types,
         tags: payload.tags,
-        world_name: payload.title,
+        relationships: payload.relationships,
+        characters: payload.characters,
+        name: payload.name,
         is_draft: true,
         draft_created_at: created_at,
         draft_modified_at: created_at,
@@ -133,7 +153,7 @@ export type PieceSettings = {
 }
 
 export interface JoinedWorldPiece extends Piece {
-    worlds: { world_name: string } | null
+    worlds: { name: string } | null
 }
 
 export interface JoinedAuthorPiece extends Piece {
@@ -179,13 +199,11 @@ export function cast_to_piece(payload: PiecePayload) {
     } as Piece
 }
 
-const media_types_string = ['video games', 'books', 'movies/TV shows', 'japanese anime', 'cartoon/comics']
-export const MEDIA_TYPES = media_types_string.map((type, index) => { return { id: index, name: type } })
-
 export const EmptyFandom: Fandom = {
     name: '',
     aliases: [],
-    media_type: null,
+    media_type: '',
+    num_of_worlds: 0,
     created_at: '',
     id: ''
 }

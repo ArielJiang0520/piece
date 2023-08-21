@@ -7,11 +7,10 @@ import { SectionCard } from '@/components/ui/display/World/SectionCard';
 
 interface AccordionDisplayProps {
     sections: WorldDescriptionSection[];
+    preview: boolean
 }
 
-export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) => {
-
-
+export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections, preview }) => {
     return (
         <div className='flex flex-col justify-start'>
             <ul className='my-5 font-serif space-y-2'>
@@ -33,7 +32,7 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) 
                                             </Disclosure.Button>
                                         </div>
                                     </div>
-                                    <Disclosure.Panel className="flex flex-row w-full space-x-5 justify-start p-10 overflow-x-auto">
+                                    <Disclosure.Panel className={`py-4 grid grid-cols-1 ${!preview ? "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" : ""} grid-flow-row w-full gap-4`}>
                                         {section.sectionCards.map((card, index) =>
                                             <SectionCard
                                                 key={index}
@@ -51,7 +50,6 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections }) 
                     </li>
                 ))}
             </ul>
-
         </div>
     );
 };
