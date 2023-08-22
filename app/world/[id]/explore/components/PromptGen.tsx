@@ -1,7 +1,7 @@
 'use client'
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
-import TextInput from '@/components/ui/input/InputTextField';
+import { TextInput } from '@/components/ui/input/InputTextField';
 import { EmptyPiecePayload, World } from '@/types/types.world';
 import useStreamText from '@/utils/useStreamText';
 import { useState } from 'react';

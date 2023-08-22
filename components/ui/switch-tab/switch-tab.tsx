@@ -65,7 +65,7 @@ export function CategoriesSwitchTab({ categories, items, selected, handleSelect 
                                         <div
                                             key={idx}
                                             className={`capitalize cursor-pointer  border py-1 px-2 text-xs mr-2 mb-2 rounded-xl ${selected.includes(item.name) ? "bg-brand border-brand text-white" : "bg-foreground/5"}`}
-                                            onClick={() => { selected.includes(item.name) ? handleSelect(selected.filter(item_name => item_name != item.name)) : handleSelect([...selected, item.name]) }}
+                                            onClick={() => { handleSelect(item) }}
                                         >
                                             {item.name}
                                         </div>

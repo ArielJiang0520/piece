@@ -27,16 +27,16 @@ export function LogoutButton() {
 
 interface IconButtonProps {
     icon: JSX.Element,
-    title: string,
+    title?: string | null,
 }
-export function IconButtonMid({ icon, title }: IconButtonProps) {
-    return <div className="cursor-pointer bg-background h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2">
+export function IconButtonMid({ icon, title = null }: IconButtonProps) {
+    return <div className="cursor-pointer bg-background h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2 min-w-[40px]">
         <div>
             {icon}
         </div>
-        <div className="text-base font-mono text-foreground">
+        {title && <div className="text-base font-mono text-foreground">
             {title}
-        </div>
+        </div>}
     </div>
 }
 

@@ -365,22 +365,22 @@ export interface Database {
       }
       subscriptions: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
-          user_id: string | null
-          world_id: string | null
+          user_id: string
+          world_id: string
         }
         Insert: {
-          created_at?: string | null
-          id: string
-          user_id?: string | null
-          world_id?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+          world_id: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
-          user_id?: string | null
-          world_id?: string | null
+          user_id?: string
+          world_id?: string
         }
         Relationships: [
           {

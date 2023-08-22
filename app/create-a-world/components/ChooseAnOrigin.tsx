@@ -1,19 +1,17 @@
 'use client'
 import { useFormikContext } from 'formik';
 import { RadioGroup } from '@headlessui/react';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckIcon } from '@/components/icon/icon'
 import { Fandom, EmptyFandom, WorldPayload } from '@/types/types.world';
 import SearchBar from '@/components/ui/input/SearchBar';
 import { IconButtonSmall } from '@/components/ui/button/button-helpers';
 import { PlusIcon } from '@/components/icon/icon';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import { useData } from '@/app/data-providers';
-import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
+import { fetch_all_fandoms, insert_fandom } from '@/utils/data-helpers';
 
 const CreateFandomButton = ({ }: {}) => {
     const [isCreateFandomOpen, setIsCreateFandomOpen] = useState(false)
-    const { addFandom } = useData();
 
     return <>
         <div onClick={() => setIsCreateFandomOpen(true)}>
@@ -26,7 +24,7 @@ const CreateFandomButton = ({ }: {}) => {
             dialogTitle='Create a new fandom'
             dialogContent=''
             initInputValue={EmptyFandom}
-            confirmAction={async (values: Fandom) => { await addFandom(values) }}
+            confirmAction={async (values: Fandom) => { await insert_fandom(values) }}
         />
     </>
 }
@@ -38,15 +36,21 @@ type Option = {
 
 export default function ChooseAnOrigin({ }: {}) {
     const { setFieldValue, values } = useFormikContext<WorldPayload>();
-    const { fandoms } = useData();
+    const [fandoms, setFandoms] = useState<Fandom[]>([])
     const [selectedOptionId, setSelectedOptionId] = useState<number>(values.origin === null ? 1 : 2);
     const [selectedFandom, setSelectedFandom] = useState<string | null>(values.origin)
+
+    useEffect(() => {
+        const fetchFandoms = async () => setFandoms(await fetch_all_fandoms());
+        fetchFandoms()
+    }, [])
 
     useEffect(() => {
         if (selectedOptionId === 1) {
             setFieldValue('origin', null);
         }
     }, [selectedOptionId]);
+
 
     useEffect(() => {
         setFieldValue('origin', selectedFandom)

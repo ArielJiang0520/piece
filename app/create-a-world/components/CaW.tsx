@@ -9,7 +9,7 @@ import { useSupabase } from '@/app/supabase-provider';
 import Link from 'next/link';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
 // UI
-import TextInput from '@/components/ui/input/InputTextField';
+import { TextInput } from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import DescriptionSections from './description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';

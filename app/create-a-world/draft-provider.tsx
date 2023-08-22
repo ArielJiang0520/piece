@@ -35,10 +35,9 @@ export function DraftProvider({
     }
 
     const handleDraftDelete = async (selectedOption: any) => {
-        if (selectedOption.default) {
-            return
-        } else {
-            delete_world(selectedOption.id)
+        if (!('default' in selectedOption)) {
+            const status = await delete_world(selectedOption.id)
+            await fetchDrafts();
         }
     }
 
@@ -60,6 +59,7 @@ export function DraftProvider({
             return
         }
         setDrafts([initDraft, ...data]);
+        console.log('fetched', [initDraft, ...data])
     }
 
     const fetchWorld = async () => {

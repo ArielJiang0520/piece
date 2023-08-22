@@ -11,6 +11,7 @@ export type Tag = Database['public']['Tables']['tags']['Row']
 export type TagCategory = Database['public']['Tables']['tags_categories']['Row']
 export type Character = Database['public']['Tables']['characters']['Row']
 export type Relationship = Database['public']['Tables']['relationships']['Row']
+export type Subscription = Database['public']['Tables']['subscriptions']['Row']
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,

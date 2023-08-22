@@ -1,7 +1,7 @@
 'use client'
-import type { World } from "@/types/types.world"
+import type { Subscription, World, Fandom } from "@/types/types.world"
 import { IconButtonMid, CopyableID } from "@/components/ui/button/button-helpers";
-import { StarIcon, AtomIcon, Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon } from "@/components/icon/icon"
+import { StarIcon, AtomIcon, Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon, PencilIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarSmallDisplay, TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { AccordionDisplay } from './AccordionDisplay';
@@ -10,11 +10,21 @@ import { formatTimestamp } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useData } from "@/app/data-providers";
+import { get_subscribers, sub_to_world } from "@/utils/stats-helpers";
+import { useEffect, useState } from "react";
+import { useSupabase } from "@/app/supabase-provider";
+import { fetch_all_fandoms } from "@/utils/data-helpers";
 
 const WorldMetadataDisplay = ({ world }: { world: World }) => {
-    const { fandoms } = useData();
+    const [fandoms, setFandoms] = useState<Fandom[]>([])
     const origin = world.origin ? fandoms.find(item => item.id === world.origin)?.name || null : "Original World"
+
+    useEffect(() => {
+        const fetchFandoms = async () => setFandoms(await fetch_all_fandoms());
+        if (world.origin)
+            fetchFandoms()
+    }, [])
+
     return (
         <>
             <div className='w-full flex flex-row text-right text-xs text-foreground/80 space-x-3'>
@@ -92,24 +102,28 @@ const WorldCharactersDisplay = ({ world }: { world: World }) => {
 
 interface WorldDisplayProps {
     world: World;
-    preview?: boolean
+    isOwner?: boolean;
+    preview?: boolean;
 }
 
-export default function WorldDisplay({ world, preview = false }: WorldDisplayProps) {
-
+export default function WorldDisplay({ world, isOwner = false, preview = false }: WorldDisplayProps) {
     return (
 
         <div className='flex flex-col space-y-3 items-start text-foreground'>
 
-            <div id="button-group" className='w-full flex flex-row justify-between items-center'>
-                {preview ? null :
-                    <div className='flex flex-row space-x-2'>
-                        <IconButtonMid icon={<StarIcon />} title={"124"} />
-                        <Link href={{ pathname: '/create-a-piece', query: { id: world.id } }} >
-                            <IconButtonMid icon={<AtomIcon />} title={"Create a Piece"} />
-                        </Link>
-                    </div>}
-            </div>
+            {!preview && <div id="button-group" className='w-full flex flex-row justify-between items-center'>
+                <div className='flex flex-row space-x-2'>
+                    <IconButtonMid icon={<StarIcon />} title="123" />
+                    <Link href={{ pathname: '/create-a-piece', query: { id: world.id } }} >
+                        <IconButtonMid icon={<AtomIcon />} title={"Create a Piece"} />
+                    </Link>
+                </div>
+                {isOwner && <div className='flex flex-row'>
+                    <Link href={{ pathname: '/create-a-world', query: { edit_id: world.id } }} >
+                        <IconButtonMid icon={<PencilIcon />} />
+                    </Link>
+                </div>}
+            </div>}
 
             {preview ? null : <CopyableID id_string="World ID" id={world.id} />}
 

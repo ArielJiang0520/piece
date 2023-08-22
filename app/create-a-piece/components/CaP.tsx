@@ -1,9 +1,8 @@
 'use client'
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { EyeIcon, AccordionIcon } from '@/components/icon/icon';
-import TextInput from '@/components/ui/input/InputTextField';
+import { TextInput } from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
-import AutocompleteBox from '@/components/ui/input/AutoCompleteBar';
 import { TagsBar } from '@/components/ui/input/tags-helpers';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { useEffect, useRef, useState } from 'react';
@@ -73,12 +72,12 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                             <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-2xl"} multiline={1} bold={"font-bold"} />
                         </div>
 
-                        <div id="logline-group" className='w-full flex flex-col'>
+                        {/* <div id="logline-group" className='w-full flex flex-col'>
                             <FieldTitleDisplay label={"logline"} />
                             <TextInput name={"logline"} placeholder={"Add your logline..."} textSize={"text-lg"} multiline={2} bold={"font-medium"} />
-                        </div>
+                        </div> */}
 
-                        <div id="cover-group" className='w-full flex flex-col'>
+                        {/* <div id="cover-group" className='w-full flex flex-col'>
                             <FieldTitleDisplay label={"cover"} />
                             <ImagesUpload
                                 dimension={{ height: "h-56", width: "w-56" }}
@@ -88,7 +87,7 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                                 setValues={(paths) => setFieldValue('images', paths)}
                                 maxNum={10}
                             />
-                        </div>
+                        </div> */}
 
 
                         {/* <div id="folder-group" className='w-full flex flex-col'>
@@ -98,11 +97,11 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
 
                         <div id="tags-group" className='w-full flex flex-col'>
                             <FieldTitleDisplay label={"tags"} />
-                            <AutocompleteBox
+                            {/* <AutocompleteBox
                                 value={values.tags}
                                 setFieldValue={setFieldValue}
-                            />
-                            <TagsBar values={values.tags} field={"tags"} setFieldValue={setFieldValue} />
+                            /> */}
+                            {/* <TagsBar values={values.tags} setFieldValue={setFieldValue} /> */}
                         </div>
 
                         <div id="content-group" className='w-full flex flex-col'>

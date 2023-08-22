@@ -1,30 +1,45 @@
 'use client'
 import { useFormikContext } from 'formik';
-import type { Tag, WorldPayload } from "@/types/types.world";
+import { TagCategory, type Tag, type WorldPayload } from "@/types/types.world";
 import { CategoriesSwitchTab } from "@/components/ui/switch-tab/switch-tab";
 import { groupByKey } from "@/utils/helpers";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { TagsBar } from "@/components/ui/input/tags-helpers";
-import { useData } from '@/app/data-providers';
+import { useEffect, useState } from 'react';
+import { fetch_all_tags, fetch_all_tags_categories } from '@/utils/data-helpers';
 
 export default function ChooseTags({ }: {}) {
     const { setFieldValue, values } = useFormikContext<WorldPayload>();
-    const { tags, tagsCategories } = useData();
+    const [tags, setTags] = useState<Tag[]>([])
+    const [categories, setCategories] = useState<TagCategory[]>([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setTags(await fetch_all_tags());
+            setCategories(await fetch_all_tags_categories());
+        }
+        fetchData();
+    }, [])
 
     return <>
         <CategoriesSwitchTab
-            categories={tagsCategories}
+            categories={categories}
             items={groupByKey(tags, 'category')}
             selected={values.tags}
-            handleSelect={(tags: string[]) => { setFieldValue('tags', tags) }}
+            handleSelect={(tag: Tag) => {
+                values.tags.includes(tag.name) ?
+                    setFieldValue('tags', values.tags.filter(item_name => item_name != tag.name))
+                    : setFieldValue('tags', [...values.tags, tag.name.toLocaleLowerCase()])
+            }
+            }
         />
         <SearchBar
-            candidates={tags.map((tag, idx) => { return { ...tag, id: idx } })}
+            candidates={tags}
             nameKey="name"
             placeholder="Or add your own tag"
             onSelect={(tag: Tag) => {
-                if (!values.tags.map(t => t.toLocaleLowerCase()).includes(tag.name.toLocaleLowerCase()))
-                    setFieldValue('tags', [...values.tags, tag.name])
+                !values.tags.includes(tag.name.toLocaleLowerCase()) &&
+                    setFieldValue('tags', [...values.tags, tag.name.toLocaleLowerCase()])
             }}
             allowCreatingNew={true}
         />

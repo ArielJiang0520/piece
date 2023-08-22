@@ -62,8 +62,10 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
 
 const upsert_tags = async (tags: string[]) => {
     const supabase = createClientSupabaseClient()
+    const filteredTags = tags.map(tag => tag.toLocaleLowerCase())
+
     const { status, error } = await supabase
-        .rpc('upsert_tags', { tags_list: tags })
+        .rpc('upsert_tags', { tags_list: filteredTags })
 
     if (error) {
         console.error(JSON.stringify(error))
@@ -75,8 +77,10 @@ const upsert_tags = async (tags: string[]) => {
 
 const upsert_characters = async (characters: string[], fandom_id: string) => {
     const supabase = createClientSupabaseClient()
+    const filteredCharacters = characters.map(char => char.toLocaleLowerCase())
+
     const { status, error } = await supabase
-        .rpc('upsert_characters', { character_names: characters, p_fandom_id: fandom_id })
+        .rpc('upsert_characters', { character_names: filteredCharacters, p_fandom_id: fandom_id })
 
     if (error) {
         console.error(JSON.stringify(error))
@@ -88,8 +92,10 @@ const upsert_characters = async (characters: string[], fandom_id: string) => {
 
 const upsert_relationships = async (relationships: string[], fandom_id: string) => {
     const supabase = createClientSupabaseClient()
+    const filteredShips = relationships.map(ship => ship.toLocaleLowerCase())
+
     const { status, error } = await supabase
-        .rpc('upsert_relationships', { relationship_names: relationships, p_fandom_id: fandom_id })
+        .rpc('upsert_relationships', { relationship_names: filteredShips, p_fandom_id: fandom_id })
 
     if (error) {
         console.error(JSON.stringify(error))

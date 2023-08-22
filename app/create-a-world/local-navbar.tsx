@@ -40,7 +40,6 @@ export default function LocalNavBar() {
         const confirmAction = async () => {
             setIsLoading(true);
             await handleDraftDelete(selected);
-            await fetchDrafts();
             setIsLoading(false);
             router.refresh();
         };

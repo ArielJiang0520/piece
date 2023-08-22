@@ -5,11 +5,10 @@ import { EmptyFandom, Fandom, FandomMediaType, WorldDescriptionSectionCard } fro
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import { TagsBar } from './tags-helpers';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
-import TextInput from './InputTextField';
+import { TextInput, TextInputWithEnter } from './InputTextField';
 import { FieldTitleDisplay } from '../display/display-helpers';
 import SearchBar from './SearchBar';
 import { fetch_all_fandom_media_types } from '@/utils/data-helpers';
-import { useData } from '@/app/data-providers';
 
 interface LineInputProps {
     inputValue: string,
@@ -88,7 +87,12 @@ interface FandomInputProps {
 }
 
 function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
-    const { fandomMediaTypes } = useData();
+    const [fandomMediaTypes, setFandomMediaTypes] = useState<FandomMediaType[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => setFandomMediaTypes(await fetch_all_fandom_media_types());
+        fetchData();
+    }, [])
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
@@ -113,14 +117,18 @@ function FandomInput({ inputValue, setInputValue }: FandomInputProps) {
                     <Form className='flex flex-col space-y-3 items-start' onKeyDown={handleKeyDown}>
                         <div id="title-group" className='w-full flex flex-col space-y-1'>
                             <FieldTitleDisplay label={"fandom name"} />
-                            <TextInput name={"name"} placeholder={"Add fandom name"} textSize={"text-2xl"} multiline={1} />
+                            <TextInput name={"name"} placeholder={"Add fandom name"} textSize={"text-base"} multiline={1} />
                         </div>
                         <div id="tags-group" className='w-full flex flex-col'>
                             <FieldTitleDisplay label={"any aliases?"} />
+                            <TextInputWithEnter
+                                textSize="text-base"
+                                placeholder='After every alias, hit enter'
+                                onEnter={(input: string) => setFieldValue('aliases', [...values.aliases, input])}
+                            />
                             <TagsBar
                                 values={values.aliases}
-                                placeholder='Add your alias and hit enter'
-                                handleValuesChange={(input: string[]) => setFieldValue('aliases', input)}
+                                handleValuesChange={(values) => setFieldValue('aliases', values)}
                             />
                         </div>
                         <div id="media-type-group" className='w-full flex flex-col space-y-2'>
