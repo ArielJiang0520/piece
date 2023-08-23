@@ -15,7 +15,7 @@ export function TagsBar({ values, handleValuesChange }: TagsBarProps) {
                     <button
                         key={idx}
                         type="button"
-                        className='capitalize bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-1 mt-2'
+                        className='bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-1 mt-2'
                         onClick={() => handleRemoveTag(idx)}
                     >
                         {name}
@@ -35,7 +35,6 @@ interface TagsBarDisplay {
 
 export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBarDisplay) {
     return (
-
         <div className={`flex flex-row w-full justify-start  ${scroll ? "overflow-hidden overflow-x-auto" : "flex-wrap "}`}>
             {
                 tags.map((tag, index) =>
@@ -50,16 +49,12 @@ export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBa
                 )
             }
         </div>
-
-
     )
 }
 
 
 export function TagsBarSmallDisplay({ tags }: { tags: string[] }) {
-
     return (
-
         <div className='flex flex-row flex-wrap w-full font-mono'>
             {
                 tags.map((tag, index) =>

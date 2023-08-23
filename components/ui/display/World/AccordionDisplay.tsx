@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { WorldDescriptionSection } from "@/types/types.world";
+import { WorldDescriptionSection } from "@/types/types";
 import { Disclosure } from '@headlessui/react';
 import { AccordionIcon } from '@/components/icon/icon';
 import { SectionCard } from '@/components/ui/display/World/SectionCard';
@@ -32,7 +32,7 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections, pr
                                             </Disclosure.Button>
                                         </div>
                                     </div>
-                                    <Disclosure.Panel className={`py-4 grid grid-cols-1 ${!preview ? "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" : ""} grid-flow-row w-full gap-4`}>
+                                    <Disclosure.Panel className={`py-4 grid grid-cols-1 ${!preview ? "lg:grid-cols-2 2xl:grid-cols-3" : ""} grid-flow-row w-full gap-4`}>
                                         {section.sectionCards.map((card, index) =>
                                             <SectionCard
                                                 key={index}

@@ -1,9 +1,9 @@
-import { Profile } from "@/types/types.world";
+import { Profile } from "@/types/types";
 import { CalendarIcon } from "@/components/icon/icon";
 import { formatTimestamp } from "@/utils/helpers";
 import Image from "next/image";
 import { FieldContentDisplay } from "./display-helpers";
-import { Piece } from "@/types/types.world";
+import { Piece } from "@/types/types";
 
 export const PieceAuthorDisplay = ({ author, piece }: { author: Profile | null, piece: Piece }) => {
     return <div className="flex flex-row justify-start items-start space-x-4 text-foreground text-xs">

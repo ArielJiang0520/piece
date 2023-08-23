@@ -208,3 +208,21 @@ export function createLookupTable(items: any[]): { [id: string]: any } {
         return acc;
     }, {} as { [id: string]: any });
 }
+
+export function cleanTags(strings: string[]): string[] {
+    // 1. Convert to lowercase
+    const lowercased = strings.map(str => str.toLowerCase());
+
+    // 2. Strip off extra whitespace
+    const strippedWhitespace = lowercased.map(str => str.trim());
+
+    // 3. Remove duplicates
+    const uniqueStrings: string[] = [];
+    strippedWhitespace.forEach(str => {
+        if (!uniqueStrings.includes(str)) {
+            uniqueStrings.push(str);
+        }
+    });
+
+    return uniqueStrings;
+}

@@ -78,26 +78,22 @@
 }
 
 
-/* Apply styles only for devices with a screen width of 1024px or more */
-@media only screen and (min-width: 1024px) {
-  /* This will apply to Webkit browsers like Chrome and Safari */
-  ::-webkit-scrollbar {
-    width: 7px; /* width of the entire scrollbar */
-    height: 5px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1; /* color of the tracking area */
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #888; /* color of the scroll thumb */
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* color of the scroll thumb on hover */
-  }
+/* styles/global.css */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
 
-  /* For Internet Explorer and Edge */
-  body {
-    scrollbar-color: #888 #f1f1f1; /* thumb and track color */
-    scrollbar-width: thin; /* scrollbar width */
-  }
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    cursor: grab;
+}
+
+.horizontal-scroll:active {
+    cursor: grabbing;
 }

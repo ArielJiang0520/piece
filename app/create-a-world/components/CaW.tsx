@@ -1,6 +1,6 @@
 'use client'
 // /create-a-world
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world } from '@/types/types.world';
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world } from '@/types/types';
 // Need to handle input error
 // Need to add "?" icon for instruction
 import { useEffect, useRef, useState } from 'react';
@@ -19,9 +19,9 @@ import { Tab } from '@headlessui/react'
 
 // local import
 import { useDraftContext } from '../draft-provider';
-import PublishButton from './PublishButton';
-import PreviewButton from './PreviewButton';
-import SaveDraftButton from './SaveDraftButton';
+import PublishButton from './buttons/PublishButton';
+import PreviewButton from './buttons/PreviewButton';
+import SaveDraftButton from './buttons/SaveDraftButton';
 import ChooseAnOrigin from './ChooseAnOrigin';
 import ChooseTags from './ChooseTags';
 import ChooseCharacters from './ChooseCharacters';

@@ -5,7 +5,7 @@ import NavBar from '@/app/NavBar';
 import { useSupabase } from '@/app/supabase-provider';
 import { NavBarSwitchLink } from '@/components/ui/switch-tab/switch-tab';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
-import { World } from '@/types/types.world';
+import { World } from '@/types/types';
 import Skeleton from 'react-loading-skeleton';
 interface LocalNavBarProps {
     world_id: string;

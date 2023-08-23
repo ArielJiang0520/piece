@@ -1,6 +1,6 @@
 'use client'
 import DropDownSelector from '@/components/ui/input/DropDownSelector';
-import { Folder, DefaultFolder } from '@/types/types.world';
+import { Folder, DefaultFolder } from '@/types/types';
 import { useState } from 'react';
 
 interface FolderSelectorProps {

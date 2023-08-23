@@ -1,7 +1,7 @@
 
 import { useState } from "react"
 import PopupDialog from "@/components/ui/input/PopupDialog"
-import { DefaultWorld, World, WorldPayload } from "@/types/types.world"
+import { DefaultWorld, World, WorldPayload } from "@/types/types"
 import { insert_world, update_world, publish_draft } from "@/utils/world-helpers"
 import { useRouter } from "next/navigation"
 

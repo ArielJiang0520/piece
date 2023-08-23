@@ -1,5 +1,6 @@
 import { CloseIcon } from '@/components/icon/icon';
 import LazyImage from '@/components/ui/image/LazyImageClient';
+import useHorizontalDragScroll from '@/hooks/useHorizontalScroll';
 
 interface ImagesDisplayRowProps {
     bucket: string;
@@ -12,11 +13,19 @@ interface ImagesDisplayRowProps {
         hasDelete: boolean;
         onDelete: (arg: any) => void;
     };
+    popup?: boolean
 }
-export function ImagesDisplayRow({ bucket, dimension, paths, del = { hasDelete: false, onDelete: () => { } } }: ImagesDisplayRowProps) {
-    return <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
+export function ImagesDisplayRow({ bucket, dimension, paths, del = { hasDelete: false, onDelete: () => { } }, popup = false }: ImagesDisplayRowProps) {
+    const { startDrag, stopDrag, doDrag } = useHorizontalDragScroll();
+
+    return <div id='image-display' className="flex flex-row space-x-2 horizontal-scroll hide-scrollbar"
+        onMouseDown={startDrag}
+        onMouseLeave={stopDrag}
+        onMouseUp={stopDrag}
+        onMouseMove={doDrag}
+    >
         {paths.map((path, index) => <div key={index} className={`relative ${dimension.height} flex-shrink-0`}>
-            <LazyImage bucket={bucket} path={path} dimension={`${dimension.height} ${dimension.width}`} />
+            <LazyImage bucket={bucket} path={path} dimension={`${dimension.height} ${dimension.width}`} popup={popup} />
 
             {del.hasDelete ? <button
                 id="delete-button"

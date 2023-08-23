@@ -1,5 +1,5 @@
 'use client'
-import { World } from "@/types/types.world"
+import { World } from "@/types/types"
 import { useState } from "react"
 import { EyeIcon } from "@/components/icon/icon"
 import { FieldTitleDisplay } from "../display-helpers"

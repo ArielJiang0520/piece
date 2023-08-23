@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import { RadioGroup } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { CheckIcon } from '@/components/icon/icon'
-import { Fandom, EmptyFandom, WorldPayload } from '@/types/types.world';
+import { Fandom, EmptyFandom, WorldPayload } from '@/types/types';
 import SearchBar from '@/components/ui/input/SearchBar';
 import { IconButtonSmall } from '@/components/ui/button/button-helpers';
 import { PlusIcon } from '@/components/icon/icon';
@@ -78,7 +78,6 @@ export default function ChooseAnOrigin({ }: {}) {
 
                         {option.id === selectedOptionId && selectedOptionId === 2 && (
                             <div className='flex flex-col mt-2 space-y-2'>
-
                                 <SearchBar
                                     candidates={fandoms}
                                     nameKey="name"
@@ -87,16 +86,15 @@ export default function ChooseAnOrigin({ }: {}) {
                                     display_func={(item: Fandom) => `${item.name} (${item.num_of_worlds})`}
                                     defaultSelectedId={values.origin}
                                 />
-
                                 <div className='flex flex-row items-center justify-end space-x-2 '>
                                     <div className='italic text-xs'>
                                         Didn't see your fandom?
                                     </div>
                                     <CreateFandomButton />
                                 </div>
-
                             </div>
                         )}
+
                     </RadioGroup.Option>
                 ))}
             </div>

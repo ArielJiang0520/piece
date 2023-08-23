@@ -1,5 +1,5 @@
 'use client'
-import { World } from "@/types/types.world";
+import { World } from "@/types/types";
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 import { CalendarIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon } from "@/components/icon/icon";
 import { formatTimestamp } from "@/utils/helpers";
@@ -76,7 +76,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             </div>
 
             <div className="w-full">
-                <FieldContentDisplay content={world.logline} textSize="text-sm" bold="font-normal" truncate={150} />
+                <FieldContentDisplay content={world.logline} textSize="text-sm" bold="font-normal" />
             </div>
 
             <div className="w-full">

@@ -1,6 +1,6 @@
 import AccordionSection from './AccordionSection';
 import { useState, useEffect } from 'react';
-import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
+import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
 
 interface AccordionListProps {
     formSections: WorldDescriptionSection[]

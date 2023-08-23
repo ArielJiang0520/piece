@@ -1,5 +1,5 @@
 'use client'
-import { JoinedWorldPiece, JoinedAuthorPiece, Piece, World } from '@/types/types.world';
+import { JoinedWorldPiece, JoinedAuthorPiece, Piece, World } from '@/types/types';
 import Masonry from 'masonry-layout';
 import { useRef, useEffect } from 'react';
 import PieceCard from './PieceCard';

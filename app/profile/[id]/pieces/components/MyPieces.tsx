@@ -1,5 +1,5 @@
 'use client'
-import { Piece, World, JoinedWorldPiece } from "@/types/types.world";
+import { Piece, World, JoinedWorldPiece } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { useEffect, useState, useRef } from 'react';
 import Link from "next/link";

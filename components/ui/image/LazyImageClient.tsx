@@ -6,11 +6,14 @@ interface LazyImageClientProps {
     bucket: string,
     path: string;
     dimension: string;
-    rounded?: boolean
+    rounded?: boolean;
+    popup?: boolean;
 }
 
-export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, dimension, rounded = true }) => {
+export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, dimension, rounded = true, popup = false }) => {
     const [url, setUrl] = useState<string | null>(null);
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupImage, setPopupImage] = useState<string | null>(null);
 
     useEffect(() => {
         downloadImage(bucket, path)
@@ -19,6 +22,11 @@ export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, 
 
     }, [path]);
 
+    const handleImageClick = (url: string) => {
+        setPopupImage(url);
+        setShowPopup(true);
+    };
+
     if (url === null) {
         return (
             <div className={`${dimension} border ${rounded ? "rounded-lg" : ""} flex justify-center items-center`}>
@@ -26,7 +34,27 @@ export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, 
             </div>
         );
     } else {
-        return <img src={url} alt="Placeholder Image" className={`w-auto h-full ${rounded ? "rounded-lg" : ""}`} />;
+        return (
+            <>
+                <img src={url} alt="Placeholder Image" className={`w-auto h-full ${rounded ? "rounded-lg" : ""}`}
+                    onClick={() => handleImageClick(url)} />
+                {popup && showPopup && (
+                    <div
+                        className="fixed inset-0 flex items-center justify-center z-50"
+                        onClick={() => setShowPopup(false)}
+                    >
+                        <div className="bg-background p-1 shadow-lg">
+                            <img
+                                src={popupImage!}
+                                alt="Popup"
+                                className="max-w-sm md:max-w-xl 2xl:max-w-2xl h-auto"
+                                onClick={e => e.stopPropagation()} // This stops the event from bubbling up
+                            />
+                        </div>
+                    </div>
+                )}
+            </>
+        )
     }
 };
 

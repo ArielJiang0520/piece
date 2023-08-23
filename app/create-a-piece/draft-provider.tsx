@@ -1,16 +1,16 @@
 'use client'
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { World, DefaultWorld } from '@/types/types';
+import { Piece, DefaultPiece } from '@/types/types';
 import { useSupabase } from '@/app/supabase-provider';
 import { delete_world } from '@/utils/world-helpers';
 import { useSearchParams } from 'next/navigation';
 import { getId } from '@/utils/helpers';
 
 interface DraftContextData {
-    currentDraft: World | DefaultWorld;
+    currentDraft: Piece | DefaultPiece;
     handleDraftChange: (selectedOption: any) => void;
     handleDraftDelete: (selectedOption: any) => void;
-    drafts: Array<World | DefaultWorld>;
+    drafts: Array<Piece | DefaultPiece>;
     fetchDrafts: () => Promise<void>;
 }
 
@@ -21,13 +21,13 @@ export function DraftProvider({
 }: {
     children: React.ReactNode;
 }) {
-    const searchParams = useSearchParams()
-    const edit_id = searchParams.get("edit_id")
+    // const searchParams = useSearchParams()
+    // const world_id = searchParams.get("id")
 
-    const initDraft = { id: `W-${getId()}`, name: 'A New Draft', default: true } as DefaultWorld;
+    const initDraft = { id: `P-${getId()}`, name: 'A New Draft', default: true } as DefaultPiece;
 
-    const [currentDraft, setCurrentDraft] = useState<World | DefaultWorld>(initDraft);
-    const [drafts, setDrafts] = useState<Array<World | DefaultWorld>>([initDraft]);
+    const [currentDraft, setCurrentDraft] = useState<Piece | DefaultPiece>(initDraft);
+    const [drafts, setDrafts] = useState<Array<Piece | DefaultPiece>>([initDraft]);
     const { supabase } = useSupabase();
 
     const handleDraftChange = (selectedOption: any) => {
@@ -49,7 +49,7 @@ export function DraftProvider({
         }
 
         const { data, error } = await supabase
-            .from('worlds')
+            .from('pieces')
             .select()
             .eq('creator_id', session.user.id)
             .eq('is_draft', true)
@@ -61,27 +61,8 @@ export function DraftProvider({
         setDrafts([initDraft, ...data]);
     }
 
-    const fetchWorld = async () => {
-        const { data, error } = await supabase
-            .from('worlds')
-            .select()
-            .eq('id', edit_id)
-            .limit(1)
-            .single()
-
-        if (error) {
-            console.error(error.code, error.message)
-            return
-        }
-        setCurrentDraft(data);
-    }
-
     useEffect(() => {
-        if (edit_id) {
-            fetchWorld();
-        } else {
-            fetchDrafts();
-        }
+        fetchDrafts();
     }, []);
 
 

@@ -138,20 +138,72 @@ export function cast_to_world(payload: WorldPayload, uid: string) {
     } as World
 }
 
-export type PiecePayload = {
-    title: string,
-    logline: string,
-    tags: string[],
-    content: string,
-    folder_id: string,
-    images: string[],
-    settings: PieceSettings
-}
-
 export type PieceSettings = {
     NSFW: boolean,
     allowComments: boolean;
 }
+
+export type PiecePayload = {
+    name: string,
+    tags: string[],
+    content: string,
+    folder_id: string | null,
+    images: string[],
+    settings: PieceSettings
+}
+
+export interface DefaultPiece {
+    id: string,
+    name: string,
+    default: boolean
+}
+
+export const PieceSettingsAsks = {
+    NSFW: "Contains NSFW Content",
+    allowComments: "Allow comments from other users"
+}
+
+export const EmptyPiecePayload: PiecePayload = {
+    name: "",
+    tags: [],
+    content: "",
+    folder_id: null,
+    images: [],
+    settings: {
+        NSFW: false,
+        allowComments: true
+    }
+}
+
+export function cast_to_piece(payload: PiecePayload) {
+    const created_at = new Date().toISOString()
+    return {
+        created_at: created_at,
+        name: payload.name,
+        tags: payload.tags,
+        content: payload.content,
+        images: payload.images,
+        folder_id: payload.folder_id,
+        nsfw: payload.settings.NSFW,
+        allow_comments: payload.settings.allowComments,
+    } as Piece
+}
+
+export function cast_to_piecepayload(piece: Piece): PiecePayload {
+    return {
+        name: piece.name,
+        tags: piece.tags,
+        content: piece.content,
+        images: piece.images,
+        folder_id: piece.folder_id,
+        settings: {
+            NSFW: piece.nsfw,
+            allowComments: piece.allow_comments,
+        }
+    } as PiecePayload
+}
+
+
 
 export interface JoinedWorldPiece extends Piece {
     worlds: { name: string } | null
@@ -167,38 +219,6 @@ export interface DefaultFolder {
     default: boolean
 }
 
-export const PieceSettingsAsks = {
-    NSFW: "Contains NSFW Content",
-    allowComments: "Allow comments from other users"
-}
-
-export const EmptyPiecePayload: PiecePayload = {
-    title: "",
-    logline: "",
-    tags: [],
-    content: "",
-    folder_id: "",
-    images: [],
-    settings: {
-        NSFW: false,
-        allowComments: true
-    }
-}
-
-export function cast_to_piece(payload: PiecePayload) {
-    const created_at = new Date().toISOString()
-    return {
-        created_at: created_at,
-        title: payload.title,
-        logline: payload.logline,
-        tags: payload.tags,
-        content: payload.content,
-        images: payload.images,
-        folder_id: payload.folder_id,
-        nsfw: payload.settings.NSFW,
-        allow_comments: payload.settings.allowComments,
-    } as Piece
-}
 
 export const EmptyFandom: Fandom = {
     name: '',
@@ -209,10 +229,10 @@ export const EmptyFandom: Fandom = {
     id: ''
 }
 
-export function user_to_profile(user: User) {
+export function cast_to_profile(user: User) {
     return {
         avatar_url: user.user_metadata.avatar_url,
-        full_name: user.user_metadata.name,
+        full_name: user.user_metadata.full_name,
         id: user.id,
         updated_at: null,
         username: user.user_metadata.name,

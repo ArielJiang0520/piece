@@ -1,7 +1,7 @@
 'use client'
 import { useFormikContext } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { WorldPayload, RelationshipType } from '@/types/types.world';
+import { WorldPayload, RelationshipType } from '@/types/types';
 
 export default function ChooseRelationshipTypes() {
     const { setFieldValue, values } = useFormikContext<WorldPayload>();

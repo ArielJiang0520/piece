@@ -1,4 +1,4 @@
-import type { Piece, Profile, World } from "@/types/types.world"
+import type { Piece, Profile, World } from "@/types/types"
 import { FolderIcon, BookIcon, SlashIcon } from "@/components/icon/icon"
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
@@ -40,7 +40,7 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
         <div className='flex flex-col space-y-3 items-start'>
             <div id="title-group" className='w-full flex flex-row flex-wrap items-center justify-start'>
                 {/* <div className="font-serif text-4xl font-semibold">{piece.title}</div> */}
-                <FieldContentDisplay content={piece.title} textSize="text-4xl" bold="font-semibold" />
+                <FieldContentDisplay content={piece.name} textSize="text-4xl" bold="font-semibold" />
             </div>
 
             <div id="metadata-group" className="mt-2 w-full flex flex-col" >
@@ -53,11 +53,6 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
                 <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={piece.images} />
-            </div>
-
-            <div id='logline-display' className="w-full flex flex-col">
-
-                <FieldContentDisplay content={piece.logline} textSize="text-base" bold="font-semibold" />
             </div>
 
             <div id="content-group" className='w-full flex flex-row flex-wrap items-center justify-start whitespace-pre-line'>

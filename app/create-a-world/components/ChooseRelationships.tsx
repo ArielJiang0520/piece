@@ -1,35 +1,37 @@
 'use client'
 import { useFormikContext } from 'formik';
-import type { WorldPayload, Relationship } from "@/types/types.world";
+import type { WorldPayload, Relationship } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { TagsBar } from "@/components/ui/input/tags-helpers";
 import { useEffect, useState } from 'react';
-import { fetch_all_relationships } from '@/utils/data-helpers';
+import { fetch_all_relationships, fetch_relationships_of_fandom } from '@/utils/data-helpers';
 
 export default function ChooseRelationships() {
     const { setFieldValue, values } = useFormikContext<WorldPayload>();
     const [ships, setShips] = useState<Relationship[]>([]);
+    const fetchShips = async () => {
+        if (values.origin)
+            setShips(await fetch_relationships_of_fandom(values.origin));
+    }
 
     useEffect(() => {
-        const fetchShips = async () => setShips(await fetch_all_relationships());
         fetchShips();
-    })
+    }, [values.origin])
 
     return <>
         <SearchBar
-            candidates={ships.map((ship, idx) => { return { ...ship, id: idx } })}
+            candidates={ships}
             nameKey="name"
             placeholder="Add your ship (e.g. John Smith/Jane Doe)"
             onSelect={(ship: Relationship) => {
-                !values.relationships.includes(ship.name.toLocaleLowerCase()) &&
-                    setFieldValue('relationships', [...values.relationships, ship.name.toLocaleLowerCase()])
+                !values.relationships.includes(ship.name) &&
+                    setFieldValue('relationships', [...values.relationships, ship.name])
             }}
             allowCreatingNew={true}
         />
         <TagsBar
             values={values.relationships}
             handleValuesChange={(values: any) => setFieldValue('relationships', values)}
-
         />
     </>
 }

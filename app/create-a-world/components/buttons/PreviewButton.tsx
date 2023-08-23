@@ -1,6 +1,6 @@
 import { useState } from "react"
 import PopupDialog from "@/components/ui/input/PopupDialog"
-import { WorldPayload, cast_to_world } from "@/types/types.world"
+import { WorldPayload, cast_to_world } from "@/types/types"
 import WorldDisplay from "@/components/ui/display/World/WorldDisplay"
 import { EyeIcon } from "@/components/icon/icon"
 

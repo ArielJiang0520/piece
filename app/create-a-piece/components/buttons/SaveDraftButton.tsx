@@ -1,23 +1,22 @@
-
-
-import { DefaultWorld, World, WorldPayload } from "@/types/types.world"
-import { insert_world, update_world } from "@/utils/world-helpers"
+import { DefaultPiece, Piece, PiecePayload } from "@/types/types"
+import { insert_piece, update_piece } from "@/utils/piece-helpers"
 import { useRouter } from "next/navigation"
 
 interface SaveDraftButtonProps {
     uid: string,
-    currentDraft: World | DefaultWorld,
-    values: WorldPayload,
+    wid: string,
+    currentDraft: Piece | DefaultPiece,
+    values: PiecePayload,
     setSubmitting: (arg: boolean) => void,
     fetchDrafts: () => Promise<void>;
 }
-export default function SaveDraftButton({ uid, setSubmitting, values, currentDraft, fetchDrafts }: SaveDraftButtonProps) {
+export default function SaveDraftButton({ uid, wid, setSubmitting, values, currentDraft, fetchDrafts }: SaveDraftButtonProps) {
     const router = useRouter();
 
-    const handleSaveNewDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
+    const handleSaveNewDraft = async (values: PiecePayload, setSubmitting: (isSubmitting: boolean) => void) => {
         setSubmitting(true)
         try {
-            await insert_world(values, uid, true)
+            await insert_piece(values, uid, wid, true)
         } catch (error) {
             alert(`Error: ${(error as Error).message}`);
         } finally {
@@ -27,10 +26,10 @@ export default function SaveDraftButton({ uid, setSubmitting, values, currentDra
         }
     }
 
-    const handleOverwriteDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {
+    const handleOverwriteDraft = async (values: PiecePayload, setSubmitting: (isSubmitting: boolean) => void) => {
         setSubmitting(true)
         try {
-            await update_world(values, currentDraft.id, true)
+            await update_piece(values, currentDraft.id, true)
         } catch (error) {
             alert(`Error: ${JSON.stringify(error)}`);
         } finally {

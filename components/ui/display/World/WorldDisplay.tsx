@@ -1,18 +1,17 @@
 'use client'
-import type { Subscription, World, Fandom } from "@/types/types.world"
+import type { Subscription, World, Fandom } from "@/types/types"
 import { IconButtonMid, CopyableID } from "@/components/ui/button/button-helpers";
 import { StarIcon, AtomIcon, Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon, PencilIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarSmallDisplay, TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { AccordionDisplay } from './AccordionDisplay';
-import { WorldDescriptionSection } from "@/types/types.world";
+import { WorldDescriptionSection } from "@/types/types";
 import { formatTimestamp } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { get_subscribers, sub_to_world } from "@/utils/stats-helpers";
 import { useEffect, useState } from "react";
-import { useSupabase } from "@/app/supabase-provider";
 import { fetch_all_fandoms } from "@/utils/data-helpers";
 
 const WorldMetadataDisplay = ({ world }: { world: World }) => {
@@ -80,7 +79,6 @@ const WorldPrivacyDisplay = ({ world }: { world: World }) => {
 
 
 const WorldCharactersDisplay = ({ world }: { world: World }) => {
-
     return (
         <>
             <div className='w-full flex flex-col text-left text-sm text-foreground/70 border p-5 space-y-4'>
@@ -94,6 +92,7 @@ const WorldCharactersDisplay = ({ world }: { world: World }) => {
                 </div>
                 {world.relationships.length > 0 && world.relationship_types[0] !== "No Relationship" && <div>
                     <FieldTitleDisplay label={'relationships'} textSize="text-sm" />
+                    <TagsBarSmallDisplay tags={world.relationships} />
                 </div>}
             </div>
         </>
@@ -137,7 +136,7 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
             </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-                <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} />
+                <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} popup={!preview} />
             </div>
 
             <div id="logline-group" className='w-full flex flex-col'>

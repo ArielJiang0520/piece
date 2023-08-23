@@ -1,5 +1,5 @@
 'use client'
-import { World } from "@/types/types.world";
+import { World } from "@/types/types";
 import SwitchGenTypes from "./SwitchGenTypes";
 import type { Option } from "./SwitchGenTypes";
 import PromptGen from "./PromptGen";

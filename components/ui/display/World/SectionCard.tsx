@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import { PlusCircleIcon, MinusIcon } from "@/components/icon/icon";
-import type { WorldDescriptionSectionCard } from "@/types/types.world";
+import type { WorldDescriptionSectionCard } from "@/types/types";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 

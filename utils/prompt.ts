@@ -1,6 +1,6 @@
 
-import { WorldDescriptionSectionCard, WorldDescriptionSection } from "@/types/types.world";
-import type { World } from "@/types/types.world";
+import { WorldDescriptionSectionCard, WorldDescriptionSection } from "@/types/types";
+import type { World } from "@/types/types";
 
 export function worldToString(world: World): string {
     let descriptionString = '';

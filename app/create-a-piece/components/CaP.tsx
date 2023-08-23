@@ -1,20 +1,22 @@
 'use client'
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
-import { EyeIcon, AccordionIcon } from '@/components/icon/icon';
+import { AccordionIcon } from '@/components/icon/icon';
 import { TextInput } from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
-import { TagsBar } from '@/components/ui/input/tags-helpers';
-import PopupDialog from '@/components/ui/input/PopupDialog';
 import { useEffect, useRef, useState } from 'react';
-import { publishPiece } from '@/utils/piece-helpers';
-import { PiecePayload, PieceSettingsAsks, cast_to_piece, World, user_to_profile } from '@/types/types.world';
+import { PiecePayload, PieceSettingsAsks, cast_to_piecepayload, World, EmptyPiecePayload } from '@/types/types';
 import { useSupabase } from '@/app/supabase-provider';
-import { useRouter } from 'next/navigation';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import { Disclosure } from '@headlessui/react';
-import PieceDisplay from '@/components/ui/display/Piece/PieceDisplay';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import FolderSelector from './FolderSelector';
+import { LoadingOverlay } from '@/components/ui/widget/loading';
+import { useDraftContext } from '../draft-provider';
+import PublishButton from './buttons/PublishButton';
+import PreviewButton from './buttons/PreviewButton';
+import SaveDraftButton from './buttons/SaveDraftButton';
+import Link from 'next/link';
+import ChooseTags from './ChooseTags';
 
 interface CaPProps {
     world: World,
@@ -22,11 +24,17 @@ interface CaPProps {
     review?: boolean
 }
 export default function CaP({ world, initValues, review = true }: CaPProps) {
-
-    const [isPreviewPieceOpen, setIsPreviewPieceOpen] = useState(false)
+    const { currentDraft, fetchDrafts } = useDraftContext();
 
     const { user } = useSupabase()
-    const router = useRouter()
+
+    const formikRef = useRef<FormikProps<PiecePayload> | null>(null); // Adding a ref to Formik
+    useEffect(() => {
+        if (formikRef.current) {
+            const newValues: PiecePayload = "default" in currentDraft ? EmptyPiecePayload : cast_to_piecepayload(currentDraft)
+            formikRef.current.resetForm({ values: newValues });
+        }
+    }, [currentDraft])  // Resetting the form whenever currentDraft changes
 
     if (!world || !user)
         return <>Loading...</>
@@ -37,48 +45,24 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
         }
     };
 
-    const onPublishPiece = async (values: PiecePayload, setSubmitting: (isSubmitting: boolean) => void) => {
-        setSubmitting(true)
-        try {
-            await publishPiece(values, world.id, user.id)
-        } catch (error) {
-            alert(`Error: ${(error as Error).message}`);
-        } finally {
-            setSubmitting(false)
-            router.push(`/world/${world.id}/pieces`)
-        }
-    }
 
     return (
         <>
 
             <Formik
                 initialValues={initValues}
-                onSubmit={(values, formikHelpers) => {
-                    console.log('submitted values', values);
-                    if (review)
-                        setIsPreviewPieceOpen(true);
-                    else
-                        onPublishPiece(values, formikHelpers.setSubmitting)
-                }}
+                onSubmit={() => { }}
             >
                 {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors }) => (
                     <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
-
-
-
                         <div id="title-group" className='w-full flex flex-col'>
                             <FieldTitleDisplay label={"title"} />
-                            <TextInput name={"title"} placeholder={"Add your title..."} textSize={"text-2xl"} multiline={1} bold={"font-bold"} />
+                            <TextInput name={"name"} placeholder={"Add your title..."} textSize={"text-2xl"} multiline={1} bold={"font-bold"} />
                         </div>
 
-                        {/* <div id="logline-group" className='w-full flex flex-col'>
-                            <FieldTitleDisplay label={"logline"} />
-                            <TextInput name={"logline"} placeholder={"Add your logline..."} textSize={"text-lg"} multiline={2} bold={"font-medium"} />
-                        </div> */}
 
-                        {/* <div id="cover-group" className='w-full flex flex-col'>
-                            <FieldTitleDisplay label={"cover"} />
+                        <div id="images-group" className='w-full flex flex-col'>
+                            <FieldTitleDisplay label={"images"} />
                             <ImagesUpload
                                 dimension={{ height: "h-56", width: "w-56" }}
                                 bucket={"world"}
@@ -87,7 +71,7 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                                 setValues={(paths) => setFieldValue('images', paths)}
                                 maxNum={10}
                             />
-                        </div> */}
+                        </div>
 
 
                         {/* <div id="folder-group" className='w-full flex flex-col'>
@@ -95,13 +79,9 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                             <FolderSelector folders={folders} />
                         </div> */}
 
-                        <div id="tags-group" className='w-full flex flex-col'>
+                        <div id="tags-group" className='w-full flex flex-col max-w-2xl space-y-2'>
                             <FieldTitleDisplay label={"tags"} />
-                            {/* <AutocompleteBox
-                                value={values.tags}
-                                setFieldValue={setFieldValue}
-                            /> */}
-                            {/* <TagsBar values={values.tags} setFieldValue={setFieldValue} /> */}
+                            <ChooseTags />
                         </div>
 
                         <div id="content-group" className='w-full flex flex-col'>
@@ -126,24 +106,25 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                         </div>
 
 
-                        <div id="submit-group" className='mx-auto w-full lg:w-2/3 flex flex-col space-y-3'>
-                            <button className="w-full p-3 primaryButton text-2xl" type="submit">
-                                {review ? "Review & Publish" : "Publish"}
-                            </button>
+                        <div id="submit-group" className='flex flex-col w-full items-center justify-center space-y-3'>
+                            <div className='w-full max-w-lg flex flex-row items-center space-x-1'>
+                                <div className='flex-grow h-10'>
+                                    <PublishButton uid={user.id} wid={world.id} values={values} currentDraft={currentDraft} setSubmitting={setSubmitting} />
+                                </div>
+                                <div className='w-10 h-10'>
+                                    <PreviewButton user={user} world={world} values={values} />
+                                </div>
+                            </div>
+                            <div className='w-full max-w-lg flex flex-row items-center justify-center space-x-4'>
+                                <SaveDraftButton uid={user.id} wid={world.id} values={values} currentDraft={currentDraft} setSubmitting={setSubmitting} fetchDrafts={fetchDrafts} />
+                                <Link href={'default' in currentDraft || currentDraft.is_draft ? `/` : `/world/${world.id}`} >
+                                    <button className="p-2 secondaryButton text-lg" type="button">
+                                        Cancel
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
-
-
-
-                        <PopupDialog
-                            isOpen={isPreviewPieceOpen}
-                            setIsOpen={setIsPreviewPieceOpen}
-                            dialogTitle='Are you sure you want to publish this piece?'
-                            dialogContent=''
-                            initInputValue={<PieceDisplay piece={cast_to_piece(values)} world={world} author={user_to_profile(user)} preview={true} />}
-                            confirmAction={() => onPublishPiece(values, setSubmitting)}
-                            dialogType='display'
-                        />
-
+                        {isSubmitting && <LoadingOverlay />}
                     </Form>
                 )}
             </Formik>

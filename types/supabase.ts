@@ -14,18 +14,21 @@ export interface Database {
           created_at: string
           fandom_id: string
           hits: number
+          id: string
           name: string
         }
         Insert: {
           created_at?: string
           fandom_id: string
           hits?: number
+          id?: string
           name?: string
         }
         Update: {
           created_at?: string
           fandom_id?: string
           hits?: number
+          id?: string
           name?: string
         }
         Relationships: [
@@ -206,14 +209,16 @@ export interface Database {
           content: string
           created_at: string
           creator_id: string
+          draft_created_at: string | null
+          draft_modified_at: string | null
           folder_id: string | null
           id: string
           images: string[]
-          logline: string
+          is_draft: boolean
           modified_at: string | null
+          name: string
           nsfw: boolean
           tags: string[]
-          title: string
           world_id: string | null
         }
         Insert: {
@@ -221,14 +226,16 @@ export interface Database {
           content?: string
           created_at?: string
           creator_id: string
+          draft_created_at?: string | null
+          draft_modified_at?: string | null
           folder_id?: string | null
           id?: string
           images?: string[]
-          logline?: string
+          is_draft?: boolean
           modified_at?: string | null
+          name?: string
           nsfw?: boolean
           tags?: string[]
-          title?: string
           world_id?: string | null
         }
         Update: {
@@ -236,14 +243,16 @@ export interface Database {
           content?: string
           created_at?: string
           creator_id?: string
+          draft_created_at?: string | null
+          draft_modified_at?: string | null
           folder_id?: string | null
           id?: string
           images?: string[]
-          logline?: string
+          is_draft?: boolean
           modified_at?: string | null
+          name?: string
           nsfw?: boolean
           tags?: string[]
-          title?: string
           world_id?: string | null
         }
         Relationships: [
@@ -306,18 +315,21 @@ export interface Database {
           created_at: string
           fandom_id: string
           hits: number
+          id: string
           name: string
         }
         Insert: {
           created_at?: string
           fandom_id: string
           hits?: number
+          id?: string
           name?: string
         }
         Update: {
           created_at?: string
           fandom_id?: string
           hits?: number
+          id?: string
           name?: string
         }
         Relationships: [
@@ -402,18 +414,21 @@ export interface Database {
           category: string | null
           created_at: string
           hits: number
+          id: string
           name: string
         }
         Insert: {
           category?: string | null
           created_at?: string
           hits?: number
+          id?: string
           name?: string
         }
         Update: {
           category?: string | null
           created_at?: string
           hits?: number
+          id?: string
           name?: string
         }
         Relationships: [

@@ -1,12 +1,18 @@
-import type { WorldPayload } from "@/types/types.world"
+import type { WorldPayload } from "@/types/types"
 import { getId } from "./helpers";
 import { createClientSupabaseClient } from './helpers'
+import { upsert_characters, upsert_relationships, upsert_tags } from "./data-helpers";
+import { cleanTags } from "./helpers";
 
 // create a new row in worlds table (draft)
 // return the created world's ID
 export const insert_world = async (values: WorldPayload, uid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { origin, images, name, characters, tags, relationships, relationship_types, logline, description, settings } = values as WorldPayload;
+    const { origin, images, name, characters: rawCharacters, tags: rawTags, relationships: rawRelationships, relationship_types, logline, description, settings } = values as WorldPayload;
+    const tags = cleanTags(rawTags)
+    const characters = cleanTags(rawCharacters)
+    const relationships = cleanTags(rawRelationships)
+
     const wid = `W-${getId()}`
 
     let world_data = {
@@ -46,8 +52,11 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
     }
 
 
-    // update tags
     if (!is_draft) {
+        // increase number of worlds for fandom
+        // TODO
+
+        // update tags
         await upsert_tags(tags);
 
         if (origin) {
@@ -60,56 +69,15 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
 }
 
 
-const upsert_tags = async (tags: string[]) => {
-    const supabase = createClientSupabaseClient()
-    const filteredTags = tags.map(tag => tag.toLocaleLowerCase())
-
-    const { status, error } = await supabase
-        .rpc('upsert_tags', { tags_list: filteredTags })
-
-    if (error) {
-        console.error(JSON.stringify(error))
-    }
-
-    return status
-}
-
-
-const upsert_characters = async (characters: string[], fandom_id: string) => {
-    const supabase = createClientSupabaseClient()
-    const filteredCharacters = characters.map(char => char.toLocaleLowerCase())
-
-    const { status, error } = await supabase
-        .rpc('upsert_characters', { character_names: filteredCharacters, p_fandom_id: fandom_id })
-
-    if (error) {
-        console.error(JSON.stringify(error))
-    }
-
-    return status
-}
-
-
-const upsert_relationships = async (relationships: string[], fandom_id: string) => {
-    const supabase = createClientSupabaseClient()
-    const filteredShips = relationships.map(ship => ship.toLocaleLowerCase())
-
-    const { status, error } = await supabase
-        .rpc('upsert_relationships', { relationship_names: filteredShips, p_fandom_id: fandom_id })
-
-    if (error) {
-        console.error(JSON.stringify(error))
-    }
-
-    return status
-}
-
-
-
-// Edit an existing row in the table. 
+// Edit an existing row in the table.
+// TODO: upsert new tags/characters? 
 export const update_world = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { origin, images, name, characters, tags, relationships, relationship_types, logline, description, settings } = values as WorldPayload;
+    const { origin, images, name, characters: rawCharacters, tags: rawTags, relationships: rawRelationships, relationship_types, logline, description, settings } = values as WorldPayload;
+    const tags = cleanTags(rawTags)
+    const characters = cleanTags(rawCharacters)
+    const relationships = cleanTags(rawRelationships)
+
 
     let world_data = {
         origin: origin,

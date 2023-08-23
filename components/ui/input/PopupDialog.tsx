@@ -1,7 +1,7 @@
 'use client'
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
-import { EmptyFandom, Fandom, FandomMediaType, WorldDescriptionSectionCard } from '@/types/types.world';
+import { EmptyFandom, Fandom, FandomMediaType, WorldDescriptionSectionCard } from '@/types/types';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import { TagsBar } from './tags-helpers';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';

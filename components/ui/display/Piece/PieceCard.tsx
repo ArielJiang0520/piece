@@ -1,4 +1,4 @@
-import { Piece, Profile } from "@/types/types.world";
+import { Piece, Profile } from "@/types/types";
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarSmallDisplay } from "@/components/ui/input/tags-helpers";
 import { IconButtonTiny } from "@/components/ui/button/button-helpers";

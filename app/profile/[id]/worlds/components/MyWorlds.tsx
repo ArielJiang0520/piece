@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import WorldCard from "@/components/ui/display/World/WorldCard";
-import { World } from "@/types/types.world";
+import { World } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
 import { ToggleButton } from "@/components/ui/button/toggle/Toggle";

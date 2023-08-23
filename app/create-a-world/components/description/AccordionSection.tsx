@@ -3,7 +3,7 @@ import { Disclosure } from '@headlessui/react';
 import { PencilIcon, DotsVerticalIcon, TrashIcon } from '@/components/icon/icon';
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
-import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types.world';
+import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { SectionCard, AddSectionCard } from '@/components/ui/display/World/SectionCard';
@@ -128,7 +128,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             />
                         </div>
 
-                        <Disclosure.Panel className="py-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row w-full gap-4">
+                        <Disclosure.Panel className="py-4 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 grid-flow-row w-full gap-4">
                             {
                                 section.sectionCards.length >= 1 ?
                                     <>

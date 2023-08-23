@@ -12,7 +12,14 @@ interface SearchBarProps {
     defaultSelectedId?: string | null
     allowCreatingNew?: boolean
 }
-export default function SearchBar({ candidates, nameKey, placeholder, onSelect, display_func = null, defaultSelectedId = null, allowCreatingNew = false }: SearchBarProps) {
+export default function SearchBar({
+    candidates, nameKey,
+    placeholder, onSelect,
+    display_func = null,
+    defaultSelectedId = null,
+    allowCreatingNew = false
+}: SearchBarProps) {
+
     const [selectedItem, setSelectedItem] = useState<null | any>(candidates.find(item => item.id === defaultSelectedId) || null)
     const [query, setQuery] = useState('')
 
@@ -23,6 +30,9 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
     useEffect(() => {
         if (selectedItem) {
             onSelect(selectedItem);
+            if (selectedItem.id === null) {
+                setQuery('');
+            }
         }
     }, [selectedItem])
 
@@ -106,11 +116,11 @@ export default function SearchBar({ candidates, nameKey, placeholder, onSelect, 
                                         </div>
                                     </Combobox.Option>
                                 )}
-                                {filteredItems.map((item, _) => (
+                                {filteredItems.map((item) => (
                                     <Combobox.Option
                                         key={item.id}
                                         value={item}
-                                        className={`${item.id === selectedItem?.id ? "bg-foreground/20 text-foreground" : "bg-background text-foreground"}`}
+                                        className={`${item.id === selectedItem?.id ? "bg-foreground/20 text-foreground" : "bg-background text-foreground"} cursor-pointer`}
                                     >
                                         <div className='px-3 py-2 flex flex-row justify-between items-center'>
                                             <div className='overflow-hidden whitespace-nowrap overflow-ellipsis flex-1 capitalize'>

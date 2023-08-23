@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import NavBar from '@/app/NavBar';
 import { useDraftContext, } from './draft-provider';
-import type { World, DefaultWorld } from '@/types/types.world';
+import type { World, DefaultWorld } from '@/types/types';
 import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import { formatTimestamp } from '@/utils/helpers';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
@@ -24,7 +24,7 @@ export default function LocalNavBar() {
 
     const LocalNavBarComponent = edit_id ? null : () => {
         const router = useRouter()
-        const { handleDraftChange, handleDraftDelete, drafts, fetchDrafts } = useDraftContext();
+        const { handleDraftChange, handleDraftDelete, drafts } = useDraftContext();
         const [selected, setSelected] = useState<World | DefaultWorld>(drafts[0]);
         const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
         const [isLoading, setIsLoading] = useState(false)

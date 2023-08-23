@@ -2,7 +2,7 @@
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
-import { EmptyPiecePayload, World } from '@/types/types.world';
+import { EmptyPiecePayload, World } from '@/types/types';
 import useStreamText from '@/utils/useStreamText';
 import { useState } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
