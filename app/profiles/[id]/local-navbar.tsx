@@ -14,9 +14,9 @@ export default function LocalNavBar({ profile_id }: LocalNavBarProps) {
     const [user, setUser] = useState<string | null>(null)
 
     const tabs = [
-        { name: 'Overview', link: `/profile/${profile_id}` },
-        { name: 'Worlds', link: `/profile/${profile_id}/worlds` },
-        { name: 'Pieces', link: `/profile/${profile_id}/pieces` },
+        { name: 'Overview', link: `/profiles/${profile_id}` },
+        { name: 'Worlds', link: `/profiles/${profile_id}/worlds` },
+        { name: 'Pieces', link: `/profiles/${profile_id}/pieces` },
     ];
 
     const PageTitleNavBarComponent = () => {

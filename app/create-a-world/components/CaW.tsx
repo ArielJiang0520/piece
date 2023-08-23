@@ -170,7 +170,7 @@ export default function CaW() {
                         </div>
                         <div className='w-full max-w-lg flex flex-row items-center justify-center space-x-4'>
                             <SaveDraftButton uid={user.id} values={values} currentDraft={currentDraft} setSubmitting={setSubmitting} fetchDrafts={fetchDrafts} />
-                            <Link href={'default' in currentDraft || currentDraft.is_draft ? `/` : `/world/${currentDraft.id}`} >
+                            <Link href={'default' in currentDraft || currentDraft.is_draft ? `/` : `/worlds/${currentDraft.id}`} >
                                 <button className="p-2 secondaryButton text-lg" type="button">
                                     Cancel
                                 </button>

@@ -33,6 +33,8 @@ import { FaHandshake as HandShakeIcon } from 'react-icons/fa'
 import { FaHandshakeSlash as HandShakeSlashIcon } from 'react-icons/fa'
 import { LuLightbulb as LightBulbIcon } from 'react-icons/lu'
 import { LuLightbulbOff as LightBulbOffIcon } from 'react-icons/lu'
+import { IoMdArrowRoundBack as BackIcon } from 'react-icons/io'
+import { BiWorld as WorldIcon } from 'react-icons/bi'
 
 export {
     BurgerIcon,
@@ -69,5 +71,7 @@ export {
     HandShakeIcon,
     HandShakeSlashIcon,
     LightBulbIcon,
-    LightBulbOffIcon
+    LightBulbOffIcon,
+    BackIcon,
+    WorldIcon
 };

@@ -6,7 +6,7 @@ import { FieldContentDisplay } from "./display-helpers";
 import { Piece } from "@/types/types";
 
 export const PieceAuthorDisplay = ({ author, piece }: { author: Profile | null, piece: Piece }) => {
-    return <div className="flex flex-row justify-start items-start space-x-4 text-foreground text-xs">
+    return <div className="flex flex-row justify-start items-start space-x-4 text-foreground text-xs border p-4">
         <div>
             <Image
                 className='rounded-full'

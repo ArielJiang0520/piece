@@ -57,7 +57,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
 
                 <div className="flex flex-row justify-end items-center text-right space-x-1">
 
-                    <Link href={`/world/${world.id}`}>
+                    <Link href={`/worlds/${world.id}`}>
                         <button className="primaryButton text-sm px-4 py-1">
                             View
                         </button>

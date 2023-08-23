@@ -1,3 +1,4 @@
+'use client'
 import { CloseIcon } from '@/components/icon/icon';
 import LazyImage from '@/components/ui/image/LazyImageClient';
 import useHorizontalDragScroll from '@/hooks/useHorizontalScroll';

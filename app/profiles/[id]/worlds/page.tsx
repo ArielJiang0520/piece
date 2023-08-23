@@ -1,4 +1,4 @@
-// /profile/[id]/worlds
+// /profiles/[id]/worlds
 import { getSession } from "@/app/supabase-server";
 import MyWorlds from "./components/MyWorlds";
 import { createServerSupabaseClient } from "@/app/supabase-server";

@@ -65,6 +65,21 @@ export async function getPiecesByWorld(id: string) {
     }
 }
 
+export async function getPieceById(id: string) {
+    const supabase = createServerSupabaseClient();
+    const { data, error } = await supabase
+        .from('pieces')
+        .select('*, profiles(*), worlds(*)')
+        .eq('id', id)
+        .single()
+
+    if (!data || error) {
+        throw Error(JSON.stringify(error))
+    }
+
+    return data
+}
+
 
 
 export async function downloadImage(bucket_name: string, path: string) {

@@ -60,7 +60,7 @@ export function TagsBarSmallDisplay({ tags }: { tags: string[] }) {
                 tags.map((tag, index) =>
                     <div
                         key={index}
-                        className='capitalize border-foreground bg-foreground/10 text-foreground/60 text-sm whitespace-nowrap mr-2 mt-2 py-1 px-2'
+                        className='capitalize border-foreground bg-foreground/10 text-foreground/70 text-sm whitespace-nowrap mr-2 mt-2 py-1 px-2'
                     >
                         {tag}
                     </div>

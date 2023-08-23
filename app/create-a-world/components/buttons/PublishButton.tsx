@@ -33,7 +33,7 @@ export default function PublishButton({ uid, currentDraft, values, setSubmitting
             alert(`Error: ${JSON.stringify(error)}`);
         } finally {
             if (world_id)
-                router.push(`/world/${world_id}`); // Redirect to world page
+                router.push(`/worlds/${world_id}`); // Redirect to world page
             else
                 router.refresh()
             setSubmitting(false)

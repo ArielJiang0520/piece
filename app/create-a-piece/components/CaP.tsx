@@ -117,7 +117,7 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
                             </div>
                             <div className='w-full max-w-lg flex flex-row items-center justify-center space-x-4'>
                                 <SaveDraftButton uid={user.id} wid={world.id} values={values} currentDraft={currentDraft} setSubmitting={setSubmitting} fetchDrafts={fetchDrafts} />
-                                <Link href={'default' in currentDraft || currentDraft.is_draft ? `/` : `/world/${world.id}`} >
+                                <Link href={'default' in currentDraft || currentDraft.is_draft ? `/` : `/worlds/${world.id}`} >
                                     <button className="p-2 secondaryButton text-lg" type="button">
                                         Cancel
                                     </button>

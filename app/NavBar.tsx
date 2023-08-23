@@ -37,17 +37,17 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
     const profileItems: any[] = [
         {
-            link: `/profile/${user?.id}`,
+            link: `/profiles/${user?.id}`,
             name: 'Profile'
         },
 
         {
-            link: `/profile/${user?.id}/worlds`,
+            link: `/profiles/${user?.id}/worlds`,
             name: 'My Worlds'
         },
 
         {
-            link: `/profile/${user?.id}/pieces`,
+            link: `/profiles/${user?.id}/pieces`,
             name: 'My Pieces'
         },
     ]
@@ -55,7 +55,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
     return (
         <>
-            <nav id="global-bar" className="w-full flex flex-row justify-between items-center h-12 py-3 sticky top-0 z-10 text-foreground text-base font-mono bg-background">
+            <nav id="global-bar" className="w-full flex flex-row justify-between items-center h-12 py-3 top-0 z-100 text-foreground text-base font-mono bg-background">
 
                 <div id="menu-part" className='pl-4 flex-grow-0 flex-shrink-0'>
 
@@ -101,7 +101,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
             </nav>
 
 
-            {LocalNavBarComponent ? <nav id="localbar" className="w-full border-b h-12 sticky top-12 z-10 bg-background p-0 text-foreground">
+            {LocalNavBarComponent ? <nav id="localbar" className="w-full border-b h-12  top-12 z-10 bg-background p-0 text-foreground">
                 <LocalNavBarComponent {...props} />
             </nav> : <div className='w-full border-b h-3 sticky top-12 z-10 bg-background p-0'></div>}
 

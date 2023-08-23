@@ -29,7 +29,7 @@ export default function DropDownSelector({ data, selected, setSelected, width, n
                         <AccordionIcon className={`ui-open:transform ui-open:rotate-90 w-5 h-5 mx-2`} />
                     </div>
                 </Listbox.Button>
-                <Listbox.Options className={`absolute bg-background border shadow-md text-xs overflow-auto rounded-2xl py-2 focus:outline-none ${width}`}>
+                <Listbox.Options className={`absolute bg-background border shadow-md text-xs overflow-auto rounded-2xl py-2 focus:outline-none ${width} z-20`}>
                     {data.map((item) => (
                         <Listbox.Option
                             key={item.id}

@@ -3,6 +3,7 @@ import { JoinedWorldPiece, JoinedAuthorPiece, Piece, World } from '@/types/types
 import Masonry from 'masonry-layout';
 import { useRef, useEffect } from 'react';
 import PieceCard from './PieceCard';
+import Link from 'next/link';
 
 interface PiecesMasonryProps {
     pieces: Piece[] | JoinedWorldPiece[] | JoinedAuthorPiece[],
@@ -38,9 +39,11 @@ export default function PiecesMasonry({ pieces, world = null, displayAuthor = fa
 
     return <div ref={masonryGridRef} className="masonry-grid">
         {pieces.map((piece) => (
-            <div key={piece.id} className="masonry-item w-full md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 p-1">
-                <PieceCard author={(piece as JoinedAuthorPiece).profiles} piece={piece} isOwner={(piece as JoinedAuthorPiece).profiles?.id === world?.creator_id} displayAuthor={displayAuthor} />
-            </div>
+            <Link href={`/pieces/${piece.id}`}>
+                <div key={piece.id} className="masonry-item w-full md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 p-1">
+                    <PieceCard author={(piece as JoinedAuthorPiece).profiles} piece={piece} isOwner={(piece as JoinedAuthorPiece).profiles?.id === world?.creator_id} displayAuthor={displayAuthor} />
+                </div>
+            </Link>
         ))}
     </div>
 }

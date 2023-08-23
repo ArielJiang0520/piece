@@ -3,7 +3,7 @@ import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'form
 import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
 import { EmptyPiecePayload, World } from '@/types/types';
-import useStreamText from '@/utils/useStreamText';
+import useStreamText from '@/hooks/useStreamText';
 import { useState } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import CaP from '@/app/create-a-piece/components/CaP';
@@ -76,7 +76,7 @@ export default function PromptGen({ world }: { world: World }) {
                         setIsOpen={setIsPublishWindowOpen}
                         dialogTitle='Publishing New Piece'
                         dialogContent=''
-                        initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, logline: values.prompt, content: lines.join("") }} review={false} />}
+                        initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, content: lines.join("") }} review={false} />}
                         confirmAction={() => { }}
                         dialogType='display'
 

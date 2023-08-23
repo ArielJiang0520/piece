@@ -19,7 +19,7 @@ export default function PieceCard({ author, piece, displayAuthor, isOwner }: Pie
         <div className="flex flex-col">
             <div id="card" className="flex flex-col rounded-lg bg-foreground/5 w-full p-4 font-serif space-y-2">
                 <div id="title">
-                    <FieldContentDisplay content={piece.title} textSize="text-base" bold="font-bold" />
+                    <FieldContentDisplay content={piece.name} textSize="text-base" bold="font-bold" />
                 </div>
 
                 {piece.images.length >= 1 ?

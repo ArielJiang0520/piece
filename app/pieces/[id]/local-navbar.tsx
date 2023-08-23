@@ -1,42 +1,17 @@
 'use client'
-import { useState, useEffect } from 'react';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import NavBar from '@/app/NavBar';
-import { useSupabase } from '@/app/supabase-provider';
-import { NavBarSwitchLink } from '@/components/ui/menu/switch-tab';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
-import { World } from '@/types/types';
-import Skeleton from 'react-loading-skeleton';
+import { Piece, World } from '@/types/types';
+import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
+
 interface LocalNavBarProps {
-    world_id: string;
+    piece: Piece;
+    world: World
 }
-export default function LocalNavBar({ world_id }: LocalNavBarProps) {
-    const { supabase } = useSupabase()
-    const [world, setWorld] = useState<World | null>(null)
-
-    const fetchWorld = async () => {
-        const { data, error } = await supabase
-            .from('worlds')
-            .select('*')
-            .eq('id', world_id)
-            .limit(1)
-            .single()
-        if (error || !data)
-            alert(error)
-        else
-            setWorld(data)
-    };
-
-    useEffect(() => {
-        fetchWorld();
-    }, [])
-
-    if (!world) {
-        return <><Skeleton count={3} /></>
-    }
-
+export default function LocalNavBar({ piece, world }: LocalNavBarProps) {
     const PageTitleNavBarComponent = () => {
-        return <NavBarHeader title={"piece"} subtitle={world?.name} icon={<PeekWorld world={world} iconOnly={true} />} />
+        return <NavBarHeader title={"piece"} subtitle={piece?.name} />
     }
 
     const LocalNavBarComponent = null;

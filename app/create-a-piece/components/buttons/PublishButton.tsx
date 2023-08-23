@@ -34,7 +34,7 @@ export default function PublishButton({ uid, wid, currentDraft, values, setSubmi
             alert(`Error: ${JSON.stringify(error)}`);
         } finally {
             if (piece_id)
-                router.push(`/piece/${piece_id}`); // Redirect to piece page
+                router.push(`/pieces/${piece_id}`); // Redirect to piece page
             else
                 router.refresh()
             setSubmitting(false)
