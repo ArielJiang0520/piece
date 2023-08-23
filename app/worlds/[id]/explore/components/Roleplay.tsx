@@ -18,7 +18,7 @@ export default function Roleplay({ world }: { world: World }) {
     const [playerChar, setPlayerChar] = useState<any>(worldChars[0])
     const [aiChar, setAiChar] = useState<any>(worldChars[0])
 
-    const [messages, setMessages] = use
+    // const [messages, setMessages] = use
 
     return (
         <div className="flex flex-col space-y-2 items-center w-full">
