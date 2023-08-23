@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import NavBar from '@/app/NavBar';
 import { useSupabase } from '@/app/supabase-provider';
-import { NavBarSwitchLink } from '@/components/ui/switch-tab/switch-tab';
+import { NavBarSwitchLink } from '@/components/ui/menu/switch-tab';
 
 
 interface LocalNavBarProps {

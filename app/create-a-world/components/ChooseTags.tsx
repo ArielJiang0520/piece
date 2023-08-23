@@ -1,7 +1,7 @@
 'use client'
 import { useFormikContext } from 'formik';
 import { TagCategory, type Tag, type WorldPayload } from "@/types/types";
-import { CategoriesSwitchTab } from "@/components/ui/switch-tab/switch-tab";
+import { CategoriesSwitchTab } from "@/components/ui/menu/switch-tab";
 import { groupByKey } from "@/utils/helpers";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { TagsBar } from "@/components/ui/input/tags-helpers";

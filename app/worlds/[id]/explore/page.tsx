@@ -1,4 +1,4 @@
-import { SolidSwitchTab } from "@/components/ui/switch-tab/switch-tab"
+import { SolidSwitchTab } from "@/components/ui/menu/switch-tab"
 import { getWorldDetailsById } from "@/app/supabase-server";
 import ExploreWorld from "./components/ExploreWorld";
 
