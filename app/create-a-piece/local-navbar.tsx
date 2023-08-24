@@ -12,16 +12,19 @@ import { formatTimestamp } from '@/utils/helpers';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { TrashIcon } from '@/components/icon/icon';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
+import { useSearchParams } from 'next/navigation';
 
 export default function LocalNavBar({ world }: { world: World }) {
+    const searchParams = useSearchParams()
+    const edit_id = searchParams.get("edit_id")
 
     const PageTitleNavBarComponent = () => {
         return (
-            <NavBarHeader title={"create-a-piece"} subtitle={world.name} icon={<PeekWorld world={world} iconOnly={true} />} />
+            <NavBarHeader title={"create-a-piece"} subtitle={edit_id ? `Editing: ${edit_id}` : world!.name} icon={<PeekWorld world={world!} iconOnly={true} />} />
         )
     }
 
-    const LocalNavBarComponent = () => {
+    const LocalNavBarComponent = edit_id ? null : () => {
         const router = useRouter()
         const { handleDraftChange, handleDraftDelete, drafts } = useDraftContext();
         const [selected, setSelected] = useState<Piece | DefaultPiece>(drafts[0]);

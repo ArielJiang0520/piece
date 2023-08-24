@@ -1,6 +1,6 @@
 import { Piece, Profile } from "@/types/types";
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
-import { TagsBarSmallDisplay } from "@/components/ui/input/tags-helpers";
+import { TagsBarTinyDisplay } from "@/components/ui/input/tags-helpers";
 import { IconButtonTiny } from "@/components/ui/button/button-helpers";
 import { EmptyHeartIcon, CommentIcon, CrownIcon } from "@/components/icon/icon";
 import SingleImage from "@/components/ui/image/SingleImage";
@@ -23,13 +23,13 @@ export default function PieceCard({ author, piece, displayAuthor, isOwner }: Pie
                 </div>
 
                 {piece.images.length >= 1 ?
-                    !hasSingleImage ?
-                        <div id="content" className={``}>
-                            <ImagesDisplayRow bucket="world" dimension={{ width: "w-80", height: "h-80" }} paths={piece.images} />
-                        </div> :
-                        <div className="-mx-4">
-                            <SingleImage bucket="world" path={piece.images[0]} dimension="w-auto h-auto" />
-                        </div>
+                    // !hasSingleImage ?
+                    //     <div id="content" className={``}>
+                    //         <ImagesDisplayRow bucket="world" dimension={{ width: "w-80", height: "h-80" }} paths={piece.images} />
+                    //     </div> :
+                    <div className="-mx-4">
+                        <SingleImage bucket="world" path={piece.images[0]} dimension="w-auto h-auto" numberIcon={piece.images.length > 1 ? piece.images.length : null} />
+                    </div>
                     : null}
 
                 <div id="content" className="">
@@ -37,7 +37,7 @@ export default function PieceCard({ author, piece, displayAuthor, isOwner }: Pie
                 </div>
 
                 <div id="tags">
-                    <TagsBarSmallDisplay tags={piece.tags} />
+                    <TagsBarTinyDisplay tags={piece.tags.slice(0, 3)} />
                 </div>
 
 
@@ -60,12 +60,12 @@ export default function PieceCard({ author, piece, displayAuthor, isOwner }: Pie
                                 onClick={() => { }}
                             />
 
-                            <div className="block w-24 md:w-auto overflow-hidden">{author?.full_name ? author.full_name : "Deleted User"}</div>
-                            {/* <div>{isOwner ? <CrownIcon className="block text-brand" /> : null}</div> */}
+                            <div className="w-auto overflow-hidden">{author?.full_name ? author.full_name : "Deleted User"}</div>
+                            <div>{isOwner ? <CrownIcon className="block text-brand" /> : null}</div>
 
 
                         </div>
-                        <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"1.2k"} />
+                        <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"0"} />
                     </div>
 
                 }

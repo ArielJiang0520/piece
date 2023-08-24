@@ -97,3 +97,27 @@
 .horizontal-scroll:active {
     cursor: grabbing;
 }
+
+
+/* This targets the scrollbar container */
+::-webkit-scrollbar {
+    width: 5px;  /* Change width for vertical scrollbar */
+    height: 5px; /* Change height for horizontal scrollbar */
+}
+
+/* This targets the scrollbar handle */
+::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 2px; /* Optional: Add rounded corners to your scrollbar */
+}
+
+/* This targets the scrollbar track */
+::-webkit-scrollbar-track {
+    background-color: #F0F0F0; /* Light gray or whatever color you prefer */
+}
+
+/* For Firefox (v64 and later) */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: gray #F0F0F0; /* thumb and track color */
+}

@@ -108,9 +108,9 @@ export default function MyPieces({ pieces, worlds }: MyPiecesProps) {
     return (
         <div className="flex flex-col">
             <div id="search-bar" className="flex flex-col md:flex-row md:items-center mb-6">
-                <button className="w-full md:w-auto mb-4 md:mb-0 order-1 md:order-2 text-base px-3 py-2 primaryButton">
+                {/* <button className="w-full md:w-auto mb-4 md:mb-0 order-1 md:order-2 text-base px-3 py-2 primaryButton">
                     <Link href={'/create-a-piece'}> Create a Piece </Link>
-                </button>
+                </button> */}
 
                 <div className="flex-grow w-full md:mr-4 order-2 md:order-1 z-30">
                     <SearchBar

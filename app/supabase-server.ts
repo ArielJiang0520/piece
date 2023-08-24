@@ -82,6 +82,7 @@ export async function getPieceById(id: string) {
 
 
 
+
 export async function downloadImage(bucket_name: string, path: string) {
     const supabase = createServerSupabaseClient();
     try {

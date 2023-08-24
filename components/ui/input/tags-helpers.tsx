@@ -53,16 +53,35 @@ export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBa
 }
 
 
-export function TagsBarSmallDisplay({ tags }: { tags: string[] }) {
+export function TagsBarSmallDisplay({ tags, small = false, scroll = false }: { tags: string[], small?: boolean, scroll?: boolean }) {
     return (
-        <div className='flex flex-row flex-wrap w-full font-mono'>
+        <div className={`flex flex-row w-full font-mono ${scroll ? "overflow-x-auto" : "flex-wrap"}`}>
             {
                 tags.map((tag, index) =>
                     <div
                         key={index}
-                        className='capitalize border-foreground bg-foreground/10 text-foreground/70 text-sm whitespace-nowrap mr-2 mt-2 py-1 px-2'
+                        className={`capitalize border-foreground bg-foreground/10 text-foreground/70 whitespace-nowrap ${!small ? "text-sm  mr-2 mt-2 py-1 px-2" : "text-xs mr-1 mt-1 py-1 px-2"} `}
                     >
                         {tag}
+                    </div>
+                )
+            }
+        </div>
+
+    )
+}
+
+
+export function TagsBarTinyDisplay({ tags }: { tags: string[] }) {
+    return (
+        <div className={`flex flex-row w-full font-mono overflow-x-auto`}>
+            {
+                tags.map((tag, index) =>
+                    <div
+                        key={index}
+                        className={`capitalize  text-foreground/70 whitespace-nowrap text-xs mr-1 mt-1`}
+                    >
+                        #{tag}
                     </div>
                 )
             }

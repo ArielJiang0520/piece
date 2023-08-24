@@ -21,6 +21,7 @@ export default function PublishButton({ uid, wid, currentDraft, values, setSubmi
         setSubmitting(true)
 
         let piece_id: string | null = null
+        console.log('current dratf', currentDraft)
         try {
             if ("default" in currentDraft) { // if directly publish from blank
                 piece_id = await insert_piece(values, uid, wid, false)

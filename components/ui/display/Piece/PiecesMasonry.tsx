@@ -39,7 +39,7 @@ export default function PiecesMasonry({ pieces, world = null, displayAuthor = fa
 
     return <div ref={masonryGridRef} className="masonry-grid">
         {pieces.map((piece) => (
-            <Link href={`/pieces/${piece.id}`}>
+            <Link key={piece.id} href={`/pieces/${piece.id}`}>
                 <div key={piece.id} className="masonry-item w-full md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 p-1">
                     <PieceCard author={(piece as JoinedAuthorPiece).profiles} piece={piece} isOwner={(piece as JoinedAuthorPiece).profiles?.id === world?.creator_id} displayAuthor={displayAuthor} />
                 </div>
@@ -47,3 +47,5 @@ export default function PiecesMasonry({ pieces, world = null, displayAuthor = fa
         ))}
     </div>
 }
+
+

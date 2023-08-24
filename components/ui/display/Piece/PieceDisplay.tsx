@@ -1,13 +1,15 @@
 'use client'
 import type { Piece, Profile, World } from "@/types/types"
-import { FolderIcon, WorldIcon, SlashIcon } from "@/components/icon/icon"
-import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
+import { EmptyHeartIcon, WorldIcon, CalendarIcon } from "@/components/icon/icon"
+import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
 import { PieceAuthorDisplay } from "@/components/ui/display/user-display-helpers";
 import type { User } from "@supabase/supabase-js";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import PeekWorld from "../World/PeekWorld";
+import { formatTimestamp } from "@/utils/helpers";
+import { IconButtonTiny } from "@/components/ui/button/button-helpers";
 
 const PieceMetadataDisplay = ({ piece, world }: { piece: Piece, world: World }) => {
     return (
@@ -55,10 +57,19 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
 
 
 
-            <div id="author-group" className="w-full flex flex-col">
+            <div id="author-group" className="w-full flex flex-col max-w-2xl">
                 <Link href={`/profiles/${author.id}`}>
-                    <PieceAuthorDisplay author={author} piece={piece} />
+                    <PieceAuthorDisplay author={author} />
                 </Link>
+            </div>
+
+            <div id="tags-group" className='w-full flex flex-col'>
+                <FieldTitleDisplay label={"tags:"} textSize="text-sm" />
+                <TagsBarDisplay tags={piece.tags} preview={preview} />
+            </div>
+
+            <div className="hpx border-t w-full my-2">
+
             </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
@@ -69,9 +80,21 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
                 <FieldContentDisplay content={piece.content} textSize="text-base" bold="font-normal" />
             </div>
 
-            <div id="tags-group" className='w-full flex flex-col'>
-                <TagsBarDisplay tags={piece.tags} preview={preview} />
+
+
+            <div className='flex flex-row text-base justify-between items-center  w-full'>
+                <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"0"} />
+                <div className="flex flex-row text-xs items-center space-x-1 ">
+                    <CalendarIcon />
+                    <span>Created on {formatTimestamp(piece.created_at, true)}</span>
+                </div>
             </div>
+
+            <div className="hpx border-t w-full my-2">
+
+            </div>
+
+
         </div>
     )
 }

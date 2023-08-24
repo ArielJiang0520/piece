@@ -21,7 +21,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
     ]
 
     const guestMenu: DropDownMenuOptions[] = [
-        { name: 'Create a Piece', icon: PencilIcon, function: () => { router.push(`/create-a-piece?id=${world.id}`) } },
+        { name: 'Create a Piece', icon: PencilIcon, function: () => { router.push(`/create-a-piece?world_id=${world.id}`) } },
         { name: 'Subscribe', icon: TrashIcon, function: () => { } }
     ]
 

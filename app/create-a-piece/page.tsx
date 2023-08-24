@@ -1,6 +1,6 @@
 import LocalNavBar from './local-navbar';
 import CaP from '@/app/create-a-piece/components/CaP';
-import { getWorldDetailsById } from '../supabase-server';
+import { getWorldDetailsById, getPieceById } from '../supabase-server';
 import { EmptyPiecePayload } from '@/types/types';
 import { DraftProvider } from './draft-provider';
 
@@ -9,10 +9,11 @@ export default async function Page({
     searchParams,
 }: {
     params: { id: string }
-    searchParams?: { [key: string]: string | string[] | undefined };
+    searchParams?: { [key: string]: string | undefined };
 }) {
     if (searchParams) {
-        const world = await getWorldDetailsById(searchParams.id as string)
+        const world_id = searchParams.world_id ?? (await getPieceById(searchParams.edit_id!)).world_id!
+        const world = await getWorldDetailsById(world_id)
 
         if (!world)
             return <></>

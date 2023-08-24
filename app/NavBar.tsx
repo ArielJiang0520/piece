@@ -103,7 +103,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
             {LocalNavBarComponent ? <nav id="localbar" className="w-full border-b h-12  top-12 z-10 bg-background p-0 text-foreground">
                 <LocalNavBarComponent {...props} />
-            </nav> : <div className='w-full border-b h-3 sticky top-12 z-10 bg-background p-0'></div>}
+            </nav> : <div className='w-full border-b h-3  top-12 z-10 bg-background p-0'></div>}
 
             <SideBar onLeft={true} isMenuOpen={isLeftMenuOpen} setIsMenuOpen={setIsLeftMenuOpen} menuItems={menuItems} image={{ link: '/logo_500px.png', alt: "logo" }} />
 

@@ -113,7 +113,7 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
             {!preview && <div id="button-group" className='w-full flex flex-row justify-between items-center'>
                 <div className='flex flex-row space-x-2'>
                     <IconButtonMid icon={<StarIcon />} title="123" />
-                    <Link href={{ pathname: '/create-a-piece', query: { id: world.id } }} >
+                    <Link href={{ pathname: '/create-a-piece', query: { world_id: world.id } }} >
                         <IconButtonMid icon={<AtomIcon />} title={"Create a Piece"} />
                     </Link>
                 </div>

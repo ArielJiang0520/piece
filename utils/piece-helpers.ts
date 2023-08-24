@@ -59,7 +59,6 @@ export const update_piece = async (values: PiecePayload, pid: string, is_draft: 
 
     let piece_data = {
         id: pid,
-        origin: origin,
         images: images,
         name: name,
         tags: tags,

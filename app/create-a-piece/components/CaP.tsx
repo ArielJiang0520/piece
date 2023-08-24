@@ -21,9 +21,8 @@ import ChooseTags from './ChooseTags';
 interface CaPProps {
     world: World,
     initValues: PiecePayload;
-    review?: boolean
 }
-export default function CaP({ world, initValues, review = true }: CaPProps) {
+export default function CaP({ world, initValues }: CaPProps) {
     const { currentDraft, fetchDrafts } = useDraftContext();
 
     const { user } = useSupabase()
@@ -52,6 +51,7 @@ export default function CaP({ world, initValues, review = true }: CaPProps) {
             <Formik
                 initialValues={initValues}
                 onSubmit={() => { }}
+                innerRef={formikRef}
             >
                 {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors }) => (
                     <Form className='flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>

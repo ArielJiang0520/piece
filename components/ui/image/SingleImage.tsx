@@ -6,10 +6,11 @@ interface SingleImageProps {
     bucket: string,
     path: string;
     dimension: string;
-    rounded?: boolean
+    rounded?: boolean;
+    numberIcon?: number | null;
 }
 
-export const SingleImage: React.FC<SingleImageProps> = ({ bucket, path, dimension, rounded = false }) => {
+export const SingleImage: React.FC<SingleImageProps> = ({ bucket, path, dimension, rounded = false, numberIcon = null }) => {
     const [url, setUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -26,7 +27,10 @@ export const SingleImage: React.FC<SingleImageProps> = ({ bucket, path, dimensio
             </div>
         );
     } else {
-        return <img src={url} alt="Placeholder Image" className={`w-full h-auto ${rounded ? "rounded-lg" : ""}`} />;
+        return <div className="relative">
+            <img src={url} alt="Placeholder Image" className={`w-full h-auto ${rounded ? "rounded-lg" : ""}`} />
+            {numberIcon && <div className="absolute top-0 right-0 h-5 w-5 bg-black/50 text-white font-mono text-sm flex items-center justify-center">{numberIcon}</div>}
+        </div>;
     }
 };
 

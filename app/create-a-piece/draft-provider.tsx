@@ -21,8 +21,9 @@ export function DraftProvider({
 }: {
     children: React.ReactNode;
 }) {
-    // const searchParams = useSearchParams()
-    // const world_id = searchParams.get("id")
+    const searchParams = useSearchParams()
+    const world_id = searchParams.get('world_id')
+    const edit_id = searchParams.get("edit_id")
 
     const initDraft = { id: `P-${getId()}`, name: 'A New Draft', default: true } as DefaultPiece;
 
@@ -50,7 +51,8 @@ export function DraftProvider({
 
         const { data, error } = await supabase
             .from('pieces')
-            .select()
+            .select('*')
+            .eq('world_id', world_id)
             .eq('creator_id', session.user.id)
             .eq('is_draft', true)
 
@@ -61,8 +63,25 @@ export function DraftProvider({
         setDrafts([initDraft, ...data]);
     }
 
+    const fetchPiece = async () => {
+        const { data, error } = await supabase
+            .from('pieces')
+            .select('*')
+            .eq('id', edit_id)
+            .single()
+        if (error || !data) {
+            console.error(error.code, error.message)
+            return
+        }
+        setCurrentDraft(data)
+        console.log('currentDraft', currentDraft)
+    }
+
     useEffect(() => {
-        fetchDrafts();
+        if (edit_id)
+            fetchPiece();
+        else
+            fetchDrafts();
     }, []);
 
 
