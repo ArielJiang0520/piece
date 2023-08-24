@@ -1,6 +1,7 @@
+'/api/generate/roleplay'
 import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge"
 import type { NextRequest } from 'next/server'
-import { storyPrompt } from "@/utils/prompt"
+import { roleplayPrompt } from "@/utils/prompt"
 
 export const runtime = 'edge'
 
@@ -11,15 +12,16 @@ const openai = new OpenAIApi(configuration)
 
 export async function POST(req: NextRequest): Promise<Response> {
     if (req.method === 'POST') {
-        const { prompt, world } = await req.json();
+        const { messages, world, userRole, aiRole } = await req.json();
+        console.log(messages, userRole, aiRole)
         try {
             const response = await openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
+                model: "gpt-3.5-turbo-16k",
                 messages: [
-                    { role: "system", content: storyPrompt(world) },
-                    { role: "user", content: prompt.prompt },
+                    { role: "system", content: roleplayPrompt(world, userRole, aiRole) },
+                    ...messages
                 ],
-                max_tokens: 2048,
+                max_tokens: 256,
                 temperature: 1,
                 stream: true
             });

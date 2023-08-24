@@ -74,7 +74,7 @@ export function TagsBarSmallDisplay({ tags, small = false, scroll = false }: { t
 
 export function TagsBarTinyDisplay({ tags }: { tags: string[] }) {
     return (
-        <div className={`flex flex-row w-full font-mono overflow-x-auto`}>
+        <div className={`flex flex-row w-full font-mono flex-wrap`}>
             {
                 tags.map((tag, index) =>
                     <div

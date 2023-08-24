@@ -1,0 +1,27 @@
+'use client'
+import { useState, useEffect } from 'react';
+import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
+import NavBar from '@/app/NavBar';
+import { useSupabase } from '@/app/supabase-provider';
+import { NavBarSwitchLink } from '@/components/ui/menu/switch-tab';
+
+
+interface LocalNavBarProps {
+    profile_id: string;
+}
+export default function LocalNavBar() {
+
+
+    const PageTitleNavBarComponent = () => {
+        return <NavBarHeader title={"browsing"} subtitle={"All Worlds"} />
+    }
+
+
+
+    const LocalNavBarComponent = null;
+
+    return <NavBar
+        PageTitleNavBarComponent={PageTitleNavBarComponent}
+        LocalNavBarComponent={LocalNavBarComponent}
+    />
+}

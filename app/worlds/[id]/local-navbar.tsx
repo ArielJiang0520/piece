@@ -7,6 +7,7 @@ import { NavBarSwitchLink } from '@/components/ui/menu/switch-tab';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
 import { World } from '@/types/types';
 import Skeleton from 'react-loading-skeleton';
+import { usePathname } from 'next/navigation';
 
 interface LocalNavBarProps {
     world_id: string;
@@ -26,7 +27,6 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
             .from('worlds')
             .select('*')
             .eq('id', world_id)
-            .limit(1)
             .single()
         if (error || !data)
             alert(error)

@@ -80,29 +80,18 @@ export async function getPieceById(id: string) {
     return data
 }
 
-
-
-
-export async function downloadImage(bucket_name: string, path: string) {
+export async function getAllWorlds() {
     const supabase = createServerSupabaseClient();
-    try {
-        const { data, error } = await supabase
-            .storage
-            .from(bucket_name)
-            .download(path)
+    const { data, error } = await supabase
+        .from('worlds')
+        .select('*, profiles(*)')
+        .eq('is_public', true)
+        .eq('is_draft', false)
 
-        if (error) {
-            throw error
-        }
 
-        const url = URL.createObjectURL(data)
-
-        if (!url)
-            throw Error(`Error downloading image ${error}`)
-
-        return url;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
+    if (!data || error) {
+        throw Error(JSON.stringify(error))
     }
+
+    return data
 }

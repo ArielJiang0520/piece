@@ -25,7 +25,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
         },
 
         {
-            link: '/world',
+            link: '/worlds',
             name: 'Browse Worlds'
         },
 

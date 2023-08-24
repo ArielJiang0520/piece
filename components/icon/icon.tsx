@@ -35,6 +35,7 @@ import { LuLightbulb as LightBulbIcon } from 'react-icons/lu'
 import { LuLightbulbOff as LightBulbOffIcon } from 'react-icons/lu'
 import { IoMdArrowRoundBack as BackIcon } from 'react-icons/io'
 import { BiWorld as WorldIcon } from 'react-icons/bi'
+import { AiOutlineSend as SendIcon } from 'react-icons/ai'
 
 export {
     BurgerIcon,
@@ -73,5 +74,6 @@ export {
     LightBulbIcon,
     LightBulbOffIcon,
     BackIcon,
-    WorldIcon
+    WorldIcon,
+    SendIcon
 };
