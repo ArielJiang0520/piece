@@ -12,13 +12,13 @@ const openai = new OpenAIApi(configuration)
 
 export async function POST(req: NextRequest): Promise<Response> {
     if (req.method === 'POST') {
-        const { messages, world, userRole, aiRole } = await req.json();
+        const { messages, world, userRole, aiRole, scenario } = await req.json();
         console.log(messages, userRole, aiRole)
         try {
             const response = await openai.createChatCompletion({
-                model: "gpt-3.5-turbo-16k",
+                model: "gpt-4",
                 messages: [
-                    { role: "system", content: roleplayPrompt(world, userRole, aiRole) },
+                    { role: "system", content: roleplayPrompt(world, userRole, aiRole, scenario) },
                     ...messages
                 ],
                 max_tokens: 256,

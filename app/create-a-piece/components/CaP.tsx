@@ -20,18 +20,23 @@ import ChooseTags from './ChooseTags';
 
 interface CaPProps {
     world: World,
-    initValues: PiecePayload;
+    initValues?: PiecePayload | null;
 }
-export default function CaP({ world, initValues }: CaPProps) {
+export default function CaP({ world, initValues = null }: CaPProps) {
     const { currentDraft, fetchDrafts } = useDraftContext();
 
     const { user } = useSupabase()
 
     const formikRef = useRef<FormikProps<PiecePayload> | null>(null); // Adding a ref to Formik
     useEffect(() => {
+
         if (formikRef.current) {
-            const newValues: PiecePayload = "default" in currentDraft ? EmptyPiecePayload : cast_to_piecepayload(currentDraft)
-            formikRef.current.resetForm({ values: newValues });
+            if (initValues) {
+                formikRef.current.resetForm({ values: initValues });
+            } else {
+                const newValues: PiecePayload = "default" in currentDraft ? EmptyPiecePayload : cast_to_piecepayload(currentDraft)
+                formikRef.current.resetForm({ values: newValues });
+            }
         }
     }, [currentDraft])  // Resetting the form whenever currentDraft changes
 
@@ -49,7 +54,7 @@ export default function CaP({ world, initValues }: CaPProps) {
         <>
 
             <Formik
-                initialValues={initValues}
+                initialValues={EmptyPiecePayload}
                 onSubmit={() => { }}
                 innerRef={formikRef}
             >

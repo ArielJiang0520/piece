@@ -43,12 +43,12 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
         {
             link: `/profiles/${user?.id}/worlds`,
-            name: 'My Worlds'
+            name: 'Your worlds'
         },
 
         {
             link: `/profiles/${user?.id}/pieces`,
-            name: 'My Pieces'
+            name: 'Your pieces'
         },
     ]
 

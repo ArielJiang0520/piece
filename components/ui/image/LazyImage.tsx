@@ -10,7 +10,7 @@ interface LazyImageClientProps {
     popup?: boolean;
 }
 
-export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, dimension, rounded = true, popup = false }) => {
+export const LazyImage: React.FC<LazyImageClientProps> = ({ bucket, path, dimension, rounded = true, popup = false }) => {
     const [url, setUrl] = useState<string | null>(null);
     const [showPopup, setShowPopup] = useState(false);
     const [popupImage, setPopupImage] = useState<string | null>(null);
@@ -20,7 +20,16 @@ export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, 
             .then((url) => setUrl(url))
             .catch((error) => console.error(error));
 
-    }, [path]);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (url) {
+                URL.revokeObjectURL(url);
+            }
+        };
+    }, [url]);
+
 
     const handleImageClick = (url: string) => {
         setPopupImage(url);
@@ -58,4 +67,4 @@ export const LazyImageClient: React.FC<LazyImageClientProps> = ({ bucket, path, 
     }
 };
 
-export default LazyImageClient;
+export default LazyImage;

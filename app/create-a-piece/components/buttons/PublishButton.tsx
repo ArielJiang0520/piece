@@ -39,6 +39,7 @@ export default function PublishButton({ uid, wid, currentDraft, values, setSubmi
             else
                 router.refresh()
             setSubmitting(false)
+            setIsPublishConfirm(false)
         }
     }
 

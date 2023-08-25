@@ -7,7 +7,6 @@ import useStreamText from '@/hooks/useStreamText';
 import { useState } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import CaP from '@/app/create-a-piece/components/CaP';
-import { DraftProvider } from '@/app/create-a-piece/draft-provider';
 
 interface PromptPayload {
     prompt: string,
@@ -34,7 +33,7 @@ export default function PromptGen({ world }: { world: World }) {
         }
     };
 
-    return <DraftProvider>
+    return <>
         <Formik
             initialValues={{} as PromptPayload}
             onSubmit={(values) => { console.log('submitted values', values); handleSubmit(values) }}
@@ -65,9 +64,9 @@ export default function PromptGen({ world }: { world: World }) {
 
                     </div>
 
-                    <div className="fixed bottom-7 left-1/2 transform -translate-x-1/2 flex justify-center space-x-4 z-50">
-                        <button className="primaryButton-pink p-2" type="submit">Generate</button>
-                        <button className="primaryButton-pink p-2" type="button" onClick={() => setIsPublishWindowOpen(true)}>Publish as New Piece</button>
+                    <div className="fixed bottom-7 left-1/2 transform -translate-x-1/2 flex justify-center space-x-4 z-50 text-sm">
+                        <button className="primaryButton p-2" type="submit">Generate</button>
+                        <button className="primaryButton p-2" type="button" onClick={() => setIsPublishWindowOpen(true)}>Publish as New Piece</button>
                     </div>
 
                     <PopupDialog
@@ -82,5 +81,5 @@ export default function PromptGen({ world }: { world: World }) {
                 </Form>
             )}
         </Formik>
-    </DraftProvider>
+    </>
 }

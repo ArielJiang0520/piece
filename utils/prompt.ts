@@ -35,7 +35,7 @@ Below is the settings of this world:
 ${worldString}`
 }
 
-export function roleplayPrompt(world: World, userRole: string, aiRole: string): string {
+export function roleplayPrompt(world: World, userRole: string, aiRole: string, scenario: string): string {
     const worldString = worldToString(world)
     return `
 Below is the settings of this world:
@@ -44,7 +44,7 @@ ${worldString}
 **Instruction**
 Right now, you are playing as ${aiRole} in the story, 
 while the user is playing as ${userRole}  in the story. 
-
+The current scenario: ${scenario}.
 
 You should never reveal you are the AI. Don't say things that are out-of-character, 
 if the character you are playing is villain/cold, DO NOT try to be preachy. 

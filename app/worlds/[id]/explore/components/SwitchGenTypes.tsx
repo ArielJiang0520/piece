@@ -31,7 +31,7 @@ export default function SwitchGenTypes({ options, onTabChange }: SwitchGenTypes)
                     {options.map((option: Option) => (
                         <RadioGroup.Option key={option.id} value={option}
                             className={`cursor-pointer  relative flex flex-row items-center justify-center rounded-lg p-5 space-x-2  border 
-                                ${selectedOption.id === option.id ? "bg-brand text-background border-brand" : "text-foreground/50"} `}
+                                ${selectedOption.id === option.id ? "bg-brand text-white border-brand" : "text-foreground/50"} `}
                         >
 
                             {option.icon}

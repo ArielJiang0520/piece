@@ -8,6 +8,7 @@ import { PencilIcon, SingleUserIcon } from '@/components/icon/icon';
 import { useState } from "react";
 import Roleplay from "./Roleplay";
 
+import { DraftProvider } from '@/app/create-a-piece/draft-provider';
 
 export default function ExploreWorld({ world }: { world: World }) {
     const options: Option[] = [
@@ -17,10 +18,12 @@ export default function ExploreWorld({ world }: { world: World }) {
 
     const [selectedOption, setSelectedOption] = useState(options[0])
 
-    return <div className="w-full flex flex-col space-y-6 items-start">
-        <div id="tab-group" className='w-full flex flex-col items-start justify-start'>
-            <SwitchGenTypes options={options} onTabChange={(option: Option) => { setSelectedOption(option) }} />
+    return <DraftProvider>
+        <div className="w-full flex flex-col space-y-6 items-start">
+            <div id="tab-group" className='w-full flex flex-col items-start justify-start'>
+                <SwitchGenTypes options={options} onTabChange={(option: Option) => { setSelectedOption(option) }} />
+            </div>
+            {selectedOption.page}
         </div>
-        {selectedOption.page}
-    </div>
+    </DraftProvider>
 }

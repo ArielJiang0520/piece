@@ -1,7 +1,7 @@
 'use client'
 import { World } from "@/types/types";
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
-import { CalendarIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon } from "@/components/icon/icon";
+import { CalendarIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon, StarIcon, AtomIcon } from "@/components/icon/icon";
 import { formatTimestamp } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
@@ -36,13 +36,13 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                     <span>{world.origin ? origin : "Original World"}</span>
                 </div>
                 <div className="flex flex-row  items-center space-x-1">
-                    <SingleUserIcon />
+                    <StarIcon />
                     <div className=" ">
                         123
                     </div>
                 </div>
                 <div className="flex flex-row items-center space-x-1">
-                    <PencilIcon />
+                    <AtomIcon />
                     <div className="">
                         23
                     </div>

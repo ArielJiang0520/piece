@@ -1,3 +1,6 @@
+'use client'
+import useHorizontalDragScroll from "@/hooks/useHorizontalScroll";
+
 interface TagsBarProps {
     values: string[];
     handleValuesChange: (values: any) => void;
@@ -34,8 +37,13 @@ interface TagsBarDisplay {
 }
 
 export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBarDisplay) {
+    const { startDrag, stopDrag, doDrag } = useHorizontalDragScroll();
     return (
-        <div className={`flex flex-row w-full justify-start  ${scroll ? "overflow-hidden overflow-x-auto" : "flex-wrap "}`}>
+        <div className={`flex flex-row w-full justify-start  ${scroll ? "overflow-hidden overflow-x-auto horizontal-scroll hide-scrollbar" : "flex-wrap "}`}
+            onMouseDown={startDrag}
+            onMouseLeave={stopDrag}
+            onMouseUp={stopDrag}
+            onMouseMove={doDrag}>
             {
                 tags.map((tag, index) =>
                     <button
