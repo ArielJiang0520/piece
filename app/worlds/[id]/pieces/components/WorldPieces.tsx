@@ -4,7 +4,12 @@ import SearchBar from "@/components/ui/input/SearchBar";
 import { useEffect, useState, useRef } from 'react';
 import Link from "next/link";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
-import PiecesMasonry from "@/components/ui/display/Piece/PiecesMasonry";
+// import PiecesMasonry from "@/components/ui/display/Piece/PiecesMasonry";
+import dynamic from 'next/dynamic';
+
+const PiecesMasonry = dynamic(() => import('@/components/ui/display/Piece/PiecesMasonry'), {
+    ssr: false
+});
 
 type SortFunc = { id: number, name: string, myFunc: (a: Piece, b: Piece) => number }
 

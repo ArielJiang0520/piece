@@ -24,12 +24,10 @@ interface CaPProps {
 }
 export default function CaP({ world, initValues = null }: CaPProps) {
     const { currentDraft, fetchDrafts } = useDraftContext();
-
     const { user } = useSupabase()
 
     const formikRef = useRef<FormikProps<PiecePayload> | null>(null); // Adding a ref to Formik
     useEffect(() => {
-
         if (formikRef.current) {
             if (initValues) {
                 formikRef.current.resetForm({ values: initValues });
@@ -48,7 +46,6 @@ export default function CaP({ world, initValues = null }: CaPProps) {
             event.preventDefault();
         }
     };
-
 
     return (
         <>

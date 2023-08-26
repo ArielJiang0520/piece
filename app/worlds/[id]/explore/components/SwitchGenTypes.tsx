@@ -27,7 +27,7 @@ export default function SwitchGenTypes({ options, onTabChange }: SwitchGenTypes)
         <div className="w-full  flex justify-center">
             <RadioGroup value={selectedOption} onChange={handleTabChange}>
                 <RadioGroup.Label className="sr-only">Choose an option</RadioGroup.Label>
-                <div className="grid grid-cols-2 lg:grid-rows-1 gap-2">
+                <div className="flex flex-row overflow-y-auto space-x-4">
                     {options.map((option: Option) => (
                         <RadioGroup.Option key={option.id} value={option}
                             className={`cursor-pointer  relative flex flex-row items-center justify-center rounded-lg p-5 space-x-2  border 

@@ -25,6 +25,13 @@ export function DraftProvider({
     const world_id = searchParams.get('world_id')
     const edit_id = searchParams.get("edit_id")
 
+    useEffect(() => {
+        if (edit_id)
+            fetchPiece();
+        else
+            fetchDrafts();
+    }, []);
+
     const initDraft = { id: `P-${getId()}`, name: 'A New Draft', default: true } as DefaultPiece;
 
     const [currentDraft, setCurrentDraft] = useState<Piece | DefaultPiece>(initDraft);
@@ -74,16 +81,7 @@ export function DraftProvider({
             return
         }
         setCurrentDraft(data)
-        console.log('currentDraft', currentDraft)
     }
-
-    useEffect(() => {
-        if (edit_id)
-            fetchPiece();
-        else
-            fetchDrafts();
-    }, []);
-
 
     return (
         <DraftContext.Provider value={{ currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>

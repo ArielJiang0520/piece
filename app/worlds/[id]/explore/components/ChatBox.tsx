@@ -68,7 +68,6 @@ const SaveButton = ({ userRole, aiRole, messages, world }: {
     userRole: string; aiRole: string; messages: Message[]; world: World
 }) => {
     const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false)
-    console.log(messages, world)
     return (
         <>
             <button

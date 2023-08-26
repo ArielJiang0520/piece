@@ -36,7 +36,7 @@ export default function PromptGen({ world }: { world: World }) {
     return <>
         <Formik
             initialValues={{} as PromptPayload}
-            onSubmit={(values) => { console.log('submitted values', values); handleSubmit(values) }}
+            onSubmit={(values) => handleSubmit(values)}
         >
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors }) => (
                 <Form className='mt-4 w-full flex flex-col space-y-4 items-start' onKeyDown={handleKeyDown}>

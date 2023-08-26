@@ -22,11 +22,11 @@ export default async function Page({
             <DraftProvider>
                 <LocalNavBar world={world} />
                 <div className="w-full md:w-2/3 flex flex-col gap-15 px-5 py-5 lg:py-5 text-foreground font-mono">
-                    <CaP world={world} initValues={EmptyPiecePayload} />
+                    <CaP world={world} />
                 </div>
             </DraftProvider>
         )
     } else {
-        return <></>
+        return <>Error! can't call this url without params</>
     }
 }   

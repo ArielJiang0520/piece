@@ -118,10 +118,11 @@ interface NavBarSwitchLinkProps {
     pinned?: boolean
 }
 export function NavBarSwitchLink({ tabs, pinned = false }: NavBarSwitchLinkProps) {
+    const currentPathname = usePathname();
     const mainTabs = pinned ? tabs.slice(0, tabs.length - 1) : tabs
     const pinnedTab = tabs[tabs.length - 1]
     return (
-        <Tab.Group selectedIndex={tabs.findIndex(tab => tab.link === usePathname())}>
+        <Tab.Group selectedIndex={tabs.findIndex(tab => tab.link === currentPathname)}>
             <div className="flex h-full overflow-hidden"> {/* <-- Parent container */}
 
                 {/* Scrollable Tab List */}
