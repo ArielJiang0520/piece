@@ -4,6 +4,7 @@ import PopupDialog from "@/components/ui/input/PopupDialog"
 import { DefaultPiece, Piece, PiecePayload } from "@/types/types"
 import { insert_piece, update_piece, publish_draft } from "@/utils/piece-helpers"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/app/toast-providers"
 
 interface PublishButtonProps {
     uid: string,
@@ -13,8 +14,10 @@ interface PublishButtonProps {
     setSubmitting: (arg: boolean) => void,
 }
 export default function PublishButton({ uid, wid, currentDraft, values, setSubmitting }: PublishButtonProps) {
+    const [msgOpen, setMsgOpen] = useState(false)
     const [isPublishConfirm, setIsPublishConfirm] = useState(false)
     const router = useRouter()
+    const { showMessage } = useToast();
 
     // Publish the current piece
     const submitPiece = async (values: PiecePayload, setSubmitting: (isSubmitting: boolean) => void) => {
@@ -33,10 +36,6 @@ export default function PublishButton({ uid, wid, currentDraft, values, setSubmi
         } catch (error) {
             alert(`Error: ${JSON.stringify(error)}`);
         } finally {
-            if (piece_id)
-                router.push(`/pieces/${piece_id}`); // Redirect to piece page
-            else
-                router.refresh()
             setSubmitting(false)
             setIsPublishConfirm(false)
         }

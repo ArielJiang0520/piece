@@ -150,10 +150,10 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
             <div className='w-full max-w-2xl flex flex-col'>
                 <WorldPrivacyDisplay world={world} />
             </div>
-
+            {/* 
             <div className='w-full max-w-2xl flex flex-col'>
                 <WorldCharactersDisplay world={world} />
-            </div>
+            </div> */}
 
 
             <div id="description-group" className='w-full flex flex-col'>

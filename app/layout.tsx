@@ -2,6 +2,8 @@ import '@/styles/globals.css'
 import { Alike, Montserrat, Domine } from 'next/font/google'
 import SupabaseProvider from './supabase-provider';
 import NextTopLoader from 'nextjs-toploader';
+import ToastProvider from './toast-providers';
+
 
 const alike = Alike({
   weight: ['400'],
@@ -50,10 +52,12 @@ export default function RootLayout({
 
       <body>
         <SupabaseProvider>
-          <main className="min-h-screen bg-background flex flex-col items-center">
-            <NextTopLoader />
-            {children}
-          </main>
+          <ToastProvider>
+            <main className="min-h-screen bg-background flex flex-col items-center">
+              <NextTopLoader />
+              {children}
+            </main>
+          </ToastProvider>
         </SupabaseProvider>
       </body>
     </html>
