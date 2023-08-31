@@ -10,6 +10,10 @@ interface SaveDraftButtonProps {
     fetchDrafts: () => Promise<void>;
 }
 export default function SaveDraftButton({ uid, setSubmitting, values, currentDraft, fetchDrafts }: SaveDraftButtonProps) {
+
+    if (!('default' in currentDraft) && !currentDraft.is_draft)
+        return <></>
+
     const router = useRouter();
 
     const handleSaveNewDraft = async (values: WorldPayload, setSubmitting: (isSubmitting: boolean) => void) => {

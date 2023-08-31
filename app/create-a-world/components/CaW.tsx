@@ -124,10 +124,10 @@ export default function CaW() {
 
                             <TabPanel>
 
-                                {/* <div id="characters-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
+                                <div id="characters-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
                                     <FieldTitleDisplay label={"Characters"} />
                                     <ChooseCharacters />
-                                </div> */}
+                                </div>
 
                                 <div id="relationship-types-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
                                     <FieldTitleDisplay label={'relationship types'} />
