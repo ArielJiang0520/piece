@@ -14,7 +14,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         const { prompt, world } = await req.json();
         try {
             const response = await openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
+                model: "gpt-3.5-turbo-16k",
                 messages: [
                     { role: "system", content: storyPrompt(world) },
                     { role: "user", content: prompt.prompt },
