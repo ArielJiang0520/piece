@@ -13,10 +13,11 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { get_subscribers, sub_to_world } from "@/utils/stats-helpers";
 import { useEffect, useState } from "react";
 import { fetch_all_fandoms } from "@/utils/data-helpers";
+import { fetch_num_of_pieces, fetch_num_of_subs } from "@/utils/world-helpers";
 
 const WorldMetadataDisplay = ({ world }: { world: World }) => {
     const [fandoms, setFandoms] = useState<Fandom[]>([])
-    const origin = world.origin ? fandoms.find(item => item.id === world.origin)?.name || null : "Original World"
+    const worldOrigin = world.origin ? fandoms.find(item => item.id === world.origin)?.name || null : "Original World"
 
     useEffect(() => {
         const fetchFandoms = async () => setFandoms(await fetch_all_fandoms());
@@ -30,7 +31,7 @@ const WorldMetadataDisplay = ({ world }: { world: World }) => {
                 <div className="">
                     <div className='flex flex-row justify-start items-center space-x-1'>
                         <BookIcon />
-                        <span>{origin}</span>
+                        <span>{worldOrigin}</span>
                     </div>
                 </div>
                 <div className="">
@@ -106,13 +107,18 @@ interface WorldDisplayProps {
 }
 
 export default function WorldDisplay({ world, isOwner = false, preview = false }: WorldDisplayProps) {
+    const [subs, setSubs] = useState(0)
+    useEffect(() => {
+        const fetchSubs = async () => setSubs(await fetch_num_of_subs(world.id));
+        fetchSubs()
+    }, [])
     return (
 
         <div className='flex flex-col space-y-3 items-start text-foreground'>
 
             {!preview && <div id="button-group" className='w-full flex flex-row justify-between items-center'>
                 <div className='flex flex-row space-x-2'>
-                    <IconButtonMid icon={<StarIcon />} title="123" />
+                    <IconButtonMid icon={<StarIcon />} title={`${subs} subs`} />
                     <Link href={{ pathname: '/create-a-piece', query: { world_id: world.id } }} >
                         <IconButtonMid icon={<AtomIcon />} title={"Create a Piece"} />
                     </Link>

@@ -89,6 +89,7 @@ export async function getAllWorlds() {
         .eq('is_draft', false)
 
 
+
     if (!data || error) {
         throw Error(JSON.stringify(error))
     }

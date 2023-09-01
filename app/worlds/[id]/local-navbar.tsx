@@ -8,6 +8,7 @@ import PeekWorld from '@/components/ui/display/World/PeekWorld';
 import { World } from '@/types/types';
 import Skeleton from 'react-loading-skeleton';
 import { usePathname } from 'next/navigation';
+import { fetch_num_of_pieces } from '@/utils/world-helpers';
 
 interface LocalNavBarProps {
     world_id: string;
@@ -16,11 +17,7 @@ interface LocalNavBarProps {
 export default function LocalNavBar({ world_id }: LocalNavBarProps) {
     const { supabase } = useSupabase()
     const [world, setWorld] = useState<World | null>(null)
-    const tabs = [
-        { name: 'Overview', link: `/worlds/${world_id}` },
-        { name: 'Pieces', link: `/worlds/${world_id}/pieces` },
-        { name: 'Explore in AI', link: `/worlds/${world_id}/explore` }
-    ];
+    const [numPieces, setNumPieces] = useState<number>(0)
 
     const fetchWorld = async () => {
         const { data, error } = await supabase
@@ -35,8 +32,16 @@ export default function LocalNavBar({ world_id }: LocalNavBarProps) {
     };
 
     useEffect(() => {
+        const fetchNumPieces = async () => setNumPieces(await fetch_num_of_pieces(world_id))
         fetchWorld();
+        fetchNumPieces();
     }, [])
+
+    const tabs = [
+        { name: 'Overview', link: `/worlds/${world_id}`, bubble: null },
+        { name: 'Pieces', link: `/worlds/${world_id}/pieces`, bubble: numPieces },
+        { name: 'Explore in AI', link: `/worlds/${world_id}/explore`, bubble: null }
+    ];
 
     if (!world) {
         return <><Skeleton count={3} /></>

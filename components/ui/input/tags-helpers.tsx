@@ -68,7 +68,7 @@ export function TagsBarSmallDisplay({ tags, small = false, scroll = false }: { t
                 tags.map((tag, index) =>
                     <div
                         key={index}
-                        className={`capitalize border-foreground bg-foreground/10 text-foreground/70 whitespace-nowrap ${!small ? "text-sm  mr-2 mt-2 py-1 px-2" : "text-xs mr-1 mt-1 py-1 px-2"} `}
+                        className={`capitalize border-foreground bg-foreground/10 text-foreground/70 whitespace-nowrap ${!small ? "text-sm  mr-2 mt-2 py-1 px-2" : "text-xs mr-1 py-1 px-2"} `}
                     >
                         {tag}
                     </div>

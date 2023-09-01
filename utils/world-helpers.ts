@@ -114,6 +114,7 @@ export const update_world = async (values: WorldPayload, wid: string, is_draft: 
         throw Error(error.message)
     }
 
+
     return data.id
 }
 
@@ -158,3 +159,29 @@ export const delete_world = async (wid: string): Promise<number> => {
 
 
 
+
+export const fetch_num_of_pieces = async (wid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error, status } = await supabase
+        .from('pieces')
+        .select('id', { count: 'exact' })
+        .eq('world_id', wid)
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
+    }
+    return data.length
+}
+
+export const fetch_num_of_subs = async (wid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error, status } = await supabase
+        .from('subscriptions')
+        .select('id', { count: 'exact' })
+        .eq('world_id', wid)
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
+    }
+    return data.length
+}

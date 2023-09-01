@@ -9,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { usePathname } from 'next/navigation'
 import { StarsIcon } from '@/components/icon/icon'
 import { Tab } from '@headlessui/react'
+import { useEffect, useState } from "react";
 
 const leftVariants = {
     open: { opacity: 1, x: 0, transition: { duration: 0.3, type: 'tween' } },
@@ -114,13 +115,20 @@ interface NavBarSwitchLinkProps {
     tabs: {
         name: any;
         link: string;
+        bubble?: string | number | null;
     }[];
     pinned?: boolean
 }
 export function NavBarSwitchLink({ tabs, pinned = false }: NavBarSwitchLinkProps) {
     const currentPathname = usePathname();
-    const mainTabs = pinned ? tabs.slice(0, tabs.length - 1) : tabs
-    const pinnedTab = tabs[tabs.length - 1]
+    const [mainTabs, setMainTabs] = useState(pinned ? tabs.slice(0, tabs.length - 1) : tabs)
+    const [pinnedTab, setPinnedTab] = useState(tabs[tabs.length - 1])
+
+    useEffect(() => {
+        setMainTabs(pinned ? tabs.slice(0, tabs.length - 1) : tabs)
+        setPinnedTab(tabs[tabs.length - 1])
+    }, [tabs])
+
     return (
         <Tab.Group selectedIndex={tabs.findIndex(tab => tab.link === currentPathname)}>
             <div className="flex h-full overflow-hidden"> {/* <-- Parent container */}
@@ -131,9 +139,12 @@ export function NavBarSwitchLink({ tabs, pinned = false }: NavBarSwitchLinkProps
                         {mainTabs.map((tab, idx) => (
                             <Tab key={idx} className="outline-none mb-0 pb-0">
                                 <Link href={tab.link}>
-                                    <div className={`capitalize h-full font-mono text-sm text-foreground/80 flex px-5 items-center border-b-2 ui-selected:border-brand ui-selected:font-bold ui-not-selected:border-transparent`} >
-                                        {tab.name}
+                                    <div className={`h-full flex flex-row px-5 items-center border-b-2 ui-selected:border-brand  ui-not-selected:border-transparent `} >
+                                        <div className="capitalize font-mono text-sm text-foreground/80 ui-selected:font-bold">{tab.name}</div>
+                                        {tab.bubble && <div className="ml-1 px-2 py-1 rounded-full bg-foreground/10 text-xs">{tab.bubble}</div>}
+
                                     </div>
+
                                 </Link>
                             </Tab>
                         ))}
