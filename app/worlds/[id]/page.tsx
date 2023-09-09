@@ -1,6 +1,5 @@
-import { getWorldDetailsById } from "@/app/supabase-server";
+import { getWorldDetailsById, getSession } from "@/app/supabase-server";
 import WorldDisplay from "@/components/ui/display/World/WorldDisplay";
-import { getSession } from "@/app/supabase-server";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const world = await getWorldDetailsById(params.id)

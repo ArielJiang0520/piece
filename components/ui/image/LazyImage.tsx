@@ -1,37 +1,18 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { downloadImage } from "@/utils/image-helpers";
+import { useState } from 'react'
 
 interface LazyImageClientProps {
-    bucket: string,
-    path: string;
+    url: string | null;
     dimension: string;
     rounded?: boolean;
     popup?: boolean;
 }
 
-export const LazyImage: React.FC<LazyImageClientProps> = ({ bucket, path, dimension, rounded = true, popup = false }) => {
-    const [url, setUrl] = useState<string | null>(null);
+export const LazyImage: React.FC<LazyImageClientProps> = ({ url, dimension, rounded = true, popup = false }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupImage, setPopupImage] = useState<string | null>(null);
 
-    useEffect(() => {
-        downloadImage(bucket, path)
-            .then((url) => setUrl(url))
-            .catch((error) => console.error(error));
-
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            if (url) {
-                URL.revokeObjectURL(url);
-            }
-        };
-    }, [url]);
-
-
-    const handleImageClick = (url: string) => {
+    const handleImageClick = () => {
         setPopupImage(url);
         setShowPopup(true);
     };
@@ -46,7 +27,7 @@ export const LazyImage: React.FC<LazyImageClientProps> = ({ bucket, path, dimens
         return (
             <>
                 <img src={url} alt="Placeholder Image" className={`w-auto h-full ${rounded ? "rounded-lg" : ""}`}
-                    onClick={() => handleImageClick(url)} />
+                    onClick={handleImageClick} />
                 {popup && showPopup && (
                     <div
                         className="fixed inset-0 flex items-center justify-center z-50"

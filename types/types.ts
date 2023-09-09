@@ -213,6 +213,16 @@ export interface JoinedAuthorPiece extends Piece {
     profiles: Profile | null
 }
 
+
+// For WorldCard Display
+export interface JoinedWorldAll extends World {
+    profiles: Profile | null,
+    fandoms: Fandom | null,
+    subscriptions: any[],
+    pieces: any[],
+}
+
+
 export interface DefaultFolder {
     id: string,
     folder_name: string,

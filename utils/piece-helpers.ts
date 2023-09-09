@@ -48,6 +48,25 @@ export const insert_piece = async (values: PiecePayload, uid: string, wid: strin
         await upsert_tags(tags);
     }
 
+    await update_world_modified_date(wid)
+
+    return data.id
+}
+
+const update_world_modified_date = async (wid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error } = await supabase
+        .from('world')
+        .update({ modified_at: new Date().toISOString() })
+        .eq('id', wid)
+        .select('id')
+        .single()
+
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
+    }
+
     return data.id
 }
 

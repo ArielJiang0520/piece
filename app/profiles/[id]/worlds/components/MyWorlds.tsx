@@ -1,58 +1,57 @@
 'use client'
 import { useEffect, useState } from "react";
 import WorldCard from "@/components/ui/display/World/WorldCard";
-import { World } from "@/types/types";
+import { JoinedWorldAll } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
 import { ToggleButton } from "@/components/ui/button/toggle/Toggle";
 import Link from "next/link";
 
+type SortFunc = { id: number, name: string, myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => number }
+
+const sortFunc: SortFunc[] = [
+    {
+        id: 1,
+        name: "Latest",
+        myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => {
+            const dateA = a.modified_at || a.created_at;
+            const dateB = b.modified_at || b.created_at;
+            // For descending order (latest to oldest)
+            return dateB.localeCompare(dateA);
+        }
+    },
+    {
+        id: 2,
+        name: "Oldest",
+        myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => {
+            const dateA = a.modified_at || a.created_at;
+            const dateB = b.modified_at || b.created_at;
+            // For ascending order 
+            return dateA.localeCompare(dateB);
+        }
+    },
+    {
+        id: 3,
+        name: "Alphabetical",
+        myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => {
+            const dateA = a.name;
+            const dateB = b.name;
+            // For ascending order
+            return dateA.localeCompare(dateB);
+        }
+    },
+]
+
 interface MyWorldsProps {
-    worlds: World[],
+    worlds: JoinedWorldAll[],
     isOwner: boolean
 }
 
-type SortFunc = { id: number, name: string, myFunc: (a: World, b: World) => number }
-
 export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
-    const [filteredWorlds, setFilteredWorlds] = useState<World[]>(worlds)
-    const [currentQuery, setCurrentQuery] = useState<null | World>(null)
+    const [filteredWorlds, setFilteredWorlds] = useState<JoinedWorldAll[]>(worlds)
+    const [currentQuery, setCurrentQuery] = useState<null | JoinedWorldAll>(null)
     const [privateOnly, setPrivateOnly] = useState(false)
     const [nsfwOnly, setNsfwOnly] = useState(false)
-
-
-    const sortFunc: SortFunc[] = [
-        {
-            id: 1,
-            name: "Latest",
-            myFunc: (a: World, b: World) => {
-                const dateA = a.modified_at || a.created_at;
-                const dateB = b.modified_at || b.created_at;
-                // For descending order (latest to oldest)
-                return dateB.localeCompare(dateA);
-            }
-        },
-        {
-            id: 2,
-            name: "Oldest",
-            myFunc: (a: World, b: World) => {
-                const dateA = a.modified_at || a.created_at;
-                const dateB = b.modified_at || b.created_at;
-                // For ascending order 
-                return dateA.localeCompare(dateB);
-            }
-        },
-        {
-            id: 3,
-            name: "Alphabetical",
-            myFunc: (a: World, b: World) => {
-                const dateA = a.name;
-                const dateB = b.name;
-                // For ascending order
-                return dateA.localeCompare(dateB);
-            }
-        },
-    ]
     const [currentSort, setCurrentSort] = useState<SortFunc>(sortFunc[0])
 
     useEffect(() => {
@@ -61,6 +60,7 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
             .filter(world => privateOnly ? !world.is_public : true)
             .filter(world => nsfwOnly ? world.nsfw : true)
         setFilteredWorlds(updatedFilteredWorlds)
+        console.log('set filtered world')
     }, [currentSort, currentQuery, privateOnly, nsfwOnly])
 
     return <div className="flex flex-col">

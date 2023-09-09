@@ -1,4 +1,4 @@
-import type { WorldPayload } from "@/types/types"
+import type { JoinedWorldAll, WorldPayload } from "@/types/types"
 import { getId } from "./helpers";
 import { createClientSupabaseClient } from './helpers'
 import { upsert_characters, upsert_relationships, upsert_tags } from "./data-helpers";

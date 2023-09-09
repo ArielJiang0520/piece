@@ -54,7 +54,17 @@ export default function RootLayout({
         <SupabaseProvider>
           <ToastProvider>
             <main className="min-h-screen bg-background flex flex-col items-center">
-              <NextTopLoader />
+              <NextTopLoader
+                color="#ec4699"
+                initialPosition={0.08}
+                crawlSpeed={200}
+                height={3}
+                crawl={true}
+                showSpinner={false}
+                easing="ease"
+                speed={200}
+                shadow="0 0 10px #ec4699,0 0 5px #ec4699"
+              />
               {children}
             </main>
           </ToastProvider>

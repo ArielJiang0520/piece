@@ -63,7 +63,7 @@ export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBa
 
 export function TagsBarSmallDisplay({ tags, small = false, scroll = false }: { tags: string[], small?: boolean, scroll?: boolean }) {
     return (
-        <div className={`flex flex-row w-full font-mono ${scroll ? "overflow-x-auto" : "flex-wrap"}`}>
+        <div className={`flex flex-row font-mono ${scroll ? "overflow-x-auto" : "flex-wrap"}`}>
             {
                 tags.map((tag, index) =>
                     <div

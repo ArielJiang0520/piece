@@ -1,9 +1,7 @@
-import { World } from "@/types/types"
+import { JoinedWorldAll } from "@/types/types"
 import WorldCard from "@/components/ui/display/World/WorldCard"
 
-
-
-export default function AllWorlds({ worlds }: { worlds: World[] }) {
+export default function AllWorlds({ worlds }: { worlds: JoinedWorldAll[] }) {
 
     return <div className="flex flex-col"><div className="flex flex-row w-full justify-start items-center p-2">
         <div className="font-mono text-xs font-medium">

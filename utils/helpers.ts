@@ -1,6 +1,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/supabase";
 import { cache } from 'react';
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 export const createClientSupabaseClient = cache(() =>
     createClientComponentClient<Database>()
@@ -152,6 +153,11 @@ export function renameKeyInObjectsArray(
     });
 }
 
+export function getDistanceToNow(timestamp: string): string {
+    const date = new Date(timestamp);
+    let result = formatDistanceToNow(date);
+    return result + ' ago'
+}
 
 export function formatTimestamp(timestamp: string | null, dateOnly: boolean = false): string {
     if (!timestamp)
