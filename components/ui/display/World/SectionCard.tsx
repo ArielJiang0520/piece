@@ -5,6 +5,34 @@ import type { WorldDescriptionSectionCard } from "@/types/types";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 
+
+export const SectionInput = ({ index, card }: { index: number, card: WorldDescriptionSectionCard }) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+
+
+    };
+    return (
+        <div className="flex flex-col">
+            <input
+                id="cardTitle"
+                type="text"
+                className="w-full singleLineInput text-2xl"
+                placeholder={'New title...'}
+                value={card.cardTitle}
+                onChange={handleInputChange}
+            />
+            <textarea
+                id="cardContent"
+                className="w-full min-h-[300px] multiLineInput text-base"
+                placeholder={'New content...'}
+                value={card.cardContent}
+                onChange={handleInputChange}
+            />
+        </div>
+    )
+}
+
 interface SectionCardProps {
     index: number,
     card: WorldDescriptionSectionCard,

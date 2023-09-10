@@ -77,6 +77,7 @@ export default function CaW() {
                         <Tab.List className={`flex flex-row space-x-8 overflow-hidden overflow-x-auto`}>
                             <StyledTab text={`setup`} />
                             <StyledTab text={`introduction`} />
+                            <StyledTab text={`images`} />
                             <StyledTab text={`tags`} />
                             <StyledTab text={`details`} />
                         </Tab.List>
@@ -95,18 +96,6 @@ export default function CaW() {
                             </TabPanel>
 
                             <TabPanel>
-                                <div id="images-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"cover images"} />
-                                    <ImagesUpload
-                                        dimension={{ height: "h-80", width: "w-80" }}
-                                        bucket={"world"}
-                                        folder={``}
-                                        initPaths={values.images}
-                                        setValues={(paths) => setFieldValue('images', paths)}
-                                        maxNum={7}
-                                    />
-                                </div>
-
                                 <div id="title-group" className='w-full flex flex-col'>
                                     <FieldTitleDisplay label={"title"} />
                                     <TextInput name={"name"} placeholder={"Add the title of your world"} textSize={"text-xl"} multiline={1} />
@@ -120,6 +109,21 @@ export default function CaW() {
                                     />
                                 </div>
 
+
+                            </TabPanel>
+
+                            <TabPanel>
+                                <div id="images-group" className='w-full flex flex-col'>
+                                    <FieldTitleDisplay label={"cover images"} />
+                                    <ImagesUpload
+                                        dimension={{ height: "h-80", width: "w-80" }}
+                                        bucket={"world"}
+                                        folder={``}
+                                        initPaths={values.images}
+                                        setValues={(paths) => setFieldValue('images', paths)}
+                                        maxNum={7}
+                                    />
+                                </div>
 
                             </TabPanel>
 

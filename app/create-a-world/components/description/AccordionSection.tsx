@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import { SectionCard, AddSectionCard } from '@/components/ui/display/World/SectionCard';
+import { SectionCard, AddSectionCard, SectionInput } from '@/components/ui/display/World/SectionCard';
 
 
 interface AccordionSectionProps {
@@ -48,7 +48,8 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
     }
 
     const onAddNewSection = () => {
-        setAddCardDialogIsOpen(true)
+        // setAddCardDialogIsOpen(true)
+        addCard(index, { cardTitle: '', cardContent: '', cardImages: [] })
     }
 
     const saveNewCard = (newCard: WorldDescriptionSectionCard) => {
@@ -128,19 +129,20 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             />
                         </div>
 
-                        <Disclosure.Panel className="py-4 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 grid-flow-row w-full gap-4">
+                        <Disclosure.Panel className="py-4 grid grid-col-1 w-full gap-4">
                             {
                                 section.sectionCards.length >= 1 ?
                                     <>
                                         {section.sectionCards.map((card, index) =>
 
-                                            <SectionCard
-                                                key={index}
-                                                index={index}
-                                                card={card}
-                                                onclick={onEditCard}
-                                                ondel={onDelCard}
-                                            />
+                                            // <SectionCard
+                                            //     key={index}
+                                            //     index={index}
+                                            //     card={card}
+                                            //     onclick={onEditCard}
+                                            //     ondel={onDelCard}
+                                            // />
+                                            <SectionInput key={index} index={index} card={card} />
 
                                         )}
 
@@ -156,7 +158,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                     </>
                 )}
             </Disclosure>
-            <PopupDialog
+            {/* <PopupDialog
                 isOpen={addCardDialogIsOpen}
                 setIsOpen={setAddCardDialogIsOpen}
                 dialogTitle={"Add New Card"}
@@ -164,7 +166,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                 initInputValue={{ cardTitle: "", cardContent: "", cardImages: [] } as WorldDescriptionSectionCard}
                 confirmAction={saveNewCard}
                 dialogType='edit-card'
-            />
+            /> */}
             {editingCard && (
                 <PopupDialog
                     isOpen={!!editingCard}

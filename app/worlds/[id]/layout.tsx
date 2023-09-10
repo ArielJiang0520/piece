@@ -1,5 +1,3 @@
-import LocalNavBar from "./local-navbar";
-
 
 export const metadata = {
     title: 'Viewing a World | Piece',
@@ -15,7 +13,7 @@ export default function CreateLayout({
 }) {
     return (
         <>
-            <LocalNavBar world_id={params.id} />
+
             {children}
         </>
     )

@@ -1,17 +1,18 @@
 'use client'
-import { World } from "@/types/types"
-import { useState } from "react"
+import { JoinedWorldAll, World } from "@/types/types"
+import { useState, useEffect, ReactNode } from "react"
 import { EyeIcon } from "@/components/icon/icon"
 import { FieldTitleDisplay } from "../display-helpers"
 import PopupDialog from "@/components/ui/input/PopupDialog"
 import WorldDisplay from "./WorldDisplay"
 
 interface PeekWorldProps {
-    world: World,
+    world: JoinedWorldAll,
     iconOnly?: boolean;
 }
 export default function PeekWorld({ world, iconOnly = false }: PeekWorldProps) {
     const [isReviewWorldOpen, setIsReviewWorldOpen] = useState(false)
+
     return <>
         {iconOnly ?
             <EyeIcon className='h-5 w-5 cursor-pointer text-foreground/50 ' onClick={() => setIsReviewWorldOpen(true)} />
