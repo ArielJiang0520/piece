@@ -1,12 +1,12 @@
 
 import { Disclosure } from '@headlessui/react';
-import { PencilIcon, DotsVerticalIcon, TrashIcon } from '@/components/icon/icon';
+import { PencilIcon, DotsVerticalIcon, TrashIcon, PlusCircleIcon } from '@/components/icon/icon';
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
 import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import { SectionCard, AddSectionCard, SectionInput } from '@/components/ui/display/World/SectionCard';
+import { SectionCard } from '@/components/ui/display/World/SectionCard';
 
 
 interface AccordionSectionProps {
@@ -19,58 +19,24 @@ interface AccordionSectionProps {
     delCard: (index: number, newCardIndex: number) => void;
 }
 
+const emptyCard = { cardTitle: '', cardContent: '', cardImages: [] } as WorldDescriptionSectionCard
+
 const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, delSection, renameSection, addCard, editCard, delCard }) => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [dialogueRenameIsOpen, setDialogRenameIsOpen] = useState(false)
     const [dialogueDelIsOpen, setDialogDelIsOpen] = useState(false)
 
-    const [addCardDialogIsOpen, setAddCardDialogIsOpen] = useState(false)
-    const [editingCard, setEditingCard] = useState<null | { card: WorldDescriptionSectionCard, index: number }>(null);
     const [delCardIndex, setDelCardIndex] = useState(-1);
-
-    const onDropdownClick = () => {
-        setDropdownVisible(!dropdownVisible);
-    };
 
     const onDeleteSection = () => {
         setDropdownVisible(!dropdownVisible);
         setDialogDelIsOpen(true)
-
     };
 
     const onRenameSection = () => {
         setDropdownVisible(!dropdownVisible);
         setDialogRenameIsOpen(true)
     };
-
-    const changeTitle = (newTitle: string) => {
-        renameSection(index, newTitle)
-    }
-
-    const onAddNewSection = () => {
-        // setAddCardDialogIsOpen(true)
-        addCard(index, { cardTitle: '', cardContent: '', cardImages: [] })
-    }
-
-    const saveNewCard = (newCard: WorldDescriptionSectionCard) => {
-        addCard(index, newCard)
-    }
-
-    const onEditCard = (cardIndex: number) => {
-        const cardCopy = { ...section.sectionCards[cardIndex] };
-        setEditingCard({ card: cardCopy, index: cardIndex });
-    };
-
-    const saveEditedCard = (newCard: WorldDescriptionSectionCard) => {
-        if (editingCard) {
-            editCard(index, newCard, editingCard.index);
-            setEditingCard(null);
-        }
-    };
-
-    const onDelCard = (cardIndex: number) => {
-        setDelCardIndex(cardIndex)
-    }
 
     const deleteCard = (cardIndex: number) => {
         delCard(index, cardIndex)
@@ -104,7 +70,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 <DotsVerticalIcon
                                     className='cursor-pointer'
                                     size={20}
-                                    onClick={onDropdownClick}
+                                    onClick={() => setDropdownVisible(!dropdownVisible)}
                                 />
                                 {dropdownVisible && <DropDownMenu setDropdownVisible={setDropdownVisible} options={menuOptions} />}
                             </div>
@@ -115,7 +81,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 dialogTitle={"Rename Section:"}
                                 dialogContent={""}
                                 initInputValue={section.sectionTitle}
-                                confirmAction={changeTitle}
+                                confirmAction={(newTitle: string) => renameSection(index, newTitle)}
                                 dialogType='input'
                             />
                             <PopupDialog
@@ -129,55 +95,21 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             />
                         </div>
 
-                        <Disclosure.Panel className="py-4 grid grid-col-1 w-full gap-4">
-                            {
-                                section.sectionCards.length >= 1 ?
-                                    <>
-                                        {section.sectionCards.map((card, index) =>
-
-                                            // <SectionCard
-                                            //     key={index}
-                                            //     index={index}
-                                            //     card={card}
-                                            //     onclick={onEditCard}
-                                            //     ondel={onDelCard}
-                                            // />
-                                            <SectionInput key={index} index={index} card={card} />
-
-                                        )}
-
-                                        <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} />
-
-                                    </> :
-
-                                    <AddSectionCard text={"Add New Card"} onclick={onAddNewSection} />
-
-                            }
-
+                        <Disclosure.Panel className="py-4 grid grid-col-1 gap-2">
+                            <>
+                                {section.sectionCards.map((card, cardIndex) =>
+                                    <SectionCard key={index} card={card} onSave={(newCard: WorldDescriptionSectionCard) => editCard(index, newCard, cardIndex)} onDel={() => setDelCardIndex(cardIndex)} />
+                                )}
+                                <div className='flex flex-row cursor-pointer border p-3 text-base justify-center items-center w-auto rounded-lg font-mono text-foreground/50 font-medium space-x-3'
+                                    onClick={() => addCard(index, emptyCard)}>
+                                    <PlusCircleIcon />
+                                    <span>Add New Card</span>
+                                </div>
+                            </>
                         </Disclosure.Panel>
                     </>
                 )}
             </Disclosure>
-            {/* <PopupDialog
-                isOpen={addCardDialogIsOpen}
-                setIsOpen={setAddCardDialogIsOpen}
-                dialogTitle={"Add New Card"}
-                dialogContent={""}
-                initInputValue={{ cardTitle: "", cardContent: "", cardImages: [] } as WorldDescriptionSectionCard}
-                confirmAction={saveNewCard}
-                dialogType='edit-card'
-            /> */}
-            {editingCard && (
-                <PopupDialog
-                    isOpen={!!editingCard}
-                    setIsOpen={() => setEditingCard(null)}
-                    dialogTitle={`Edit Card (@${section.sectionTitle})`}
-                    dialogContent={""}
-                    initInputValue={editingCard.card}
-                    confirmAction={saveEditedCard}
-                    dialogType='edit-card'
-                />
-            )}
             {delCardIndex != -1 && <PopupDialog
                 isOpen={delCardIndex !== -1}
                 setIsOpen={() => setDelCardIndex(-1)}

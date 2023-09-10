@@ -3,7 +3,7 @@ import React from 'react';
 import { WorldDescriptionSection } from "@/types/types";
 import { Disclosure } from '@headlessui/react';
 import { AccordionIcon } from '@/components/icon/icon';
-import { SectionCard } from '@/components/ui/display/World/SectionCard';
+import { SectionCardDisplay } from '@/components/ui/display/World/SectionCard';
 
 interface AccordionDisplayProps {
     sections: WorldDescriptionSection[];
@@ -32,16 +32,9 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections, pr
                                             </Disclosure.Button>
                                         </div>
                                     </div>
-                                    <Disclosure.Panel className={`py-4 grid grid-cols-1 ${!preview ? "lg:grid-cols-2 2xl:grid-cols-3" : ""} grid-flow-row w-full gap-4`}>
+                                    <Disclosure.Panel className="py-4 grid grid-col-1 gap-2">
                                         {section.sectionCards.map((card, index) =>
-                                            <SectionCard
-                                                key={index}
-                                                index={index}
-                                                card={card}
-                                                onclick={() => { }}
-                                                ondel={() => { }}
-                                                display={true}
-                                            />
+                                            <SectionCardDisplay key={index} card={card} />
                                         )}
                                     </Disclosure.Panel>
                                 </>

@@ -8,7 +8,7 @@ interface InputTitleProps {
 export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize = "text-base" }) => {
     return (
         <div>
-            <label className={`${textSize}  text-foreground/50 font-bold whitespace-nowrap`}>
+            <label className={`${textSize}  text-foreground/50 font-bold whitespace-nowrap font-mono`}>
                 {label.toLocaleUpperCase()}
             </label>
         </div>
@@ -17,12 +17,12 @@ export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize =
 
 interface FieldContentDisplayProps {
     content: string,
-    textSize: string,
-    bold: string,
+    textSize?: string,
+    bold?: string,
     truncate?: number
 }
 
-export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize, bold, truncate = -1 }) => {
+export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize = "text-base", bold = "font-normal", truncate = -1 }) => {
     return (
         <div>
             <p className={`whitespace-pre-line font-serif ${textSize} ${bold}`}>

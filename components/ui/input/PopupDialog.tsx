@@ -28,57 +28,6 @@ function LineInput({ inputValue, setInputValue }: LineInputProps) {
     />)
 }
 
-interface CardInputProps {
-    inputValue: WorldDescriptionSectionCard,
-    setInputValue: (arg: WorldDescriptionSectionCard) => void;
-}
-
-function CardInput({ inputValue, setInputValue }: CardInputProps) {
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { id, value } = e.target;
-
-        setInputValue({
-            ...inputValue,
-            [(id === "cardTitle") ? "cardTitle" : "cardContent"]: value
-        });
-    };
-
-    const handleImageChange = (paths: string[]) => {
-        setInputValue({
-            ...inputValue,
-            ["cardImages"]: paths
-        });
-    }
-
-    return (
-        <div>
-            <input
-                id="cardTitle"
-                type="text"
-                className="w-full singleLineInput text-2xl"
-                placeholder={'New title...'}
-                value={inputValue.cardTitle}
-                onChange={handleInputChange}
-            />
-            <textarea
-                id="cardContent"
-                className="w-full min-h-[300px] multiLineInput text-base"
-                placeholder={'New content...'}
-                value={inputValue.cardContent}
-                onChange={handleInputChange}
-            />
-            <FieldTitleDisplay label={"related images"} />
-            <ImagesUpload
-                dimension={{ height: "h-72", width: "w-72" }}
-                initPaths={inputValue.cardImages}
-                setValues={(paths) => handleImageChange(paths)}
-                folder={``}
-                bucket={"world"}
-                maxNum={3}
-            />
-        </div>
-    )
-}
 
 
 interface FandomInputProps {
@@ -158,7 +107,7 @@ function DialogDisplay({ children }: DialogDisplayProps) {
 }
 
 interface DialogProps {
-    dialogType: "input" | "edit-card" | "confirm" | "display" | "publish-piece" | "add-fandom";
+    dialogType: "input" | "confirm" | "display" | "add-fandom";
 
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
@@ -214,9 +163,6 @@ export default function PopupDialog({
 
                     {dialogType === "display" && <DialogDisplay children={initInputValue} />}
 
-                    {dialogType === "edit-card" && <CardInput inputValue={inputValue} setInputValue={setInputValue} />}
-
-                    {dialogType === "publish-piece" && <CardInput inputValue={inputValue} setInputValue={setInputValue} />}
 
                     {dialogType === "add-fandom" && <FandomInput inputValue={inputValue} setInputValue={setInputValue} />}
 

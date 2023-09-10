@@ -1,126 +1,84 @@
 'use client'
-import { useState } from "react";
-import { PlusCircleIcon, MinusIcon } from "@/components/icon/icon";
+import { useEffect, useState } from "react";
+import { PlusCircleIcon, MinusIcon, PencilIcon, TrashIcon } from "@/components/icon/icon";
 import type { WorldDescriptionSectionCard } from "@/types/types";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
+import { IconButtonTiny } from "@/components/ui/button/button-helpers";
+import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
+import { ImagesUpload } from "@/components/ui/image/ImagesUpload";
 
+export const SectionCardDisplay = ({ card }: {
+    card: WorldDescriptionSectionCard,
+}) => {
+    return <div className="grid grid-cols-1 w-full border rounded-lg py-2 px-4 ">
+        <FieldContentDisplay content={card.cardTitle} textSize="text-xl" />
+        <FieldContentDisplay content={card.cardContent} textSize="text-sm" />
+    </div>
+}
 
-export const SectionInput = ({ index, card }: { index: number, card: WorldDescriptionSectionCard }) => {
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { id, value } = e.target;
+export const SectionCard = ({ card, onSave, onDel }: {
+    card: WorldDescriptionSectionCard,
+    onSave: (newCard: WorldDescriptionSectionCard) => void;
+    onDel: () => void,
+}) => {
 
+    const [curCard, setCurCard] = useState(card);
 
-    };
     return (
-        <div className="flex flex-col">
+        <div className="grid grid-cols-1 w-full border rounded-lg py-2 px-4 ">
             <input
                 id="cardTitle"
                 type="text"
-                className="w-full singleLineInput text-2xl"
+                className="w-full singleLineInput text-lg"
                 placeholder={'New title...'}
-                value={card.cardTitle}
-                onChange={handleInputChange}
+                value={curCard.cardTitle}
+                onChange={(e) => setCurCard(prevCard => {
+                    return {
+                        ...prevCard,
+                        cardTitle: e.target.value
+                    }
+                })}
+                onBlur={() => onSave(curCard)}
             />
             <textarea
                 id="cardContent"
-                className="w-full min-h-[300px] multiLineInput text-base"
+                className="w-full min-h-[150px] multiLineInput text-sm"
                 placeholder={'New content...'}
-                value={card.cardContent}
-                onChange={handleInputChange}
+                value={curCard.cardContent}
+                onChange={(e) => setCurCard(prevCard => {
+                    return {
+                        ...prevCard,
+                        cardContent: e.target.value
+                    }
+                })}
+                onBlur={() => onSave(curCard)}
+
             />
-        </div>
-    )
-}
-
-interface SectionCardProps {
-    index: number,
-    card: WorldDescriptionSectionCard,
-    onclick: (arg: number) => void,
-    ondel: (arg: number) => void,
-    display?: boolean
-}
-export const SectionCard = ({ index, card, onclick, ondel, display = false }: SectionCardProps) => {
-    const { cardTitle, cardContent, cardImages } = card
-    const [isOpen, setIsOpen] = useState(false)
-
-    function DisplayCard() {
-        return <div className='flex flex-col w-full space-y-4'>
-            <ImagesDisplayRow bucket="world" paths={cardImages} dimension={{ height: "h-64", width: "w-64" }} />
-            <div className='text-center font-serif text-2xl font-semibold'>
-                {cardTitle}
-            </div>
-            <div className='w-full border-b h-px my-2'></div>
-            <div className='text-sm min-h-[300px] whitespace-pre-line'>
-                {cardContent}
-            </div>
-        </div>
-    }
-
-    return (
-        <div
-            id='card'
-            className={`relative p-8 flex flex-col justify-start items-center space-y-2 border rounded-lg h-full ${display ? 'cursor-pointer' : ''}`}
-            onClick={display ? () => { setIsOpen(true) } : () => onclick(index)}
-        >
-            {display ? null : <div>
-                <MinusIcon
-                    className='absolute top-2 right-2 w-5 h-5 text-foreground/20'
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        ondel(index)
-                    }}
-                />
-            </div>}
-
-
-            <div id='image-display' className="flex flex-row justify-start items-start space-x-2 overflow-hidden">
-                <ImagesDisplayRow bucket="world" paths={cardImages} dimension={{ height: "h-64", width: "w-64" }} />
-            </div>
-
-            <div className='text-center leading-snug text-2xl overflow-hidden overflow-ellipsis whitespace-nowrap w-full'>
-                {cardTitle}
-            </div>
-
-            <div className='w-full border-b h-px'></div>
-
-            <div className='text-sm text-left overflow-hidden overflow-ellipsis w-full whitespace-pre-line max-h-[200px]'>
-                {cardContent}
-            </div>
-
-
-            <PopupDialog
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                dialogTitle=''
-                dialogContent=''
-                initInputValue={<DisplayCard />}
-                confirmAction={() => setIsOpen(false)}
-                dialogType='display'
-                overwriteConfirm='Close'
-                hideCancel={true}
+            <FieldTitleDisplay label={"Upload card images"} textSize="text-sm" />
+            <ImagesUpload
+                dimension={{ height: "h-72", width: "w-72" }}
+                initPaths={curCard.cardImages}
+                setValues={(paths: string[]) => {
+                    setCurCard(prevCard => {
+                        return {
+                            ...prevCard,
+                            cardImages: paths
+                        }
+                    })
+                }}
+                folder={``}
+                bucket={"world"}
+                maxNum={3}
             />
-        </div>
-    )
-}
 
-interface AddCardProps {
-    text: string;
-    onclick: () => void,
-}
-
-export const AddSectionCard = ({ text, onclick }: AddCardProps) => {
-    return (
-        <div className={`p-8 flex flex-col justify-center items-center space-y-2 border cursor-pointer rounded-lg h-full min-h-[300px]`}
-            onClick={onclick}>
-            <div>
-                <PlusCircleIcon
-                    size={40}
-                    className='text-foreground/20'
-                />
-            </div>
-            <div className='font-mono text-sm text-foreground/20'>
-                {text}
+            <div className="mt-2 flex flex-row justify-end items-center space-x-2">
+                <button type="button" onClick={(event) => {
+                    event.stopPropagation();
+                    onDel()
+                }}>
+                    <IconButtonTiny icon={<TrashIcon />} />
+                </button>
             </div>
         </div>
     )
