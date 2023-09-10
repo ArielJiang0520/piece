@@ -70,7 +70,6 @@ export const EmptyWorldPayload: WorldPayload = {
     name: "",
     logline: "",
     description: [
-
         {
             sectionTitle: "Premise",
             sectionCards: []
@@ -92,50 +91,12 @@ export const EmptyWorldPayload: WorldPayload = {
     }
 }
 
-export function cast_to_worldpayload(world: World) {
-    return {
-        origin: world.origin,
-        tags: world.tags,
-        characters: world.characters,
-        relationship_types: world.relationship_types,
-        relationships: world.relationships,
-        images: world.images,
-        name: world.name,
-        logline: world.logline,
-        description: world.description as WorldDescriptionSection[],
-        settings: {
-            public: world.is_public,
-            NSFW: world.nsfw,
-            allowContribution: world.allow_contribution,
-            allowSuggestion: world.allow_suggestion,
-        }
-    } as WorldPayload
-}
-
-export function cast_to_world(payload: WorldPayload, uid: string) {
-    const created_at = new Date().toISOString()
-    return {
-        allow_contribution: payload.settings.allowContribution,
-        allow_suggestion: payload.settings.allowSuggestion,
-        created_at: created_at,
-        creator_id: uid,
-        description: payload.description,
-        id: '',
-        images: payload.images,
-        logline: payload.logline,
-        modified_at: created_at,
-        nsfw: payload.settings.NSFW,
-        origin: payload.origin,
-        is_public: payload.settings.public,
-        relationship_types: payload.relationship_types,
-        tags: payload.tags,
-        relationships: payload.relationships,
-        characters: payload.characters,
-        name: payload.name,
-        is_draft: true,
-        draft_created_at: created_at,
-        draft_modified_at: created_at,
-    } as World
+// For WorldCard Display
+export interface JoinedWorldAll extends World {
+    profiles: Profile | null,
+    fandoms: Fandom | null,
+    subscriptions: any[],
+    pieces: any[],
 }
 
 export type PieceSettings = {
@@ -213,14 +174,6 @@ export interface JoinedAuthorPiece extends Piece {
     profiles: Profile | null
 }
 
-
-// For WorldCard Display
-export interface JoinedWorldAll extends World {
-    profiles: Profile | null,
-    fandoms: Fandom | null,
-    subscriptions: any[],
-    pieces: any[],
-}
 
 
 export interface DefaultFolder {

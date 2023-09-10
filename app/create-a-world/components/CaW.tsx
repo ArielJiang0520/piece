@@ -1,6 +1,7 @@
 'use client'
 // /create-a-world
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, cast_to_worldpayload, cast_to_world } from '@/types/types';
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload } from '@/types/types';
+import { cast_to_worldpayload, cast_to_world } from "@/types/cast-types";
 // Need to handle input error
 // Need to add "?" icon for instruction
 import { useEffect, useRef, useState } from 'react';

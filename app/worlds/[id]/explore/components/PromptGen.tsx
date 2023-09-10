@@ -74,7 +74,7 @@ export default function PromptGen({ world }: { world: World }) {
                         setIsOpen={setIsPublishWindowOpen}
                         dialogTitle='Publishing New Piece'
                         dialogContent=''
-                        initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, content: lines.join("") }} />}
+                        initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, content: lines.join("\n") }} />}
                         confirmAction={() => { }}
                         dialogType='display'
                     />

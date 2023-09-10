@@ -26,7 +26,7 @@ export default function PiecesMasonry({ pieces, world = null, displayAuthor = fa
             if (masonryInstanceRef.current) {
                 masonryInstanceRef.current.layout!();
             }
-        }, 500);  // 100 ms delay. Adjust as needed.
+        }, 1000);  // 100 ms delay. Adjust as needed.
 
         return () => {
             clearTimeout(timeout);

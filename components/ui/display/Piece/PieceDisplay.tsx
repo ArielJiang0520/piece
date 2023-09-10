@@ -1,22 +1,21 @@
 'use client'
 import type { Piece, Profile, World } from "@/types/types"
-import { EmptyHeartIcon, WorldIcon, CalendarIcon } from "@/components/icon/icon"
+import { EmptyHeartIcon, WorldIcon, CalendarIcon, BookIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
 import { PieceAuthorDisplay } from "@/components/ui/display/user-display-helpers";
 import type { User } from "@supabase/supabase-js";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
-import PeekWorld from "../World/PeekWorld";
 import { formatTimestamp } from "@/utils/helpers";
 import { IconButtonTiny } from "@/components/ui/button/button-helpers";
 
 const PieceMetadataDisplay = ({ piece, world }: { piece: Piece, world: World }) => {
     return (
-        <div className="flex flex-row w-full  justify-start items-center text-sm text-left font-semibold">
+        <div className="flex flex-row w-full  justify-start items-center text-sm text-left font-medium">
 
             <div className="cursor-pointer flex flex-row items-center justify-start space-x-1 w-64 hover:text-brand">
-                <WorldIcon className="flex-shrink-0" />
+                <BookIcon className="flex-shrink-0" />
                 <Link href={`/worlds/${world.id}`}>
                     <div className="overflow-hidden whitespace-nowrap overflow-ellipsis ">{world.name}</div>
                 </Link>
@@ -63,14 +62,6 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
                 </Link>
             </div>
 
-            <div id="tags-group" className='w-full flex flex-col'>
-                <FieldTitleDisplay label={"tags:"} textSize="text-sm" />
-                <TagsBarDisplay tags={piece.tags} preview={preview} />
-            </div>
-
-            <div className="hpx border-t w-full my-2">
-
-            </div>
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
                 <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={piece.images} />
@@ -80,6 +71,10 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
                 <FieldContentDisplay content={piece.content} textSize="text-base" bold="font-normal" />
             </div>
 
+            <div id="tags-group" className='w-full flex flex-col'>
+                <FieldTitleDisplay label={"tags:"} textSize="text-sm" />
+                <TagsBarDisplay tags={piece.tags} preview={preview} />
+            </div>
 
 
             <div className='flex flex-row text-base justify-between items-center  w-full'>
@@ -95,6 +90,6 @@ export default function PieceDisplay({ piece, world, author, preview = false }: 
             </div>
 
 
-        </div>
+        </div >
     )
 }

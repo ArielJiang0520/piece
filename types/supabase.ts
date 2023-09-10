@@ -169,6 +169,40 @@ export interface Database {
           }
         ]
       }
+      followers: {
+        Row: {
+          created_at: string
+          follower_id: string | null
+          id: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          follower_id?: string | null
+          id?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string | null
+          id?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "followers_follower_id_fkey"
+            columns: ["follower_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "followers_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       likes: {
         Row: {
           created_at: string | null
@@ -545,6 +579,13 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      increment_fandom: {
+        Args: {
+          p_fandom_id: string
+          p_amount: number
+        }
+        Returns: undefined
+      }
       upsert_characters: {
         Args: {
           character_names: string[]

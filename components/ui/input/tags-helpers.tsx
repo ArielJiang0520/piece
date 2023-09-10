@@ -50,7 +50,7 @@ export function TagsBarDisplay({ tags, preview = false, scroll = false }: TagsBa
                         key={index}
                         type="button"
                         disabled={preview}
-                        className={`capitalize bg-foreground text-background text-xs font-medium rounded-full px-3 py-1 whitespace-nowrap mr-1 my-1 ${preview ? "cursor-auto" : ""}`}
+                        className={` bg-foreground text-background text-xs font-medium rounded-full px-3 py-1 whitespace-nowrap mr-1 my-1 ${preview ? "cursor-auto" : ""}`}
                     >
                         {tag}
                     </button>

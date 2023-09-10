@@ -1,6 +1,8 @@
-import { useState } from "react"
+'use client'
+import { ReactNode, useEffect, useState } from "react"
 import PopupDialog from "@/components/ui/input/PopupDialog"
-import { WorldPayload, cast_to_world } from "@/types/types"
+import { JoinedWorldAll, WorldPayload } from "@/types/types"
+import { cast_to_world } from "@/types/cast-types"
 import WorldDisplay from "@/components/ui/display/World/WorldDisplay"
 import { EyeIcon } from "@/components/icon/icon"
 
@@ -10,6 +12,16 @@ interface PreviewButtonProps {
 }
 export default function PreviewButton({ values, uid }: PreviewButtonProps) {
     const [isReviewOpen, setIsReviewOpen] = useState(false)
+    const [castedWorld, setCastedWorld] = useState<ReactNode | null>(null)
+
+    useEffect(() => {
+        const fetchCastedWorld = async () => {
+            const world = await cast_to_world(values, uid);
+            setCastedWorld(<WorldDisplay world={world} preview={true} />)
+        };
+        fetchCastedWorld();
+    }, [isReviewOpen])
+
     return <>
         <button className="flex items-center justify-center w-full h-full p-2 primaryButton" onClick={() => setIsReviewOpen(true)} type="button">
             <EyeIcon className="w-6 h-6" />
@@ -19,10 +31,11 @@ export default function PreviewButton({ values, uid }: PreviewButtonProps) {
             setIsOpen={setIsReviewOpen}
             dialogTitle='Preview of your world'
             dialogContent=''
-            initInputValue={<WorldDisplay world={cast_to_world(values, uid)} preview={true} />}
+            initInputValue={castedWorld}
             confirmAction={() => { }}
             dialogType='display'
             hideCancel={true}
             overwriteConfirm='Close'
-        /></>
+        />
+    </>
 }

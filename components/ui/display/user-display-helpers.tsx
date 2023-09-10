@@ -6,7 +6,7 @@ import { FieldContentDisplay } from "./display-helpers";
 import { Piece } from "@/types/types";
 
 
-export const PieceAuthorDisplay = ({ author }: { author: Profile, work: Piece | World | JoinedWorldAll }) => {
+export const PieceAuthorDisplay = ({ author }: { author: Profile }) => {
     return <div className="flex flex-row w-full max-w-md justify-start items-start space-x-4 text-foreground text-xs border py-4 px-3 font-mono">
         <div>
             <Image

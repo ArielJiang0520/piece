@@ -1,7 +1,7 @@
 import type { JoinedWorldAll, WorldPayload } from "@/types/types"
 import { getId } from "./helpers";
 import { createClientSupabaseClient } from './helpers'
-import { upsert_characters, upsert_relationships, upsert_tags } from "./data-helpers";
+import { increment_fandom, upsert_characters, upsert_relationships, upsert_tags } from "./data-helpers";
 import { cleanTags } from "./helpers";
 
 // create a new row in worlds table (draft)
@@ -54,12 +54,12 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
 
     if (!is_draft) {
         // increase number of worlds for fandom
-        // TODO
 
         // update tags
         await upsert_tags(tags);
 
         if (origin) {
+            await increment_fandom(origin, 1);
             await upsert_characters(characters, origin);
             await upsert_relationships(relationships, origin);
         }
@@ -143,7 +143,7 @@ export const publish_draft = async (wid: string): Promise<string> => {
 }
 
 // Delete an existing row in the table
-export const delete_world = async (wid: string): Promise<number> => {
+export const delete_world = async (wid: string, world_origin: null | string = null): Promise<number> => {
     const supabase = createClientSupabaseClient()
     const { error, status } = await supabase
         .from('worlds')
@@ -154,9 +154,13 @@ export const delete_world = async (wid: string): Promise<number> => {
         console.error(JSON.stringify(error))
         throw Error(error.message)
     }
+
+    if (world_origin) {
+        await increment_fandom(world_origin, -1);
+    }
+
     return status
 }
-
 
 
 

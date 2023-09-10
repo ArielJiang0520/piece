@@ -39,8 +39,8 @@ export const insert_piece = async (values: PiecePayload, uid: string, wid: strin
         .single()
 
     if (error || !data) {
-        console.error(JSON.stringify(error))
-        throw Error(error.message)
+        console.error('Error in publishing piece' + JSON.stringify(error))
+        throw Error('Error in publishing piece' + JSON.stringify(error))
     }
 
     // update tags
@@ -48,6 +48,7 @@ export const insert_piece = async (values: PiecePayload, uid: string, wid: strin
         await upsert_tags(tags);
     }
 
+    // update world modified date
     await update_world_modified_date(wid)
 
     return data.id
@@ -56,18 +57,15 @@ export const insert_piece = async (values: PiecePayload, uid: string, wid: strin
 const update_world_modified_date = async (wid: string) => {
     const supabase = createClientSupabaseClient()
     const { data, error } = await supabase
-        .from('world')
+        .from('worlds')
         .update({ modified_at: new Date().toISOString() })
         .eq('id', wid)
         .select('id')
         .single()
 
     if (error || !data) {
-        console.error(JSON.stringify(error))
-        throw Error(error.message)
+        console.error('Error in modifying date' + JSON.stringify(error))
     }
-
-    return data.id
 }
 
 

@@ -10,8 +10,6 @@ import { formatTimestamp, getDistanceToNow } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useEffect, useState } from "react";
-import { fetch_num_of_subs } from "@/utils/world-helpers";
 import { PieceAuthorDisplay } from "../user-display-helpers";
 
 const WorldDateDisplay = ({ world }: { world: JoinedWorldAll }) => {
@@ -22,10 +20,6 @@ const WorldDateDisplay = ({ world }: { world: JoinedWorldAll }) => {
                 <CalendarIcon />
                 {world.modified_at ? <span>{`Updated ${getDistanceToNow(world.modified_at)}`}</span> : <span>{`Created on ${formatTimestamp(world.created_at, true)}`}</span>}
             </div>
-            {/* {world.modified_at && <div className="flex flex-row items-center space-x-1">
-                <CalendarIcon />
-                <span>{`Updated ${getDistanceToNow(world.modified_at)}`}</span>
-            </div>} */}
         </div>
 
     )
@@ -93,13 +87,6 @@ interface WorldDisplayProps {
 }
 
 export default function WorldDisplay({ world, isOwner = false, preview = false }: WorldDisplayProps) {
-    // const [subs, setSubs] = useState(0)
-    // useEffect(() => {
-    //     const fetchSubs = async () => setSubs(await fetch_num_of_subs(world.id));
-    //     fetchSubs()
-    // }, [])
-
-
     return (
 
         <div className='flex flex-col space-y-3 items-start text-foreground'>
@@ -124,24 +111,19 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
                 <FieldContentDisplay content={world.name} textSize="text-4xl" bold="font-bold" />
             </div>
 
-
-
             <div id="origin-group" className='w-full flex flex-row justify-start text-right text-sm text-foreground/80 space-x-3'>
-
                 <div className="">
                     <div className='flex flex-row justify-start items-center space-x-1'>
                         <BookIcon />
                         <span>{world.fandoms ? world.fandoms.name : "Original World"}</span>
                     </div>
                 </div>
-
                 <WorldDateDisplay world={world} />
-
             </div>
 
-            <div id="author-group" className="w-full flex flex-col">
-                {world.profiles && <PieceAuthorDisplay author={world.profiles} work={world} />}
-            </div>
+            {world.profiles && <div id="author-group" className="w-full flex flex-col">
+                <PieceAuthorDisplay author={world.profiles} />
+            </div>}
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
                 <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} />

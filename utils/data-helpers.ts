@@ -2,6 +2,7 @@ import { Fandom } from "@/types/types";
 import { getId } from '@/utils/helpers';
 import { createClientSupabaseClient } from './helpers'
 
+
 export const insert_fandom = async (values: Fandom) => {
     const supabase = createClientSupabaseClient()
     const { data, error } = await supabase
@@ -14,6 +15,22 @@ export const insert_fandom = async (values: Fandom) => {
         throw Error(error.message)
     }
     return data.id
+}
+
+export const get_fandom = async (fid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error } = await supabase
+        .from('fandoms')
+        .select('*')
+        .eq('id', fid)
+        .single()
+
+    if (error || !data) {
+        console.error(JSON.stringify(error))
+        throw Error(error.message)
+    }
+
+    return data
 }
 
 
@@ -146,7 +163,7 @@ export const upsert_tags = async (tags: string[]) => {
         .rpc('upsert_tags', { tags_list: filteredTags })
 
     if (error) {
-        console.error(JSON.stringify(error))
+        console.error('Error in upsert tags' + JSON.stringify(error) + tags)
     }
 
     return status
@@ -161,7 +178,7 @@ export const upsert_characters = async (characters: string[], fandom_id: string)
         .rpc('upsert_characters', { character_names: filteredCharacters, p_fandom_id: fandom_id })
 
     if (error) {
-        console.error(JSON.stringify(error))
+        console.error('Error in upsert characters' + JSON.stringify(error))
     }
 
     return status
@@ -176,10 +193,21 @@ export const upsert_relationships = async (relationships: string[], fandom_id: s
         .rpc('upsert_relationships', { relationship_names: filteredShips, p_fandom_id: fandom_id })
 
     if (error) {
-        console.error(JSON.stringify(error))
+        console.error('Error in upsert relationships' + JSON.stringify(error))
     }
 
     return status
 }
 
+export const increment_fandom = async (fandom_id: string, amount: number) => {
+    const supabase = createClientSupabaseClient()
 
+    const { status, error } = await supabase
+        .rpc('increment_fandom', { p_fandom_id: fandom_id, p_amount: amount })
+
+    if (error) {
+        console.error('Error in increment fandom' + JSON.stringify(error))
+    }
+
+    return status
+}
