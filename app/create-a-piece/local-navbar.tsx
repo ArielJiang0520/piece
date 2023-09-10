@@ -3,7 +3,7 @@ import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import NavBar from '@/app/NavBar';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { DefaultPiece, Piece, World } from '@/types/types';
+import { DefaultPiece, JoinedWorldAll, Piece, World } from '@/types/types';
 import { useDraftContext } from './draft-provider';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import DropDownSelector from '@/components/ui/input/DropDownSelector';
@@ -14,7 +14,7 @@ import { TrashIcon } from '@/components/icon/icon';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
 import { useSearchParams } from 'next/navigation';
 
-export default function LocalNavBar({ world }: { world: World }) {
+export default function LocalNavBar({ world }: { world: JoinedWorldAll }) {
     const searchParams = useSearchParams()
     const edit_id = searchParams.get("edit_id")
 

@@ -4,7 +4,7 @@ import { AccordionIcon } from '@/components/icon/icon';
 import { TextInput } from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { useEffect, useRef, useState } from 'react';
-import { PiecePayload, PieceSettingsAsks, cast_to_piecepayload, World, EmptyPiecePayload } from '@/types/types';
+import { PiecePayload, PieceSettingsAsks, cast_to_piecepayload, World, EmptyPiecePayload, JoinedWorldAll } from '@/types/types';
 import { useSupabase } from '@/app/supabase-provider';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import { Disclosure } from '@headlessui/react';
@@ -19,7 +19,7 @@ import Link from 'next/link';
 import ChooseTags from './ChooseTags';
 
 interface CaPProps {
-    world: World,
+    world: World | JoinedWorldAll,
     initValues?: PiecePayload | null;
 }
 export default function CaP({ world, initValues = null }: CaPProps) {
