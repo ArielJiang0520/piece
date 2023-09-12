@@ -30,3 +30,7 @@ export const PieceAuthorDisplay = ({ author }: { author: Profile }) => {
         </div>
     </div>
 }
+
+export const ProfileDisplay = ({ author }: { author: Profile }) => {
+
+}

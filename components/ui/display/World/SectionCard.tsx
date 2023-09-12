@@ -7,13 +7,16 @@ import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import { IconButtonTiny } from "@/components/ui/button/button-helpers";
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { ImagesUpload } from "@/components/ui/image/ImagesUpload";
+import { Markdown } from "@/components/ui/display/display-helpers";
 
 export const SectionCardDisplay = ({ card }: {
     card: WorldDescriptionSectionCard,
 }) => {
-    return <div className="grid grid-cols-1 w-full border rounded-lg py-2 px-4 ">
+    return <div className="grid grid-cols-1 gap-3 border rounded-lg p-4">
+        <ImagesDisplayRow bucket="world" dimension={{ height: "h-56", width: "w-56" }} paths={card.cardImages} popup={true} />
         <FieldContentDisplay content={card.cardTitle} textSize="text-xl" />
-        <FieldContentDisplay content={card.cardContent} textSize="text-sm" />
+        <div className="hpx w-full border-t" />
+        <Markdown className="font-serif text-sm">{card.cardContent}</Markdown>
     </div>
 }
 

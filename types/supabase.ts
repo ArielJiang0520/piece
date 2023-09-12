@@ -169,7 +169,7 @@ export interface Database {
           }
         ]
       }
-      followers: {
+      followings: {
         Row: {
           created_at: string
           follower_id: string | null
@@ -190,13 +190,13 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "followers_follower_id_fkey"
+            foreignKeyName: "followings_follower_id_fkey"
             columns: ["follower_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "followers_user_id_fkey"
+            foreignKeyName: "followings_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]

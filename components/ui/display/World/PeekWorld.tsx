@@ -25,7 +25,7 @@ export default function PeekWorld({ world, iconOnly = false }: PeekWorldProps) {
         <PopupDialog
             isOpen={isReviewWorldOpen}
             setIsOpen={setIsReviewWorldOpen}
-            dialogTitle=''
+            dialogTitle='Peeking a world...'
             dialogContent=''
             initInputValue={<WorldDisplay world={world} preview={true} />}
             confirmAction={() => setIsReviewWorldOpen(false)}

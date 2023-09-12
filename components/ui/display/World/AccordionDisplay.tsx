@@ -32,7 +32,7 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections, pr
                                             </Disclosure.Button>
                                         </div>
                                     </div>
-                                    <Disclosure.Panel className="py-4 grid grid-col-1 gap-2">
+                                    <Disclosure.Panel className="py-4 flex flex-col space-y-4">
                                         {section.sectionCards.map((card, index) =>
                                             <SectionCardDisplay key={index} card={card} />
                                         )}

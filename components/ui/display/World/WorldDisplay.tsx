@@ -12,18 +12,6 @@ import Link from "next/link";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { PieceAuthorDisplay } from "../user-display-helpers";
 
-const WorldDateDisplay = ({ world }: { world: JoinedWorldAll }) => {
-    return (
-
-        <div className='flex flex-row  items-center space-x-3 text-foreground/80'>
-            <div className="flex flex-row items-center space-x-1">
-                <CalendarIcon />
-                {world.modified_at ? <span>{`Updated ${getDistanceToNow(world.modified_at)}`}</span> : <span>{`Created on ${formatTimestamp(world.created_at, true)}`}</span>}
-            </div>
-        </div>
-
-    )
-}
 
 const WorldPrivacyDisplay = ({ world }: { world: JoinedWorldAll }) => {
     return (
@@ -94,7 +82,7 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
             {preview ? null : <CopyableID id_string="World ID" id={world.id} />}
 
             {!preview && <div id="button-group" className='w-full flex flex-row justify-between items-center'>
-                <div className='flex flex-row space-x-2'>
+                <div className='flex flex-row space-x-1 text-sm md:text-base'>
                     <IconButtonMid icon={<StarIcon />} title={`${world.subscriptions[0].count} Subscribers`} />
                     <Link href={{ pathname: '/create-a-piece', query: { world_id: world.id } }} >
                         <IconButtonMid icon={<AtomIcon />} title={"Create a Piece"} />
@@ -111,17 +99,24 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
                 <FieldContentDisplay content={world.name} textSize="text-4xl" bold="font-bold" />
             </div>
 
-            <div id="origin-group" className='w-full flex flex-row justify-start text-right text-sm text-foreground/80 space-x-3'>
-                <div className="">
-                    <div className='flex flex-row justify-start items-center space-x-1'>
+            <div id="origin-group" className="grid md:flex md:space-x-3 text-sm text-foreground/80">
+                <div id="origin" className="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div className='flex flex-row justify-start items-center space-x-1 '>
                         <BookIcon />
                         <span>{world.fandoms ? world.fandoms.name : "Original World"}</span>
                     </div>
                 </div>
-                <WorldDateDisplay world={world} />
+                <div id="date" className="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div className='flex flex-row justify-start items-center space-x-1'>
+                        <CalendarIcon />
+                        {world.modified_at ?
+                            <span>{`Updated ${getDistanceToNow(world.modified_at)}`}</span> :
+                            <span>{`Created on ${formatTimestamp(world.created_at, true)}`}</span>}
+                    </div>
+                </div>
             </div>
 
-            {world.profiles && <div id="author-group" className="w-full flex flex-col">
+            {world.profiles && !preview && <div id="author-group" className="w-full flex flex-col">
                 <PieceAuthorDisplay author={world.profiles} />
             </div>}
 
@@ -150,7 +145,7 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
 
 
 
-            <div id="description-group" className='w-full flex flex-col'>
+            <div id="description-group" className='flex flex-col'>
                 <AccordionDisplay sections={world.description as WorldDescriptionSection[]} preview={preview} />
             </div>
 

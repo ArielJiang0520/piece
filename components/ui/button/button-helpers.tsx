@@ -27,21 +27,21 @@ export function LogoutButton() {
 
 interface IconButtonProps {
     icon: JSX.Element,
-    title?: string | null,
+    title?: string | null
 }
 export function IconButtonMid({ icon, title = null }: IconButtonProps) {
-    return <div className="cursor-pointer bg-background h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2 min-w-[40px]">
+    return <div className={`cursor-pointer bg-none h-8 md:h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2 min-w-[35px] whitespace-nowrap`}>
         <div>
             {icon}
         </div>
-        {title && <div className="text-base font-mono text-foreground">
+        {title && <div className="font-mono text-foreground">
             {title}
         </div>}
     </div>
 }
 
 export function IconButtonSmall({ icon, title }: IconButtonProps) {
-    return <div className="cursor-pointer bg-background text-foreground/80 h-5 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2">
+    return <div className="cursor-pointer bg-none text-foreground/80 h-5 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2 whitespace-nowrap">
         <div className='text-foreground/50'>
             {icon}
         </div>
@@ -53,7 +53,7 @@ export function IconButtonSmall({ icon, title }: IconButtonProps) {
 
 // for likes, saves, etc
 export function IconButtonTiny({ icon, title }: IconButtonProps) {
-    return <div className="cursor-pointer h-8 flex flex-row items-center justify-center space-x-1">
+    return <div className="cursor-pointer h-8 flex flex-row items-center justify-center space-x-1 whitespace-nowrap">
         <div>
             {icon}
         </div>
@@ -85,7 +85,7 @@ export function CopyableID({ id_string, id }: { id_string: string, id: string })
 
 
     return (<div className="relative flex flex-row font-mono text-xs space-x-1 items-center justify-start">
-        <div className="font-semibold text-sm text-foreground/80">{id_string}:</div>
+        <div className="font-semibold text-foreground/80">{id_string}:</div>
         <button className="cursor-pointer rounded-2xl bg-brand text-white py-1 px-2" onClick={handleButtonClick}>
             {id}
         </button>

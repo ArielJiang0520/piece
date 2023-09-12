@@ -174,7 +174,11 @@ export interface JoinedAuthorPiece extends Piece {
     profiles: Profile | null
 }
 
+export interface JoinedProfile extends Profile {
+    pieces: any[],
+    worlds: any[],
 
+}
 
 export interface DefaultFolder {
     id: string,

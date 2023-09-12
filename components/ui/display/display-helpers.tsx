@@ -1,4 +1,5 @@
 import React from 'react';
+import MarkdownIt from 'markdown-it';
 
 interface InputTitleProps {
     label: string,
@@ -49,3 +50,26 @@ export const CreatorDisplay = ({ items }: { items: any[] }) => {
         </div>
     )
 }
+
+
+interface MyComponentProps {
+    children: string;
+    className?: string;
+}
+
+export const Markdown: React.FC<MyComponentProps> = ({ children, className }) => {
+    const markdown = new MarkdownIt({ breaks: true }) // enabling line breaks
+
+    const createMarkup = () => {
+        let html = markdown.render(children);
+        html = html.replace(/<p>/g, '<p class="mb-4">'); // Add tailwind class here for margin
+        return { __html: html };
+    };
+
+    console.log(createMarkup())
+
+    return (
+        <div dangerouslySetInnerHTML={createMarkup()} className={`${className} prose prose-sm`} />
+    );
+};
+

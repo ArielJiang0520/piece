@@ -155,7 +155,7 @@ export function renameKeyInObjectsArray(
 
 export function getDistanceToNow(timestamp: string): string {
     const date = new Date(timestamp);
-    let result = formatDistanceToNow(date);
+    let result = formatDistanceToNow(date, { addSuffix: false, includeSeconds: true });
     return result + ' ago'
 }
 

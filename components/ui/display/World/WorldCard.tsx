@@ -32,7 +32,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
     const [dropdownVisible, setDropdownVisible] = useState(false)
 
     const tags: string[] = [
-        ...(world.relationship_types[0] === "No Relationship" ? ["No Pairing"] : world.relationship_types),
+        ...(world.relationship_types[0] === "No Relationship" ? [] : world.relationship_types),
         ...(world.nsfw ? ["🔞 NSFW Content"] : []),
     ]
     return (
@@ -102,10 +102,10 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                 <FieldContentDisplay content={world.logline} textSize="text-sm" bold="font-normal" />
             </div>
 
-            <div className="flex flex-row justify-start items-center ">
+            {tags.length > 1 && <div className="flex flex-row justify-start items-center ">
                 <TagsBarSmallDisplay tags={tags} small={true} />
 
-            </div>
+            </div>}
 
 
             <div className="w-full">

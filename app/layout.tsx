@@ -63,7 +63,7 @@ export default function RootLayout({
                 showSpinner={false}
                 easing="ease"
                 speed={200}
-                shadow="0 0 10px #ec4699,0 0 5px #ec4699"
+                shadow=""
               />
               {children}
             </main>

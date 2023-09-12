@@ -33,7 +33,7 @@ export const LazyImage: React.FC<LazyImageClientProps> = ({ url, dimension, roun
                         className="fixed inset-0 flex items-center justify-center z-50"
                         onClick={() => setShowPopup(false)}
                     >
-                        <div className="bg-background p-1 shadow-lg">
+                        <div className="shadow-lg">
                             <img
                                 src={popupImage!}
                                 alt="Popup"
