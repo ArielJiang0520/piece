@@ -6,7 +6,7 @@ import { getDistanceToNow } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropdownMenu";
+import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropdown";
 import { useRouter } from "next/navigation";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { TagsBarSmallDisplay } from "@/components/ui/input/tags-helpers";

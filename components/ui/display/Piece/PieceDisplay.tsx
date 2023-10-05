@@ -13,7 +13,7 @@ import { IconButtonMid, IconButtonTiny } from "@/components/ui/button/button-hel
 import { useEffect, useState } from "react";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { delete_piece, update_special_piece } from "@/utils/piece-helpers";
-import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropdownMenu";
+import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropdown";
 import { fetch_all_folders, update_piece_folder } from "@/utils/folder-helpers";
 import { useRouter } from "next/navigation";
 import { notify_error, notify_success } from "../../widget/toast";
