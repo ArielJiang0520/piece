@@ -1,15 +1,15 @@
 'use client'
 // /create-a-world
 import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload } from '@/types/types';
-import { cast_to_worldpayload, cast_to_world } from "@/types/cast-types";
+import { cast_to_worldpayload } from "@/types/cast-types";
 // Need to handle input error
-// Need to add "?" icon for instruction
 import { useEffect, useRef, useState } from 'react';
 
 import { useSupabase } from '@/app/supabase-provider';
 import Link from 'next/link';
 import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMessage, FieldProps } from 'formik'; // need to validate input
 // UI
+import { HelpTooltip } from '@/components/ui/widget/tooltip';
 import { TextInput } from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import DescriptionSections from './description/DescriptionSections';
@@ -23,26 +23,32 @@ import { useDraftContext } from '../draft-provider';
 import PublishButton from './buttons/PublishButton';
 import PreviewButton from './buttons/PreviewButton';
 import SaveDraftButton from './buttons/SaveDraftButton';
-import ChooseAnOrigin from './ChooseAnOrigin';
 import ChooseTags from './ChooseTags';
-import ChooseCharacters from './ChooseCharacters';
-import ChooseRelationshipTypes from './ChooseRelationshipTypes';
-import ChooseRelationships from './ChooseRelationships';
+import ChooseGenres from './ChooseGenres';
 
 export default function CaW() {
     const { currentDraft, fetchDrafts } = useDraftContext();
     const { user } = useSupabase()
 
     const formikRef = useRef<FormikProps<WorldPayload> | null>(null); // Adding a ref to Formik
+    const [isFormikRendered, setIsFormikRendered] = useState(false);
+
+    // Add effect to change state when Formik has been rendered
     useEffect(() => {
         if (formikRef.current) {
-            const newValues: WorldPayload = "default" in currentDraft ? EmptyWorldPayload : cast_to_worldpayload(currentDraft)
-            formikRef.current.resetForm({ values: newValues });
+            setIsFormikRendered(true);
         }
-    }, [currentDraft])  // Resetting the form whenever currentDraft changes
+    }, [formikRef]);
+
+    useEffect(() => {
+        if (isFormikRendered) {
+            const newValues: WorldPayload = "default" in currentDraft ? EmptyWorldPayload : cast_to_worldpayload(currentDraft)
+            formikRef.current?.resetForm({ values: newValues });
+        }
+    }, [isFormikRendered, currentDraft])  // Resetting the form whenever currentDraft changes
 
     if (!user) {
-        return <>Loading...</>;
+        return <>You can not create a world while logged out.</>;
     }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -55,66 +61,79 @@ export default function CaW() {
         <div className='font-mono text-foreground/80 font-semibold ui-selected:text-brand capitalize px-6 whitespace-nowrap'>
             {text}
         </div>
-        <div className='hpx border-4 w-full rounded-xl ui-selected:border-brand'>
-
-        </div>
+        <div className='hpx border-4 w-full rounded-xl ui-selected:border-brand' />
     </Tab>
 
     const TabPanel = ({ children }: { children: React.ReactNode }) => (
         <Tab.Panel className={`flex flex-col space-y-6 items-start w-full min-h-[600px] py-8`}>
             {children}
-        </Tab.Panel>)
+        </Tab.Panel>
+    )
 
     return (
         <Formik
             initialValues={EmptyWorldPayload}
             onSubmit={() => { }}
-            innerRef={formikRef}
+            innerRef={(instance) => {
+                formikRef.current = instance;
+                setIsFormikRendered(true);
+            }}
         >
             {({ isSubmitting, isValid, values, errors, touched, setValues, resetForm, setFieldValue, setErrors, setSubmitting }) => (
                 <Form className='' onKeyDown={handleKeyDown}>
                     <Tab.Group>
                         <Tab.List className={`flex flex-row space-x-8 overflow-hidden overflow-x-auto`}>
-                            <StyledTab text={`setup`} />
-                            <StyledTab text={`introduction`} />
+                            <StyledTab text={`basics`} />
                             <StyledTab text={`images`} />
-                            <StyledTab text={`tags`} />
                             <StyledTab text={`details`} />
+                            <StyledTab text={`settings`} />
                         </Tab.List>
 
                         <Tab.Panels >
                             <TabPanel>
-                                <div id="origin-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
-                                    <FieldTitleDisplay label={'origin'} />
-                                    <ChooseAnOrigin />
-                                </div>
-
-                                <div id="settings-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"Privacy Settings"} />
-                                    <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
-                                </div>
-                            </TabPanel>
-
-                            <TabPanel>
                                 <div id="title-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"title"} />
+                                    <div className='flex flex-row items-center space-x-1'>
+                                        <FieldTitleDisplay label={"title"} />
+                                        {/* <HelpTooltip tooltipText='Add your title here' /> */}
+                                    </div>
                                     <TextInput name={"name"} placeholder={"Add the title of your world"} textSize={"text-xl"} multiline={1} />
                                 </div>
 
                                 <div id="logline-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"summary"} />
+                                    <div className='flex flex-row items-center space-x-1'>
+                                        <FieldTitleDisplay label={"summary"} />
+                                        {/* <HelpTooltip tooltipText='Add your title here' /> */}
+                                    </div>
                                     <TextInput name={"logline"}
                                         placeholder={"Add a few lines about your world"}
                                         textSize={"text-md"} multiline={4}
                                     />
                                 </div>
 
+                                <div id="genre-group" className='w-full max-w-2xl flex-col space-y-2'>
+                                    <div className='flex flex-row items-center space-x-1'>
+                                        <FieldTitleDisplay label={"genres"} />
+                                        <HelpTooltip tooltipText='Add your title here' />
+                                    </div>
+                                    <ChooseGenres />
+                                </div>
+
+                                <div id="tags-group" className='w-full max-w-2xl flex-col space-y-2'>
+                                    <div className='flex flex-row items-center space-x-1'>
+                                        <FieldTitleDisplay label={"elements"} />
+                                        <HelpTooltip tooltipText='Add your title here' />
+                                    </div>
+                                    <ChooseTags />
+                                </div>
 
                             </TabPanel>
 
                             <TabPanel>
                                 <div id="images-group" className='w-full flex flex-col'>
-                                    <FieldTitleDisplay label={"cover images"} />
+                                    <div className='flex flex-row items-center space-x-1'>
+                                        <FieldTitleDisplay label={"cover images"} />
+                                        <HelpTooltip tooltipText='Add your title here' />
+                                    </div>
                                     <ImagesUpload
                                         dimension={{ height: "h-80", width: "w-80" }}
                                         bucket={"world"}
@@ -124,40 +143,18 @@ export default function CaW() {
                                         maxNum={7}
                                     />
                                 </div>
-
-                            </TabPanel>
-
-                            <TabPanel>
-
-                                <div id="characters-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
-                                    <FieldTitleDisplay label={"Characters"} />
-                                    <ChooseCharacters />
-                                </div>
-
-                                <div id="relationship-types-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
-                                    <FieldTitleDisplay label={'relationship types'} />
-                                    <ChooseRelationshipTypes />
-                                </div>
-
-                                {values.relationship_types[0] !== 'No Relationship' &&
-                                    <div id="relationships-group" className='w-full max-w-2xl  flex flex-col space-y-2'>
-                                        <FieldTitleDisplay label={'relationships'} />
-                                        <ChooseRelationships />
-                                    </div>
-                                }
-
-                                <div id="genre-group" className='w-full max-w-2xl flex-col space-y-2'>
-                                    <FieldTitleDisplay label={"tags"} />
-                                    <ChooseTags />
-                                </div>
-
-
-
                             </TabPanel>
 
                             <TabPanel>
                                 <div id="description-group" className='w-full flex flex-col'>
                                     <DescriptionSections formSections={values.description} setFieldValue={setFieldValue} />
+                                </div>
+                            </TabPanel>
+
+                            <TabPanel>
+                                <div id="settings-group" className='w-full flex flex-col'>
+                                    {/* <FieldTitleDisplay label={"Privacy Settings"} /> */}
+                                    <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
                                 </div>
                             </TabPanel>
 

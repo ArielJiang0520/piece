@@ -1,15 +1,13 @@
 'use client'
-import { World, WorldDescriptionSection, WorldPayload, JoinedWorldAll } from "./types";
-import { get_fandom } from "@/utils/data-helpers";
+import { Profile, World, WorldDescriptionSection, WorldPayload } from "./types";
+import { WorldMetadata } from "@/app/supabase-server";
 import { get_profile } from "@/utils/user-helpers";
 
 export function cast_to_worldpayload(world: World) {
     return {
-        origin: world.origin,
         tags: world.tags,
-        characters: world.characters,
-        relationship_types: world.relationship_types,
-        relationships: world.relationships,
+        genre1: world.primary_genre,
+        genre2: world.secondary_genre,
         images: world.images,
         name: world.name,
         logline: world.logline,
@@ -25,14 +23,15 @@ export function cast_to_worldpayload(world: World) {
 
 export async function cast_to_world(payload: WorldPayload, uid: string) {
     const created_at = new Date().toISOString();
-    const fandom = payload.origin ? await get_fandom(payload.origin) : null
-    const profile = await get_profile(uid)
-
-    return {
+    const profile: Profile = await get_profile(uid)
+    const world = {
         allow_contribution: payload.settings.allowContribution,
         allow_suggestion: payload.settings.allowSuggestion,
         nsfw: payload.settings.NSFW,
         is_public: payload.settings.public,
+
+        primary_genre: payload.genre1,
+        secondary_genre: payload.genre2,
 
         created_at: created_at,
         modified_at: null,
@@ -44,21 +43,19 @@ export async function cast_to_world(payload: WorldPayload, uid: string) {
         images: payload.images,
         logline: payload.logline,
 
-
-        origin: payload.origin,
-        relationship_types: payload.relationship_types,
         tags: payload.tags,
-        relationships: payload.relationships,
-        characters: payload.characters,
         name: payload.name,
 
         is_draft: true,
         draft_created_at: created_at,
-        draft_modified_at: null,
+        draft_modified_at: null
+    } as World
 
-        fandoms: fandom,
-        subscriptions: [{ count: 0 }],
-        pieces: [{ count: 0 }],
+    const metadata = {
         profiles: profile,
-    } as JoinedWorldAll;
+        pieces: [{ count: 0 }], // count
+        subscriptions: [{ count: 0 }]// count
+    }
+
+    return { ...world, ...metadata } as WorldMetadata
 }

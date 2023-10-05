@@ -2,6 +2,7 @@
 import LocalNavBar from './local-navbar';
 import CaW from './components/CaW'
 import { DraftProvider } from './draft-provider';
+import { createServerSupabaseClient } from '../supabase-server';
 
 export default function Page() {
     return (

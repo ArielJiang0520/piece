@@ -67,13 +67,12 @@ export function CopyableID({ id_string, id }: { id_string: string, id: string })
     const [showWidget, setShowWidget] = useState(false);
 
     const handleButtonClick = () => {
-        const contentToCopy = "Text to be copied"; // Replace with your content
+        const contentToCopy = id;
 
         navigator.clipboard.writeText(contentToCopy)
             .then(() => {
                 setShowWidget(true);
 
-                // Hide widget after a delay (e.g., 2 seconds)
                 setTimeout(() => {
                     setShowWidget(false);
                 }, 1000);

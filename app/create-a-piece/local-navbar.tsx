@@ -3,7 +3,7 @@ import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import NavBar from '@/app/NavBar';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { DefaultPiece, JoinedWorldAll, Piece, World } from '@/types/types';
+import { DefaultPiece, Piece, World } from '@/types/types';
 import { useDraftContext } from './draft-provider';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import DropDownSelector from '@/components/ui/input/DropDownSelector';
@@ -13,12 +13,17 @@ import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { TrashIcon } from '@/components/icon/icon';
 import PeekWorld from '@/components/ui/display/World/PeekWorld';
 import { useSearchParams } from 'next/navigation';
+import Skeleton from 'react-loading-skeleton';
 
-export default function LocalNavBar({ world }: { world: JoinedWorldAll }) {
+export default function LocalNavBar() {
     const searchParams = useSearchParams()
     const edit_id = searchParams.get("edit_id")
 
     const PageTitleNavBarComponent = () => {
+        const { world } = useDraftContext();
+        if (!world)
+            return <Skeleton className='h-5 max-w-sm' />
+
         return (
             <NavBarHeader title={"create-a-piece"} subtitle={edit_id ? `Editing: ${edit_id}` : world!.name} icon={<PeekWorld world={world!} iconOnly={true} />} />
         )

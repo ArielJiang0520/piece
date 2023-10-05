@@ -9,37 +9,6 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      characters: {
-        Row: {
-          created_at: string
-          fandom_id: string
-          hits: number
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          fandom_id: string
-          hits?: number
-          id?: string
-          name?: string
-        }
-        Update: {
-          created_at?: string
-          fandom_id?: string
-          hits?: number
-          id?: string
-          name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "characters_fandom_id_fkey"
-            columns: ["fandom_id"]
-            referencedRelation: "fandoms"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       comments: {
         Row: {
           content: string
@@ -80,87 +49,26 @@ export interface Database {
           }
         ]
       }
-      fandoms: {
-        Row: {
-          aliases: string[]
-          created_at: string
-          id: string
-          media_type: string | null
-          name: string
-          num_of_worlds: number
-        }
-        Insert: {
-          aliases?: string[]
-          created_at?: string
-          id: string
-          media_type?: string | null
-          name?: string
-          num_of_worlds?: number
-        }
-        Update: {
-          aliases?: string[]
-          created_at?: string
-          id?: string
-          media_type?: string | null
-          name?: string
-          num_of_worlds?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fandoms_media_type_fkey"
-            columns: ["media_type"]
-            referencedRelation: "fandoms_media_types"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      fandoms_media_types: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
       folders: {
         Row: {
-          created_at: string | null
-          creator_id: string | null
-          folder_name: string
+          created_at: string
           id: string
-          world_id: string | null
+          name: string
+          world_id: string
         }
         Insert: {
-          created_at?: string | null
-          creator_id?: string | null
-          folder_name?: string
+          created_at?: string
           id?: string
-          world_id?: string | null
+          name: string
+          world_id: string
         }
         Update: {
-          created_at?: string | null
-          creator_id?: string | null
-          folder_name?: string
+          created_at?: string
           id?: string
-          world_id?: string | null
+          name?: string
+          world_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "folders_creator_id_fkey"
-            columns: ["creator_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "folders_world_id_fkey"
             columns: ["world_id"]
@@ -240,52 +148,52 @@ export interface Database {
       pieces: {
         Row: {
           allow_comments: boolean
-          content: string
           created_at: string
           creator_id: string
           draft_created_at: string | null
           draft_modified_at: string | null
           folder_id: string | null
           id: string
-          images: string[]
           is_draft: boolean
           modified_at: string | null
           name: string
           nsfw: boolean
+          piece_json: Json | null
+          piece_type: string
           tags: string[]
           world_id: string | null
         }
         Insert: {
           allow_comments?: boolean
-          content?: string
           created_at?: string
           creator_id: string
           draft_created_at?: string | null
           draft_modified_at?: string | null
           folder_id?: string | null
           id?: string
-          images?: string[]
           is_draft?: boolean
           modified_at?: string | null
           name?: string
           nsfw?: boolean
+          piece_json?: Json | null
+          piece_type?: string
           tags?: string[]
           world_id?: string | null
         }
         Update: {
           allow_comments?: boolean
-          content?: string
           created_at?: string
           creator_id?: string
           draft_created_at?: string | null
           draft_modified_at?: string | null
           folder_id?: string | null
           id?: string
-          images?: string[]
           is_draft?: boolean
           modified_at?: string | null
           name?: string
           nsfw?: boolean
+          piece_json?: Json | null
+          piece_type?: string
           tags?: string[]
           world_id?: string | null
         }
@@ -340,71 +248,6 @@ export interface Database {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      relationships: {
-        Row: {
-          created_at: string
-          fandom_id: string
-          hits: number
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          fandom_id: string
-          hits?: number
-          id?: string
-          name?: string
-        }
-        Update: {
-          created_at?: string
-          fandom_id?: string
-          hits?: number
-          id?: string
-          name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "relationships_fandom_id_fkey"
-            columns: ["fandom_id"]
-            referencedRelation: "fandoms"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      stars: {
-        Row: {
-          created_at: string | null
-          id: string
-          piece_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id: string
-          piece_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          piece_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "stars_piece_id_fkey"
-            columns: ["piece_id"]
-            referencedRelation: "pieces"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "stars_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -496,7 +339,6 @@ export interface Database {
         Row: {
           allow_contribution: boolean
           allow_suggestion: boolean
-          characters: string[]
           created_at: string
           creator_id: string | null
           description: Json
@@ -510,15 +352,13 @@ export interface Database {
           modified_at: string | null
           name: string
           nsfw: boolean
-          origin: string | null
-          relationship_types: string[]
-          relationships: string[]
+          primary_genre: string | null
+          secondary_genre: string | null
           tags: string[]
         }
         Insert: {
           allow_contribution?: boolean
           allow_suggestion?: boolean
-          characters: string[]
           created_at?: string
           creator_id?: string | null
           description?: Json
@@ -532,15 +372,13 @@ export interface Database {
           modified_at?: string | null
           name: string
           nsfw?: boolean
-          origin?: string | null
-          relationship_types?: string[]
-          relationships: string[]
+          primary_genre?: string | null
+          secondary_genre?: string | null
           tags: string[]
         }
         Update: {
           allow_contribution?: boolean
           allow_suggestion?: boolean
-          characters?: string[]
           created_at?: string
           creator_id?: string | null
           description?: Json
@@ -554,9 +392,8 @@ export interface Database {
           modified_at?: string | null
           name?: string
           nsfw?: boolean
-          origin?: string | null
-          relationship_types?: string[]
-          relationships?: string[]
+          primary_genre?: string | null
+          secondary_genre?: string | null
           tags?: string[]
         }
         Relationships: [
@@ -567,9 +404,15 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "worlds_origin_fkey"
-            columns: ["origin"]
-            referencedRelation: "fandoms"
+            foreignKeyName: "worlds_primary_genre_fkey"
+            columns: ["primary_genre"]
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "worlds_secondary_genre_fkey"
+            columns: ["secondary_genre"]
+            referencedRelation: "tags"
             referencedColumns: ["id"]
           }
         ]

@@ -9,15 +9,17 @@ interface SearchBarProps {
     placeholder: string,
     onSelect: (arg: any) => void;
     display_func?: ((arg?: any) => any) | null;
-    defaultSelectedId?: string | null
-    allowCreatingNew?: boolean
+    defaultSelectedId?: string | null;
+    allowCreatingNew?: boolean;
+    hasReset?: boolean
 }
 export default function SearchBar({
     candidates, nameKey,
     placeholder, onSelect,
     display_func = null,
     defaultSelectedId = null,
-    allowCreatingNew = false
+    allowCreatingNew = false,
+    hasReset = true
 }: SearchBarProps) {
 
     const [selectedItem, setSelectedItem] = useState<null | any>(candidates.find(item => item.id === defaultSelectedId) || null)
@@ -80,7 +82,7 @@ export default function SearchBar({
                                     event.stopPropagation();
                                 }
                             }}
-                            className={`border rounded-2xl py-2 px-3 focus:outline-none w-full bg-background`}
+                            className={`border rounded-2xl py-2 px-3 focus:outline-none w-full bg-background capitalize`}
                             onChange={(event) => setQuery(event.target.value)}
                             displayValue={(item: any) => item ? item[nameKey] : null}
                             placeholder={placeholder}
@@ -134,7 +136,7 @@ export default function SearchBar({
                         }
                     </Transition>
                 </div>
-                <ResetIcon className='text-foreground/50 cursor-pointer' onClick={() => setSelectedItem(null)} />
+                {hasReset && <ResetIcon className='text-foreground/50 cursor-pointer' onClick={() => setSelectedItem(null)} />}
             </div>
         </Combobox>
     )

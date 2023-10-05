@@ -2,18 +2,25 @@
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
-import { EmptyPiecePayload, World } from '@/types/types';
+import { EmptyPiecePayload, TypedPiece, World } from '@/types/types';
 import useStreamText from '@/hooks/useStreamText';
 import { useState } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import CaP from '@/app/create-a-piece/components/CaP';
+import { insert_special_piece } from '@/utils/piece-helpers';
+import { useSupabase } from '@/app/supabase-provider';
 
 interface PromptPayload {
     prompt: string,
 }
 export default function PromptGen({ world }: { world: World }) {
+    const { user } = useSupabase()
     const { lines, isLoading, streamText } = useStreamText();
     const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false)
+
+    if (!user) {
+        return <>No user found!</>
+    }
 
     const handleSubmit = async (values: PromptPayload) => {
         const data = {
@@ -74,9 +81,16 @@ export default function PromptGen({ world }: { world: World }) {
                         setIsOpen={setIsPublishWindowOpen}
                         dialogTitle='Publishing New Piece'
                         dialogContent=''
-                        initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, content: lines.join("\n") }} />}
-                        confirmAction={() => { }}
-                        dialogType='display'
+                        initInputValue={{
+                            name: 'Untitled Piece',
+                            world_id: world.id,
+                            type: 'gen-piece',
+                            json_content: { prompt: values.prompt, output: lines.join('\n'), notes: '' },
+                            folder_id: null,
+                            tags: []
+                        } as TypedPiece}
+                        confirmAction={(inputValue: TypedPiece) => { insert_special_piece(inputValue, user.id) }}
+                        dialogType="publish-special-piece"
                     />
                 </Form>
             )}

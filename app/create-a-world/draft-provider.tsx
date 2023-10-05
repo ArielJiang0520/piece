@@ -1,10 +1,11 @@
 'use client'
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { World, DefaultWorld } from '@/types/types';
+import { World, DefaultWorld, Tag, TagCategory } from '@/types/types';
 import { useSupabase } from '@/app/supabase-provider';
 import { delete_world } from '@/utils/world-helpers';
 import { useSearchParams } from 'next/navigation';
 import { getId } from '@/utils/helpers';
+import { fetch_all_tags, fetch_all_tags_categories } from '@/utils/data-helpers';
 
 interface DraftContextData {
     currentDraft: World | DefaultWorld;
@@ -12,6 +13,8 @@ interface DraftContextData {
     handleDraftDelete: (selectedOption: any) => void;
     drafts: Array<World | DefaultWorld>;
     fetchDrafts: () => Promise<void>;
+    tags: Tag[],
+    categories: TagCategory[]
 }
 
 export const DraftContext = createContext<DraftContextData | undefined>(undefined);
@@ -28,6 +31,9 @@ export function DraftProvider({
 
     const [currentDraft, setCurrentDraft] = useState<World | DefaultWorld>(initDraft);
     const [drafts, setDrafts] = useState<Array<World | DefaultWorld>>([initDraft]);
+    const [tags, setTags] = useState<Tag[]>([])
+    const [categories, setCategories] = useState<TagCategory[]>([])
+
     const { supabase } = useSupabase();
 
     const handleDraftChange = (selectedOption: any) => {
@@ -76,17 +82,24 @@ export function DraftProvider({
         setCurrentDraft(data);
     }
 
+    const fetchData = async () => {
+        setTags(await fetch_all_tags());
+        setCategories(await fetch_all_tags_categories());
+    }
+
+
     useEffect(() => {
         if (edit_id) {
             fetchWorld();
         } else {
             fetchDrafts();
         }
+        fetchData();
     }, []);
 
 
     return (
-        <DraftContext.Provider value={{ currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>
+        <DraftContext.Provider value={{ tags, categories, currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>
             {children}
         </DraftContext.Provider>
     );

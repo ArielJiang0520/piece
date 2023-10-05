@@ -4,7 +4,7 @@ import { IconType } from 'react-icons';
 
 export type DropDownMenuOptions = {
     name: string;
-    icon: IconType;
+    icon?: IconType;
     function: () => void;
 };
 export interface DropDownMenu {
@@ -28,8 +28,8 @@ export function DropDownMenu({ options, setDropdownVisible }: DropDownMenu) {
     }, []);
 
     return (
-        <div ref={dropdownRef} className='absolute right-[50%] transform translateX([50%]) 
-                                        mt-2 w-24 bg-background border rounded-lg shadow-lg
+        <div ref={dropdownRef} className='absolute right-0 min-w-[100px] max-w-lg
+                                        mt-2  bg-background border rounded-lg shadow-lg
                                         font-mono font-semibold text-foreground/70 text-xs '>
             <div className='flex flex-col py-1'>
                 {options.map(option => <div
@@ -37,7 +37,8 @@ export function DropDownMenu({ options, setDropdownVisible }: DropDownMenu) {
                     className='flex flex-row justify-start items-center w-full leading-5 hover:bg-foreground/10 px-3 py-2 cursor-pointer'
                     onClick={option.function}
                 >
-                    <option.icon className='mr-2' /> {option.name}
+                    {option.icon && <option.icon className='mr-2' />}
+                    {option.name}
                 </div>)}
             </div>
         </div>

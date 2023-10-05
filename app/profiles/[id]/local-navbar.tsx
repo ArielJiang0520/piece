@@ -16,7 +16,6 @@ export default function LocalNavBar({ profile_id }: LocalNavBarProps) {
     const tabs = [
         { name: 'Overview', link: `/profiles/${profile_id}` },
         { name: 'Worlds', link: `/profiles/${profile_id}/worlds` },
-        { name: 'Pieces', link: `/profiles/${profile_id}/pieces` },
     ];
 
     const PageTitleNavBarComponent = () => {

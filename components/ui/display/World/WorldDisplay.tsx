@@ -1,7 +1,7 @@
 'use client'
-import type { JoinedWorldAll } from "@/types/types"
+import type { WorldMetadata } from "@/app/supabase-server";
 import { IconButtonMid, CopyableID } from "@/components/ui/button/button-helpers";
-import { StarIcon, AtomIcon, Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon, PencilIcon } from "@/components/icon/icon"
+import { StarIcon, AtomIcon, Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon, PencilIcon, SlashIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarSmallDisplay, TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { AccordionDisplay } from './AccordionDisplay';
@@ -10,10 +10,12 @@ import { formatTimestamp, getDistanceToNow } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import 'react-loading-skeleton/dist/skeleton.css'
-import { PieceAuthorDisplay } from "../user-display-helpers";
+import { AuthorDisplay } from "../user-display-helpers";
+import { useSupabase } from "@/app/supabase-provider";
 
 
-const WorldPrivacyDisplay = ({ world }: { world: JoinedWorldAll }) => {
+const WorldPrivacyDisplay = ({ world }: { world: WorldMetadata }) => {
+
     return (
         <>
             <div className='w-full grid grid-cols-2 grid-flex-row gap-3 text-left text-sm text-foreground/70 border p-5'>
@@ -47,34 +49,14 @@ const WorldPrivacyDisplay = ({ world }: { world: JoinedWorldAll }) => {
 }
 
 
-const WorldCharactersDisplay = ({ world }: { world: JoinedWorldAll }) => {
-    return (
-        <>
-            <div className='w-full flex flex-col text-left text-sm text-foreground/70 border p-5 space-y-4'>
-                <div>
-                    <FieldTitleDisplay label={'characters'} textSize="text-sm" />
-                    <TagsBarSmallDisplay tags={world.characters} />
-                </div>
-                <div>
-                    <FieldTitleDisplay label={'Relationship type'} textSize="text-sm" />
-                    <TagsBarSmallDisplay tags={world.relationship_types[0] === "No Relationship" ? ["General (No Pairing)"] : world.relationship_types} />
-                </div>
-                {world.relationships.length > 0 && world.relationship_types[0] !== "No Relationship" && <div>
-                    <FieldTitleDisplay label={'relationships'} textSize="text-sm" />
-                    <TagsBarSmallDisplay tags={world.relationships} />
-                </div>}
-            </div>
-        </>
-    )
-}
-
 interface WorldDisplayProps {
-    world: JoinedWorldAll;
+    world: WorldMetadata;
     isOwner?: boolean;
     preview?: boolean;
 }
 
 export default function WorldDisplay({ world, isOwner = false, preview = false }: WorldDisplayProps) {
+    const { tagMap } = useSupabase();
     return (
 
         <div className='flex flex-col space-y-3 items-start text-foreground'>
@@ -99,29 +81,29 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
                 <FieldContentDisplay content={world.name} textSize="text-4xl" bold="font-bold" />
             </div>
 
-            <div id="origin-group" className="grid md:flex md:space-x-3 text-sm text-foreground/80">
-                <div id="origin" className="whitespace-nowrap overflow-hidden overflow-ellipsis">
-                    <div className='flex flex-row justify-start items-center space-x-1 '>
-                        <BookIcon />
-                        <span>{world.fandoms ? world.fandoms.name : "Original World"}</span>
+            <div id="gren-date-group" className="grid md:flex md:space-x-3 space-y-1 text-sm text-foreground/80">
+                <div id="genre" className='flex flex-row justify-start items-center space-x-1'>
+                    <BookIcon />
+                    <div className='flex flex-row justify-start items-center capitalize font-medium'>
+                        <span>{tagMap[world.primary_genre!]}</span>
+                        <SlashIcon />
+                        <span>{tagMap[world.secondary_genre!]}</span>
                     </div>
                 </div>
-                <div id="date" className="whitespace-nowrap overflow-hidden overflow-ellipsis">
-                    <div className='flex flex-row justify-start items-center space-x-1'>
-                        <CalendarIcon />
-                        {world.modified_at ?
-                            <span>{`Updated ${getDistanceToNow(world.modified_at)}`}</span> :
-                            <span>{`Created on ${formatTimestamp(world.created_at, true)}`}</span>}
-                    </div>
+                <div id="date" className='flex flex-row justify-start items-center space-x-1'>
+                    <CalendarIcon />
+                    {world.modified_at ?
+                        <span>{`Updated ${getDistanceToNow(world.modified_at)}`}</span>
+                        : <span>{`Created ${getDistanceToNow(world.created_at)}`}</span>}
                 </div>
             </div>
 
             {world.profiles && !preview && <div id="author-group" className="w-full flex flex-col">
-                <PieceAuthorDisplay author={world.profiles} />
+                <AuthorDisplay author={world.profiles} bannerContent="World Creator" />
             </div>}
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-                <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} />
+                <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} popup={true} />
             </div>
 
             <div id="logline-group" className='w-full flex flex-col'>
@@ -138,22 +120,9 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
                 <WorldPrivacyDisplay world={world} />
             </div>
 
-            <div className='w-full max-w-2xl flex flex-col'>
-                <WorldCharactersDisplay world={world} />
-            </div>
-
-
-
-
             <div id="description-group" className='flex flex-col'>
                 <AccordionDisplay sections={world.description as WorldDescriptionSection[]} preview={preview} />
             </div>
-
-            {/* <div id="metadata-group" className="w-full flex flex-col items-end" >
-                
-            </div> */}
-
-
 
 
         </div>

@@ -1,5 +1,5 @@
 import { getSession } from "@/app/supabase-server";
-import MyPieces from "./components/MyPieces";
+// import MyPieces from "./components/MyPieces";
 import { createServerSupabaseClient } from "@/app/supabase-server";
 
 async function getPiecesByUser(id: string, isOwner: boolean) {
@@ -52,7 +52,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
         <div className="w-full md:w-2/3 flex flex-col gap-14 px-2 py-5 lg:py-10 text-foreground font-mono">
-            <MyPieces pieces={pieces} worlds={worlds} />
+            {/* <MyPieces pieces={pieces} worlds={worlds} /> */}
         </div>
     )
 }

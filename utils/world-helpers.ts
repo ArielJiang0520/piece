@@ -1,29 +1,25 @@
-import type { JoinedWorldAll, WorldPayload } from "@/types/types"
+import type { World, WorldDescriptionSection, WorldPayload } from "@/types/types"
 import { getId } from "./helpers";
 import { createClientSupabaseClient } from './helpers'
-import { increment_fandom, upsert_characters, upsert_relationships, upsert_tags } from "./data-helpers";
+import { upsert_tags } from "./data-helpers";
 import { cleanTags } from "./helpers";
 
 // create a new row in worlds table (draft)
 // return the created world's ID
 export const insert_world = async (values: WorldPayload, uid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { origin, images, name, characters: rawCharacters, tags: rawTags, relationships: rawRelationships, relationship_types, logline, description, settings } = values as WorldPayload;
+    const { images, name, tags: rawTags, genre1, genre2, logline, description, settings } = values as WorldPayload;
     const tags = cleanTags(rawTags)
-    const characters = cleanTags(rawCharacters)
-    const relationships = cleanTags(rawRelationships)
 
     const wid = `W-${getId()}`
 
     let world_data = {
         id: wid,
-        origin: origin,
         images: images,
         name: name,
-        characters: characters,
         tags: tags,
-        relationship_types: relationship_types,
-        relationships: relationships,
+        primary_genre: genre1,
+        secondary_genre: genre2,
         creator_id: uid,
         logline: logline,
         description: description,
@@ -53,16 +49,8 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
 
 
     if (!is_draft) {
-        // increase number of worlds for fandom
-
         // update tags
         await upsert_tags(tags);
-
-        if (origin) {
-            await increment_fandom(origin, 1);
-            await upsert_characters(characters, origin);
-            await upsert_relationships(relationships, origin);
-        }
     }
 
     return data.id
@@ -73,27 +61,21 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
 // TODO: upsert new tags/characters? 
 export const update_world = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { origin, images, name, characters: rawCharacters, tags: rawTags, relationships: rawRelationships, relationship_types, logline, description, settings } = values as WorldPayload;
+    const { images, name, tags: rawTags, genre1, genre2, logline, description, settings } = values as WorldPayload;
     const tags = cleanTags(rawTags)
-    const characters = cleanTags(rawCharacters)
-    const relationships = cleanTags(rawRelationships)
-
 
     let world_data = {
-        origin: origin,
         images: images,
         name: name,
         logline: logline,
         tags: tags,
-        relationship_types: relationship_types,
-        relationships: relationships,
-        characters: characters,
+        primary_genre: genre1,
+        secondary_genre: genre2,
         description: description,
         is_public: settings.public,
         nsfw: settings.NSFW,
         allow_contribution: settings.allowContribution,
         allow_suggestion: settings.allowSuggestion,
-
     }
 
     let modified_at_data = is_draft ? {
@@ -113,8 +95,6 @@ export const update_world = async (values: WorldPayload, wid: string, is_draft: 
         console.error(JSON.stringify(error))
         throw Error(error.message)
     }
-
-
     return data.id
 }
 
@@ -154,38 +134,18 @@ export const delete_world = async (wid: string, world_origin: null | string = nu
         console.error(JSON.stringify(error))
         throw Error(error.message)
     }
-
-    if (world_origin) {
-        await increment_fandom(world_origin, -1);
-    }
-
     return status
 }
 
 
-
-export const fetch_num_of_pieces = async (wid: string) => {
-    const supabase = createClientSupabaseClient()
-    const { data, error, status } = await supabase
-        .from('pieces')
-        .select('id', { count: 'exact' })
-        .eq('world_id', wid)
-    if (error || !data) {
-        console.error(JSON.stringify(error))
-        throw Error(error.message)
+export function getCharDict(world: World) {
+    let charList = [] as string[]
+    for (let section of (world.description as WorldDescriptionSection[])) {
+        for (let card of section.sectionCards) {
+            if (card.isCharacterCard)
+                charList.push(card.cardTitle)
+        }
     }
-    return data.length
-}
 
-export const fetch_num_of_subs = async (wid: string) => {
-    const supabase = createClientSupabaseClient()
-    const { data, error, status } = await supabase
-        .from('subscriptions')
-        .select('id', { count: 'exact' })
-        .eq('world_id', wid)
-    if (error || !data) {
-        console.error(JSON.stringify(error))
-        throw Error(error.message)
-    }
-    return data.length
+    return charList.map((char, idx) => { return { id: idx, name: char } })
 }

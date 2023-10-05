@@ -62,14 +62,12 @@ export const Markdown: React.FC<MyComponentProps> = ({ children, className }) =>
 
     const createMarkup = () => {
         let html = markdown.render(children);
-        html = html.replace(/<p>/g, '<p class="mb-4">'); // Add tailwind class here for margin
+        html = html.replace(/<p>/g, '<p class="my-2">'); // Add tailwind class here for margin
         return { __html: html };
     };
 
-    console.log(createMarkup())
-
     return (
-        <div dangerouslySetInnerHTML={createMarkup()} className={`${className} prose prose-sm`} />
+        <div dangerouslySetInnerHTML={createMarkup()} className={`${className}`} />
     );
 };
 

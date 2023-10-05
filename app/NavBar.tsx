@@ -46,10 +46,6 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
             name: 'Your worlds'
         },
 
-        {
-            link: `/profiles/${user?.id}/pieces`,
-            name: 'Your pieces'
-        },
     ]
 
 

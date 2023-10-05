@@ -1,5 +1,5 @@
 'use client'
-import { JoinedWorldAll, World } from "@/types/types"
+import { WorldMetadata } from "@/app/supabase-server"
 import { useState, useEffect, ReactNode } from "react"
 import { EyeIcon } from "@/components/icon/icon"
 import { FieldTitleDisplay } from "../display-helpers"
@@ -7,7 +7,7 @@ import PopupDialog from "@/components/ui/input/PopupDialog"
 import WorldDisplay from "./WorldDisplay"
 
 interface PeekWorldProps {
-    world: JoinedWorldAll,
+    world: WorldMetadata,
     iconOnly?: boolean;
 }
 export default function PeekWorld({ world, iconOnly = false }: PeekWorldProps) {

@@ -107,9 +107,6 @@ export default function ChatBoxSimulation({ world, aiRole1, aiRole2, scenario, o
     };
 
 
-
-
-
     return <>
 
         <div className="flex flex-col space-y-4 items-start justify-start w-full overflow-y-auto text-foreground max-h-[500px] lg:max-h-[800px]" ref={chatBoxRef}>
@@ -118,9 +115,7 @@ export default function ChatBoxSimulation({ world, aiRole1, aiRole2, scenario, o
             ))}
         </div>
 
-
         <div className="block h-20" />
-
 
         <div className="fixed bottom-0 left-0 pb-4 px-4 w-full flex flex-col items-center justify-center">
             <form
@@ -130,7 +125,6 @@ export default function ChatBoxSimulation({ world, aiRole1, aiRole2, scenario, o
                     sendMessage();
                 }}
             >
-
 
                 <button
                     type="submit"

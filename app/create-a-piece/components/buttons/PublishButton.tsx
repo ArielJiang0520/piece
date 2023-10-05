@@ -3,8 +3,9 @@ import { useState } from "react"
 import PopupDialog from "@/components/ui/input/PopupDialog"
 import { DefaultPiece, Piece, PiecePayload } from "@/types/types"
 import { insert_piece, update_piece, publish_draft } from "@/utils/piece-helpers"
+import { notify_success, notify_error } from "@/components/ui/widget/toast"
 import { useRouter } from "next/navigation"
-import { useToast } from "@/app/toast-providers"
+import Link from "next/link"
 
 interface PublishButtonProps {
     uid: string,
@@ -14,10 +15,8 @@ interface PublishButtonProps {
     setSubmitting: (arg: boolean) => void,
 }
 export default function PublishButton({ uid, wid, currentDraft, values, setSubmitting }: PublishButtonProps) {
-    const [msgOpen, setMsgOpen] = useState(false)
     const [isPublishConfirm, setIsPublishConfirm] = useState(false)
-    const router = useRouter()
-    const { showMessage } = useToast();
+    const router = useRouter();
 
     // Publish the current piece
     const submitPiece = async (values: PiecePayload, setSubmitting: (isSubmitting: boolean) => void) => {
@@ -33,11 +32,19 @@ export default function PublishButton({ uid, wid, currentDraft, values, setSubmi
             } else { // if editing an existing piece
                 piece_id = await update_piece(values, currentDraft.id, false)
             }
-        } catch (error) {
-            alert(`Error: ${JSON.stringify(error)}`);
-        } finally {
+
             setSubmitting(false)
             setIsPublishConfirm(false)
+            router.push(`/worlds/${wid}/pieces`)
+            notify_success(<div>
+                <Link className="underline-offset-2 text-blue-500" href={`/pieces/${piece_id}`}>
+                    {piece_id}
+                </Link> successfully posted!
+            </div>, 10000)
+
+        } catch (error) {
+            console.error(`Error: ${JSON.stringify(error)}`);
+            notify_error(JSON.stringify(error), 10000)
         }
     }
 

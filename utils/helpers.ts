@@ -1,7 +1,9 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/types/supabase";
 import { cache } from 'react';
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import moment from 'moment';
 
 export const createClientSupabaseClient = cache(() =>
     createClientComponentClient<Database>()
@@ -45,87 +47,6 @@ export function getFromLocalStorage<T>(key: string): any | null {
     }
 }
 
-export const postData = async ({
-    url,
-    data
-}: {
-    url: string;
-    data: any;
-}) => {
-    console.log('posting,', url, data);
-
-    const res = await fetch(url, {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        credentials: 'same-origin',
-        body: JSON.stringify({
-            data: data
-        })
-    });
-
-    if (!res.ok) {
-        console.log('Error in postData', { url, data, res });
-        throw Error(res.statusText);
-    }
-
-    return res.json();
-};
-
-export const updateData = async ({
-    url,
-    data,
-    id,
-}: {
-    url: string;
-    data: any;
-    id: string;
-}) => {
-    console.log('updating,', url, data, 'at', id);
-
-    const res = await fetch(url, {
-        method: 'PUT',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        credentials: 'same-origin',
-        body: JSON.stringify({
-            data: data,
-            id: id
-        })
-    });
-
-    if (!res.ok) {
-        console.log('Error in updateData', { url, data, id, res });
-        throw Error(res.statusText);
-    }
-
-    return res.json();
-}
-
-export const deleteData = async ({
-    url,
-    id,
-}: {
-    url: string;
-    id: string;
-}) => {
-    console.log('deleting,', url, 'at', id);
-
-    const res = await fetch(url, {
-        method: 'DELETE',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        credentials: 'same-origin',
-        body: JSON.stringify({
-            id: id
-        })
-    });
-
-    if (!res.ok) {
-        console.log('Error in deleteData', { url, id, res });
-        throw Error(res.statusText);
-    }
-
-    return res.json();
-}
-
 
 
 export function titleCase(str: string, delimiter: string = '/'): string {
@@ -155,7 +76,7 @@ export function renameKeyInObjectsArray(
 
 export function getDistanceToNow(timestamp: string): string {
     const date = new Date(timestamp);
-    let result = formatDistanceToNow(date, { addSuffix: false, includeSeconds: true });
+    let result = formatDistanceToNowStrict(date, { addSuffix: false });
     return result + ' ago'
 }
 
@@ -180,6 +101,23 @@ export function formatTimestamp(timestamp: string | null, dateOnly: boolean = fa
         return `${month}/${day} ${hours}:${minutes}`;
     else
         return `${month}/${day}/${year}`
+}
+
+export function getDistanceToNowAbbr(timestamp: string): string {
+    let timestampDate = new Date(timestamp);
+    let timeElapsed = moment.duration(moment(Date.now()).diff(moment(timestampDate)));
+
+    if (timeElapsed.asYears() >= 1) {
+        return Math.floor(timeElapsed.asYears()) + 'y';
+    } else if (timeElapsed.asMonths() >= 1) {
+        return Math.floor(timeElapsed.asMonths()) + 'm';
+    } else if (timeElapsed.asDays() >= 1) {
+        return Math.floor(timeElapsed.asDays()) + 'd';
+    } else if (timeElapsed.asHours() >= 1) {
+        return Math.floor(timeElapsed.asHours()) + 'h';
+    } else {
+        return Math.floor(timeElapsed.asMinutes()) + 'min';
+    }
 }
 
 // await sleep(10000); // Sleep for 10 seconds

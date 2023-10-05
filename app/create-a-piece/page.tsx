@@ -1,7 +1,5 @@
 import LocalNavBar from './local-navbar';
 import CaP from '@/app/create-a-piece/components/CaP';
-import { getWorldDetailsById, getPieceById } from '../supabase-server';
-import { EmptyPiecePayload } from '@/types/types';
 import { DraftProvider } from './draft-provider';
 
 export default async function Page({
@@ -11,22 +9,17 @@ export default async function Page({
     params: { id: string }
     searchParams?: { [key: string]: string | undefined };
 }) {
-    if (searchParams) {
-        const world_id = searchParams.world_id ?? (await getPieceById(searchParams.edit_id!)).world_id!
-        const world = await getWorldDetailsById(world_id)
 
-        if (!world)
-            return <></>
-
+    if (searchParams)
         return (
             <DraftProvider>
-                <LocalNavBar world={world} />
+                <LocalNavBar />
                 <div className="w-full md:w-2/3 flex flex-col gap-15 px-5 py-5 lg:py-5 text-foreground font-mono">
-                    <CaP world={world} />
+                    <CaP />
                 </div>
             </DraftProvider>
         )
-    } else {
-        return <>Error! can't call this url without params</>
-    }
+    else
+        return <>No search params found!</>
+
 }   

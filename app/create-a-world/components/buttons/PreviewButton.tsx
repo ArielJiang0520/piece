@@ -1,7 +1,7 @@
 'use client'
 import { ReactNode, useEffect, useState } from "react"
 import PopupDialog from "@/components/ui/input/PopupDialog"
-import { JoinedWorldAll, WorldPayload } from "@/types/types"
+import { WorldPayload } from "@/types/types"
 import { cast_to_world } from "@/types/cast-types"
 import WorldDisplay from "@/components/ui/display/World/WorldDisplay"
 import { EyeIcon } from "@/components/icon/icon"

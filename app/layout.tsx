@@ -1,9 +1,10 @@
 import '@/styles/globals.css'
+import 'react-toastify/dist/ReactToastify.css';
+import 'tippy.js/dist/tippy.css';
 import { Alike, Montserrat, Domine } from 'next/font/google'
 import SupabaseProvider from './supabase-provider';
 import NextTopLoader from 'nextjs-toploader';
-import ToastProvider from './toast-providers';
-
+import { ToastContainer } from 'react-toastify';
 
 const alike = Alike({
   weight: ['400'],
@@ -52,22 +53,21 @@ export default function RootLayout({
 
       <body>
         <SupabaseProvider>
-          <ToastProvider>
-            <main className="min-h-screen bg-background flex flex-col items-center">
-              <NextTopLoader
-                color="#ec4699"
-                initialPosition={0.08}
-                crawlSpeed={200}
-                height={3}
-                crawl={true}
-                showSpinner={false}
-                easing="ease"
-                speed={200}
-                shadow=""
-              />
-              {children}
-            </main>
-          </ToastProvider>
+          <main className="min-h-screen bg-background flex flex-col items-center">
+            <ToastContainer />
+            <NextTopLoader
+              color="#ec4699"
+              initialPosition={0.08}
+              crawlSpeed={200}
+              height={3}
+              crawl={true}
+              showSpinner={false}
+              easing="ease"
+              speed={200}
+              shadow=""
+            />
+            {children}
+          </main>
         </SupabaseProvider>
       </body>
     </html>

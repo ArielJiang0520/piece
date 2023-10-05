@@ -5,8 +5,10 @@ import { useSupabase } from '@/app/supabase-provider';
 import { delete_world } from '@/utils/world-helpers';
 import { useSearchParams } from 'next/navigation';
 import { getId } from '@/utils/helpers';
+import { WorldMetadata } from '../supabase-server';
 
 interface DraftContextData {
+    world: WorldMetadata | null;
     currentDraft: Piece | DefaultPiece;
     handleDraftChange: (selectedOption: any) => void;
     handleDraftDelete: (selectedOption: any) => void;
@@ -25,15 +27,8 @@ export function DraftProvider({
     const world_id = searchParams.get('world_id')
     const edit_id = searchParams.get("edit_id")
 
-    useEffect(() => {
-        if (edit_id)
-            fetchPiece();
-        else
-            fetchDrafts();
-    }, []);
-
     const initDraft = { id: `P-${getId()}`, name: 'A New Draft', default: true } as DefaultPiece;
-
+    const [world, setWorld] = useState<WorldMetadata | null>(null)
     const [currentDraft, setCurrentDraft] = useState<Piece | DefaultPiece>(initDraft);
     const [drafts, setDrafts] = useState<Array<Piece | DefaultPiece>>([initDraft]);
     const { supabase } = useSupabase();
@@ -44,14 +39,26 @@ export function DraftProvider({
 
     const handleDraftDelete = async (selectedOption: any) => {
         if (!('default' in selectedOption)) {
-            const status = await delete_world(selectedOption.id)
+            await delete_world(selectedOption.id)
             await fetchDrafts();
         }
     }
 
+    async function getWorldMetadata(id: string): Promise<WorldMetadata> {
+        const { data, error } = await supabase
+            .from('worlds')
+            .select('*, profiles(*), pieces(count), subscriptions(count)')
+            .eq('id', id)
+            .limit(1)
+            .single();
+        if (!data || error)
+            throw Error(JSON.stringify(error))
+        return data as WorldMetadata
+    }
+
     const fetchDrafts = async () => {
         const { data: { session } } = await supabase.auth.getSession()
-        if (!session) {
+        if (!session || !world_id) {
             console.error('did not find authenticated user')
             return
         }
@@ -68,6 +75,7 @@ export function DraftProvider({
             return
         }
         setDrafts([initDraft, ...data]);
+        setWorld(await getWorldMetadata(world_id))
     }
 
     const fetchPiece = async () => {
@@ -77,14 +85,24 @@ export function DraftProvider({
             .eq('id', edit_id)
             .single()
         if (error || !data) {
-            console.error(error.code, error.message)
-            return
+            throw Error(JSON.stringify(error))
         }
         setCurrentDraft(data)
+        setWorld(await getWorldMetadata(data.world_id!))
     }
 
+    useEffect(() => {
+        if (edit_id) {
+            fetchPiece();
+        }
+        else if (world_id) {
+            fetchDrafts();
+        }
+    }, [searchParams]);
+
+
     return (
-        <DraftContext.Provider value={{ currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>
+        <DraftContext.Provider value={{ world, currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>
             {children}
         </DraftContext.Provider>
     );

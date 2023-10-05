@@ -2,7 +2,8 @@ import type { Database } from '@/types/supabase';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-import { Fandom, JoinedWorldAll, Profile, World } from '@/types/types';
+import { World, Profile, Piece, Folder } from "@/types/types"
+
 export const createServerSupabaseClient = cache(() =>
     createServerComponentClient<Database>({ cookies })
 );
@@ -34,124 +35,87 @@ export async function getUserDetails() {
     }
 }
 
-export async function getWorldDetailsById(id: string) {
+// For worlds/[id]
+// For WorldDisplay
+export interface WorldMetadata extends World {
+    profiles: Profile | null,
+    pieces: any[], // count
+    subscriptions: any[] // count
+}
+export async function getWorldMetadata(id: string): Promise<WorldMetadata> {
     const supabase = createServerSupabaseClient();
-    try {
-        const { data: worldDetails } = await supabase
-            .from('worlds')
-            .select('*, profiles(*), fandoms(*), pieces(count), subscriptions(count)')
-            .eq('id', id)
-            .limit(1)
-            .single();
-        return worldDetails;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
+    const { data, error } = await supabase
+        .from('worlds')
+        .select('*, profiles(*), pieces(count), subscriptions(count)')
+        .eq('id', id)
+        .limit(1)
+        .single();
+    if (!data || error)
+        throw Error(JSON.stringify(error))
+    return data as WorldMetadata
+}
+// For worlds/, profiles/[id]
+// For AllWorlds, MyWorlds
+export async function getAllWorldMetadata(uid?: string) {
+    const supabase = createServerSupabaseClient();
+    let query = supabase.from('worlds').select('*, profiles(*), pieces(count), subscriptions(count)')
+
+    if (uid)
+        query = query.eq('creator_id', uid).eq('is_draft', false)
+    else
+        query = query.eq('is_public', true).eq('is_draft', false)
+
+    const { data, error } = await query
+    if (!data || error) {
+        throw Error(JSON.stringify(error))
     }
+    return data as WorldMetadata[]
 }
 
-export async function getPiecesByWorld(id: string) {
+// For worlds/[id]/pieces
+// For WorldPieces, PieceCard
+export interface PieceDetails extends Piece {
+    profiles: Profile | null,
+    folders: Folder | null
+}
+export interface FolderCount extends Folder {
+    pieces: any[] // count
+}
+export interface WorldDetails extends World {
+    profiles: Profile | null,
+    pieces: Array<PieceDetails>,
+    folders: Array<FolderCount>
+}
+export async function getWorldDetails(id: string): Promise<WorldDetails> {
     const supabase = createServerSupabaseClient();
-    try {
-        const { data, error } = await supabase
-            .from('pieces')
-            .select('*, profiles(*)')
-            .eq('world_id', id)
-            .order('created_at', { ascending: false })
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
-    }
+    const { data, error } = await supabase
+        .from('worlds')
+        .select('*, profiles(*), pieces(*, profiles(*), folders(*)), folders(*, pieces(count))')
+        .eq('id', id)
+        .limit(1)
+        .single();
+    if (!data || error)
+        throw Error(JSON.stringify(error))
+    return data as WorldDetails
 }
 
-export async function getPieceById(id: string) {
+
+// For pieces/[id]
+// For PieceDisplay
+export interface PieceDetailsIncludeWorld extends PieceDetails {
+    worlds: World | null;
+}
+export async function getPieceDetailsIncludeWorld(
+    id: string
+): Promise<PieceDetailsIncludeWorld> {
     const supabase = createServerSupabaseClient();
     const { data, error } = await supabase
         .from('pieces')
-        .select('*, profiles(*), worlds(*)')
+        .select('*, profiles(*), folders(*), worlds(*)')
         .eq('id', id)
-        .single()
-
-    if (!data || error) {
+        .limit(1)
+        .single();
+    if (!data || error)
         throw Error(JSON.stringify(error))
-    }
-
-    return data
+    return data as PieceDetailsIncludeWorld
 }
-
-export async function getWorldsByUser(id: string, isOwner: boolean) {
-    const supabase = createServerSupabaseClient();
-
-    let query = supabase
-        .from('worlds')
-        .select('*, profiles(*), fandoms(*), pieces(count), subscriptions(count)')
-        .eq('creator_id', id)
-        .eq('is_draft', false)
-
-    if (!isOwner) { query = query.eq('is_public', true) }
-
-    const { data, error } = await query
-
-    if (!data || error) {
-        throw Error('Failed at fetching worlds')
-    }
-
-    return data;
-}
-
-export async function getAllWorlds() {
-    const supabase = createServerSupabaseClient();
-    const { data, error } = await supabase
-        .from('worlds')
-        .select('*, profiles(*), fandoms(*), pieces(count), subscriptions(count)')
-        .eq('is_public', true)
-        .eq('is_draft', false)
-
-    if (!data || error) {
-        throw Error(JSON.stringify(error))
-    }
-
-    return data
-}
-
-// export async function getNumPieces(wid: string) {
-//     const supabase = createServerSupabaseClient();
-//     const { data, error } = await supabase
-//         .from('pieces')
-//         .select('id', { count: 'exact' })
-//         .eq('world_id', wid)
-//     if (error || !data) {
-//         console.error(JSON.stringify(error))
-//         throw Error(error.message)
-//     }
-//     return data.length
-// }
-
-// export async function getNumSubs(wid: string) {
-//     const supabase = createServerSupabaseClient()
-//     const { data, error } = await supabase
-//         .from('subscriptions')
-//         .select('id', { count: 'exact' })
-//         .eq('world_id', wid)
-//     if (error || !data) {
-//         console.error(JSON.stringify(error))
-//         throw Error(error.message)
-//     }
-//     return data.length
-// }
-
-
-// export const getWorldsJoinedData = async (worlds: JoinedWorldDetails[]) => {
-//     let myPromises: Promise<JoinedWorldAll>[] = worlds.map((obj) => {
-//         return Promise.all([getNumPieces(obj.id), getNumSubs(obj.id)]).then(([numPieces, numSubs]) => {
-//             return {
-//                 ...obj,
-//                 numPieces: numPieces,
-//                 numSubs: numSubs
-//             };
-//         });
-//     });
-
-//     return await Promise.all(myPromises);
-// }

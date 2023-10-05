@@ -5,13 +5,18 @@ import { useState, useRef, useEffect } from "react";
 import { capitalize } from "@/utils/helpers";
 import ChatBoxSimulation from "./ChatBoxSimulation";
 import { ResetIcon } from "@/components/icon/icon";
-import { TextInput } from "@/components/ui/input/InputTextField";
+import { TextInputFreeform } from "@/components/ui/input/InputTextField";
+import { getCharDict } from "@/utils/world-helpers";
 
 export default function Simulation({ world }: { world: World }) {
-    const worldChars = world.characters.map((char, idx) => { return { id: idx, name: char } })
+    const worldChars = getCharDict(world)
+
+    if (worldChars.length < 2) {
+        return <>Not enough characters in the world!</>
+    }
 
     const [aiChar1, setAiChar1] = useState<{ [key: string]: any }>(worldChars[0])
-    const [aiChar2, setAiChar2] = useState<{ [key: string]: any }>(worldChars[0])
+    const [aiChar2, setAiChar2] = useState<{ [key: string]: any }>(worldChars[1])
     const [scenario, setScenario] = useState('')
     const [openingMsg, setOpeningMsg] = useState('')
 
@@ -19,7 +24,7 @@ export default function Simulation({ world }: { world: World }) {
 
     return (
         <>
-            {!chatOpen && <div className="flex flex-col space-y-2 items-center w-full">
+            {!chatOpen && <div className="flex flex-col space-y-4 items-start w-full">
                 <FieldTitleDisplay label={"AI 1's character"} />
                 <DropDownSelector data={worldChars} nameKey="name" width="w-56"
                     selected={aiChar1} setSelected={setAiChar1}
@@ -34,22 +39,28 @@ export default function Simulation({ world }: { world: World }) {
 
 
                 <FieldTitleDisplay label={"Scenario"} />
-                <textarea
-                    className="max-w-2xl multiLineInput  text-base rounded-md border px-2 py-6 overflow-y-auto"
-                    rows={4}
-                    value={scenario}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setScenario(e.target.value)}
-                    placeholder="(optional) Describe the scenario of this simulation"
-                />
+                <div className="w-full max-w-xl">
+                    <TextInputFreeform
+                        initValue={scenario}
+                        onChange={(newValue: string) => setScenario(newValue)}
+                        placeholder={"Describe the scenario of this roleplay"}
+                        textSize={"text-base"}
+                        multiline={3}
+                    />
+                </div>
+
 
                 <FieldTitleDisplay label={"AI 1's Opening"} />
-                <textarea
-                    className="max-w-2xl multiLineInput  text-base rounded-md border px-2 py-6 overflow-y-auto"
-                    rows={2}
-                    value={openingMsg}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setOpeningMsg(e.target.value)}
-                    placeholder="Write an opening message for AI 1 to start the conversation"
-                />
+                <div className="w-full max-w-xl">
+                    <TextInputFreeform
+                        initValue={openingMsg}
+                        onChange={(newValue: string) => setOpeningMsg(newValue)}
+                        placeholder={"Write an opening message for AI 1 to start the conversation"}
+                        textSize={"text-base"}
+                        multiline={3}
+                    />
+                </div>
+
             </div>}
 
             {!chatOpen && <button

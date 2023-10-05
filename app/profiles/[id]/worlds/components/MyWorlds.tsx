@@ -1,19 +1,19 @@
 'use client'
 import { useEffect, useState } from "react";
 import WorldCard from "@/components/ui/display/World/WorldCard";
-import { JoinedWorldAll } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
 import { ToggleButton } from "@/components/ui/button/toggle/Toggle";
 import Link from "next/link";
+import { WorldMetadata } from "@/app/supabase-server";
 
-type SortFunc = { id: number, name: string, myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => number }
+type SortFunc = { id: number, name: string, myFunc: (a: WorldMetadata, b: WorldMetadata) => number }
 
 const sortFunc: SortFunc[] = [
     {
         id: 1,
         name: "Latest",
-        myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => {
+        myFunc: (a: WorldMetadata, b: WorldMetadata) => {
             const dateA = a.modified_at || a.created_at;
             const dateB = b.modified_at || b.created_at;
             // For descending order (latest to oldest)
@@ -23,7 +23,7 @@ const sortFunc: SortFunc[] = [
     {
         id: 2,
         name: "Oldest",
-        myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => {
+        myFunc: (a: WorldMetadata, b: WorldMetadata) => {
             const dateA = a.modified_at || a.created_at;
             const dateB = b.modified_at || b.created_at;
             // For ascending order 
@@ -33,7 +33,7 @@ const sortFunc: SortFunc[] = [
     {
         id: 3,
         name: "Alphabetical",
-        myFunc: (a: JoinedWorldAll, b: JoinedWorldAll) => {
+        myFunc: (a: WorldMetadata, b: WorldMetadata) => {
             const dateA = a.name;
             const dateB = b.name;
             // For ascending order
@@ -43,13 +43,13 @@ const sortFunc: SortFunc[] = [
 ]
 
 interface MyWorldsProps {
-    worlds: JoinedWorldAll[],
+    worlds: WorldMetadata[],
     isOwner: boolean
 }
 
 export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
-    const [filteredWorlds, setFilteredWorlds] = useState<JoinedWorldAll[]>(worlds)
-    const [currentQuery, setCurrentQuery] = useState<null | JoinedWorldAll>(null)
+    const [filteredWorlds, setFilteredWorlds] = useState<WorldMetadata[]>(worlds)
+    const [currentQuery, setCurrentQuery] = useState<null | WorldMetadata>(null)
     const [privateOnly, setPrivateOnly] = useState(false)
     const [nsfwOnly, setNsfwOnly] = useState(false)
     const [currentSort, setCurrentSort] = useState<SortFunc>(sortFunc[0])
@@ -60,7 +60,6 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
             .filter(world => privateOnly ? !world.is_public : true)
             .filter(world => nsfwOnly ? world.nsfw : true)
         setFilteredWorlds(updatedFilteredWorlds)
-        console.log('set filtered world')
     }, [currentSort, currentQuery, privateOnly, nsfwOnly])
 
     return <div className="flex flex-col">

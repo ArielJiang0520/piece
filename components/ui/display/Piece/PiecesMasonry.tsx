@@ -1,16 +1,16 @@
 'use client'
-import { JoinedWorldPiece, JoinedAuthorPiece, Piece, World } from '@/types/types';
+import { Piece, World } from '@/types/types';
 import Masonry from 'masonry-layout';
 import { useRef, useEffect } from 'react';
 import PieceCard from './PieceCard';
 import Link from 'next/link';
+import { PieceDetails } from '@/app/supabase-server';
 
 interface PiecesMasonryProps {
-    pieces: Piece[] | JoinedWorldPiece[] | JoinedAuthorPiece[],
-    world?: World | null;
-    displayAuthor?: boolean
+    pieces: PieceDetails[],
+    world: World
 }
-export default function PiecesMasonry({ pieces, world = null, displayAuthor = false }: PiecesMasonryProps) {
+export default function PiecesMasonry({ pieces, world }: PiecesMasonryProps) {
     const masonryGridRef = useRef<HTMLDivElement | null>(null);
     const masonryInstanceRef = useRef<Masonry | null>(null);
 
@@ -38,10 +38,10 @@ export default function PiecesMasonry({ pieces, world = null, displayAuthor = fa
     }, [pieces]);
 
     return <div ref={masonryGridRef} className="masonry-grid">
-        {pieces.map((piece) => (
+        {pieces.map((piece: PieceDetails) => (
             <Link key={piece.id} href={`/pieces/${piece.id}`}>
-                <div key={piece.id} className="masonry-item w-full md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 p-1">
-                    <PieceCard author={(piece as JoinedAuthorPiece).profiles} piece={piece} isOwner={(piece as JoinedAuthorPiece).profiles?.id === world?.creator_id} displayAuthor={displayAuthor} />
+                <div key={piece.id} className="masonry-item w-full lg:w-1/2 xl:w-1/3 2xl:w-1/4 p-1">
+                    <PieceCard piece={piece} isOwner={piece.creator_id === world.creator_id} />
                 </div>
             </Link>
         ))}

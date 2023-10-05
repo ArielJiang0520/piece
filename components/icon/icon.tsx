@@ -4,8 +4,8 @@ import { BsFillTrashFill as TrashIcon } from 'react-icons/bs'
 import { MdFileUpload as UploadIcon } from 'react-icons/md'
 import { ImCross as CrossIcon } from 'react-icons/im'
 import { BsThreeDotsVertical as DotsVerticalIcon } from 'react-icons/bs'
-import { ChevronRightIcon as AccordionIcon } from '@heroicons/react/20/solid'
-import { CheckIcon as CheckIcon } from '@heroicons/react/20/solid'
+import { BiChevronRight as AccordionIcon } from 'react-icons/bi'
+import { AiOutlineCheck as CheckIcon } from 'react-icons/ai'
 import { RiPencilFill as PencilIcon } from 'react-icons/ri'
 import { BsPlusCircleDotted as PlusCircleIcon } from 'react-icons/bs'
 import { AiOutlineMinus as MinusIcon } from 'react-icons/ai'
@@ -24,7 +24,7 @@ import { AiOutlineHeart as EmptyHeartIcon } from 'react-icons/ai'
 import { FaRegCommentDots as CommentIcon } from 'react-icons/fa'
 import { FiEyeOff as EyeOffIcon } from 'react-icons/fi'
 import { FiEye as EyeIcon } from 'react-icons/fi'
-import { ChevronUpDownIcon as UpDownIcon } from '@heroicons/react/20/solid'
+import { HiOutlineChevronUpDown as UpDownIcon } from 'react-icons/hi2'
 import { LuRotateCcw as ResetIcon } from 'react-icons/lu'
 import { BsStars as StarsIcon } from 'react-icons/bs'
 import { FaCrown as CrownIcon } from 'react-icons/fa'
@@ -37,6 +37,8 @@ import { IoMdArrowRoundBack as BackIcon } from 'react-icons/io'
 import { BiWorld as WorldIcon } from 'react-icons/bi'
 import { AiOutlineSend as SendIcon } from 'react-icons/ai'
 import { HiOutlineSave as SaveIcon } from 'react-icons/hi'
+import { IoMdHelpCircle as HelpIcon } from 'react-icons/io'
+import { FaRobot as RobotIcon } from 'react-icons/fa'
 
 export {
     BurgerIcon,
@@ -77,5 +79,7 @@ export {
     BackIcon,
     WorldIcon,
     SendIcon,
-    SaveIcon
+    SaveIcon,
+    HelpIcon,
+    RobotIcon
 };

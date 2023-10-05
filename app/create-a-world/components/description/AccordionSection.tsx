@@ -1,10 +1,9 @@
 
 import { Disclosure } from '@headlessui/react';
-import { PencilIcon, DotsVerticalIcon, TrashIcon, PlusCircleIcon } from '@/components/icon/icon';
+import { PencilIcon, TrashIcon, PlusCircleIcon } from '@/components/icon/icon';
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
-import { DropDownMenuOptions, DropDownMenu } from '@/components/ui/menu/InPlaceDropDownMenu';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { SectionCard } from '@/components/ui/display/World/SectionCard';
 
@@ -19,34 +18,18 @@ interface AccordionSectionProps {
     delCard: (index: number, newCardIndex: number) => void;
 }
 
-const emptyCard = { cardTitle: '', cardContent: '', cardImages: [] } as WorldDescriptionSectionCard
+const emptyCard = { cardTitle: '', cardContent: '', cardImages: [], isCharacterCard: false } as WorldDescriptionSectionCard
 
 const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, delSection, renameSection, addCard, editCard, delCard }) => {
-    const [dropdownVisible, setDropdownVisible] = useState(false);
     const [dialogueRenameIsOpen, setDialogRenameIsOpen] = useState(false)
     const [dialogueDelIsOpen, setDialogDelIsOpen] = useState(false)
 
     const [delCardIndex, setDelCardIndex] = useState(-1);
 
-    const onDeleteSection = () => {
-        setDropdownVisible(!dropdownVisible);
-        setDialogDelIsOpen(true)
-    };
-
-    const onRenameSection = () => {
-        setDropdownVisible(!dropdownVisible);
-        setDialogRenameIsOpen(true)
-    };
-
     const deleteCard = (cardIndex: number) => {
         delCard(index, cardIndex)
         setDelCardIndex(-1)
     }
-
-    const menuOptions: DropDownMenuOptions[] = [
-        { name: 'Rename', icon: PencilIcon, function: onRenameSection },
-        { name: 'Delete', icon: TrashIcon, function: onDeleteSection }
-    ]
 
     return (
         <li className="">
@@ -66,13 +49,9 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 </Disclosure.Button>
                             </div>
 
-                            <div className='relative z-10'>
-                                <DotsVerticalIcon
-                                    className='cursor-pointer'
-                                    size={20}
-                                    onClick={() => setDropdownVisible(!dropdownVisible)}
-                                />
-                                {dropdownVisible && <DropDownMenu setDropdownVisible={setDropdownVisible} options={menuOptions} />}
+                            <div className='flex flex-row space-x-2'>
+                                <PencilIcon className='cursor-pointer' onClick={() => setDialogRenameIsOpen(true)} />
+                                <TrashIcon className='cursor-pointer' onClick={() => setDialogDelIsOpen(true)} />
                             </div>
 
                             <PopupDialog
@@ -95,7 +74,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                             />
                         </div>
 
-                        <Disclosure.Panel className="py-4 grid grid-col-1 gap-2">
+                        <Disclosure.Panel className="py-4 grid grid-col-1 gap-2 max-w-4xl">
                             <>
                                 {section.sectionCards.map((card, cardIndex) =>
                                     <SectionCard key={index} card={card} onSave={(newCard: WorldDescriptionSectionCard) => editCard(index, newCard, cardIndex)} onDel={() => setDelCardIndex(cardIndex)} />

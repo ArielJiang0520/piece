@@ -1,10 +1,11 @@
-import { World, EmptyPiecePayload } from "@/types/types"
+import { World, TypedPiece } from "@/types/types"
 import { useState, useRef, useEffect } from "react";
 import { PencilIcon, ResetIcon, SaveIcon, SendIcon, UploadIcon } from "@/components/icon/icon";
 import useStreamText from "@/hooks/useStreamText";
 import PopupDialog from "@/components/ui/input/PopupDialog";
-import CaP from "@/app/create-a-piece/components/CaP";
 import { capitalize } from "@/utils/helpers";
+import { useSupabase } from "@/app/supabase-provider";
+import { insert_special_piece } from "@/utils/piece-helpers";
 
 type Message = {
     id: number,
@@ -60,14 +61,17 @@ const ChatBubble = ({ role, content, onEdit, id }: { role: string, content: stri
     )
 }
 
-function formatMessages(messages: Message[], userRole: string, aiRole: string): string {
-    return messages.map(message => `${message.role === "user" ? capitalize(userRole) : capitalize(aiRole)}:\n${message.content}\n`).join('\n');
+const formatMessages = (userRole: string, aiRole: string, messages: Message[]) => {
+    console.log(messages.map(msg => { return { role: msg.role === 'user' ? userRole : aiRole, content: msg.content } }))
+    return messages.map(msg => { return { role: msg.role === 'user' ? userRole : aiRole, content: msg.content } })
 }
 
-const SaveButton = ({ userRole, aiRole, messages, world }: {
-    userRole: string; aiRole: string; messages: Message[]; world: World
+const SaveButton = ({ userRole, aiRole, scenario, messages, world }: {
+    userRole: string; aiRole: string; scenario: string; messages: Message[]; world: World
 }) => {
+    const { user } = useSupabase();
     const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false)
+
     return (
         <>
             <button
@@ -80,11 +84,18 @@ const SaveButton = ({ userRole, aiRole, messages, world }: {
             <PopupDialog
                 isOpen={isPublishWindowOpen}
                 setIsOpen={setIsPublishWindowOpen}
-                dialogTitle='Publishing New Piece'
+                dialogTitle='Publishing chat history as a new piece'
                 dialogContent=''
-                initInputValue={<CaP world={world} initValues={{ ...EmptyPiecePayload, content: formatMessages(messages, userRole, aiRole) }} />}
-                confirmAction={() => { }}
-                dialogType='display'
+                initInputValue={{
+                    name: 'Untitled Chat History',
+                    world_id: world.id,
+                    type: 'roleplay',
+                    json_content: { userRole: userRole, aiRole: aiRole, scenario: scenario, output: formatMessages(userRole, aiRole, messages), notes: '' },
+                    folder_id: null,
+                    tags: [],
+                } as TypedPiece}
+                confirmAction={(inputValue: TypedPiece) => { insert_special_piece(inputValue, user!.id) }}
+                dialogType="publish-special-piece"
             />
         </>
     )
@@ -220,7 +231,7 @@ export default function ChatBox({ world, userRole, aiRole, scenario }: { world: 
                     >
                         <span className="flex flex-row space-x-1 items-center text-foreground/80 "><ResetIcon className="w-3 h-3" /><span>Regenerate</span></span>
                     </button>
-                    <SaveButton world={world} messages={state.messages} userRole={userRole} aiRole={aiRole} />
+                    <SaveButton world={world} messages={state.messages} userRole={userRole} scenario={scenario} aiRole={aiRole} />
                 </div>
 
 

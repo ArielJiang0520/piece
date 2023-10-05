@@ -1,22 +1,24 @@
 'use client'
-import { World, Fandom, JoinedWorldAll } from "@/types/types";
+import type { WorldMetadata } from "@/app/supabase-server";
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
-import { CalendarIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon, StarIcon, AtomIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbOffIcon, LightBulbIcon } from "@/components/icon/icon";
-import { formatTimestamp, getDistanceToNow } from "@/utils/helpers";
+import { CalendarIcon, SlashIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon, StarIcon, AtomIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbOffIcon, LightBulbIcon } from "@/components/icon/icon";
+import { getDistanceToNow } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropDownMenu";
+import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropdownMenu";
 import { useRouter } from "next/navigation";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { TagsBarSmallDisplay } from "@/components/ui/input/tags-helpers";
 import Image from "next/image";
+import { useSupabase } from "@/app/supabase-provider";
 
 interface WorldCardProps {
-    world: JoinedWorldAll,
+    world: WorldMetadata,
     isOwner: boolean
 }
 export default function WorldCard({ world, isOwner }: WorldCardProps) {
+    const { tagMap } = useSupabase();
     const ownerMenu: DropDownMenuOptions[] = [
         { name: 'Edit', icon: PencilIcon, function: () => { router.push(`/create-a-world?edit_id=${world.id}`) } },
         { name: 'Delete', icon: TrashIcon, function: () => { } }
@@ -32,17 +34,20 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
     const [dropdownVisible, setDropdownVisible] = useState(false)
 
     const tags: string[] = [
-        ...(world.relationship_types[0] === "No Relationship" ? [] : world.relationship_types),
+        // ...(world.relationship_types[0] === "No Relationship" ? [] : world.relationship_types),
         ...(world.nsfw ? ["🔞 NSFW Content"] : []),
     ]
     return (
         <div className="flex flex-col space-y-4 rounded-lg bg-foreground/5 p-4">
 
             <div className="flex flex-row w-full justify-between space-x-6 text-sm text-foreground/80 font-medium text-left">
-
-                <div className="flex flex-row  items-center  space-x-1 w-40 md:w-80  ">
+                <div className="flex flex-row items-center  space-x-1 w-40 md:w-80  ">
                     <BookIcon className="flex-shrink-0" />
-                    <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">{world.origin && world.fandoms ? world.fandoms.name : "Original World"}</span>
+                    <div className='flex flex-row justify-start items-center capitalize font-medium whitespace-nowrap'>
+                        <span className="font-semibold">{tagMap[world.primary_genre!]}</span>
+                        <SlashIcon />
+                        <span>{tagMap[world.secondary_genre!]}</span>
+                    </div>
                 </div>
                 <div className="flex flex-row space-x-4">
                     <div className="flex flex-row  items-center space-x-1 ">
@@ -61,16 +66,11 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             </div>
 
 
-
             <div id='title-group' className="flex flex-row w-full justify-between items-center">
 
                 <div className="flex flex-row text-left w-56 md:w-80 ">
                     <FieldContentDisplay textSize="text-xl" content={world.name} bold={"font-bold"} />
                 </div>
-
-
-
-
 
                 <div className="flex flex-row justify-end items-center text-right space-x-1">
 
@@ -92,17 +92,11 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
 
             </div>
 
-
-
-
-
-
-
             <div className="w-full">
                 <FieldContentDisplay content={world.logline} textSize="text-sm" bold="font-normal" />
             </div>
 
-            {tags.length > 1 && <div className="flex flex-row justify-start items-center ">
+            {tags.length > 0 && <div className="flex flex-row justify-start items-center ">
                 <TagsBarSmallDisplay tags={tags} small={true} />
 
             </div>}
@@ -115,9 +109,6 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             <div className="w-full">
                 <TagsBarDisplay tags={world.tags} scroll={true} />
             </div>
-
-
-
 
             <div className="flex flex-row w-full">
                 {world.profiles &&

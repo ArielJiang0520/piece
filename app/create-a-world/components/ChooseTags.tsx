@@ -1,30 +1,18 @@
 'use client'
 import { useFormikContext } from 'formik';
-import { TagCategory, type Tag, type WorldPayload } from "@/types/types";
+import { type Tag, type WorldPayload } from "@/types/types";
 import { CategoriesSwitchTab } from "@/components/ui/menu/switch-tab";
 import { groupByKey } from "@/utils/helpers";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { TagsBar } from "@/components/ui/input/tags-helpers";
-import { useEffect, useState } from 'react';
-import { fetch_all_tags, fetch_all_tags_categories } from '@/utils/data-helpers';
-
+import { useDraftContext } from '../draft-provider';
 
 export default function ChooseTags({ }: {}) {
     const { setFieldValue, values } = useFormikContext<WorldPayload>();
-    const [tags, setTags] = useState<Tag[]>([])
-    const [categories, setCategories] = useState<TagCategory[]>([])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setTags(await fetch_all_tags());
-            setCategories(await fetch_all_tags_categories());
-        }
-        fetchData();
-    }, [])
-
+    const { tags, categories } = useDraftContext();
     return <>
         <CategoriesSwitchTab
-            categories={categories}
+            categories={categories.filter(cat => cat.name !== "Genres")}
             items={groupByKey(tags, 'category')}
             selected={values.tags}
             handleSelect={(tag: Tag) => {

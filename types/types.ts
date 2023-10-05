@@ -1,22 +1,19 @@
 import { User } from "@supabase/supabase-js"
-import { Database } from "./supabase"
+import { Database, Json } from "./supabase"
 
 export type World = Database['public']['Tables']['worlds']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Piece = Database['public']['Tables']['pieces']['Row']
 export type Folder = Database['public']['Tables']['folders']['Row']
-export type Fandom = Database['public']['Tables']['fandoms']['Row']
-export type FandomMediaType = Database['public']['Tables']['fandoms_media_types']['Row']
 export type Tag = Database['public']['Tables']['tags']['Row']
 export type TagCategory = Database['public']['Tables']['tags_categories']['Row']
-export type Character = Database['public']['Tables']['characters']['Row']
-export type Relationship = Database['public']['Tables']['relationships']['Row']
 export type Subscription = Database['public']['Tables']['subscriptions']['Row']
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,
     cardContent: string,
     cardImages: string[],
+    isCharacterCard: boolean
 }
 
 export type WorldDescriptionSection = {
@@ -45,14 +42,11 @@ export interface DefaultWorld {
     default: boolean
 }
 
-export type RelationshipType = 'No Relationship' | 'M/M' | 'M/F' | 'F/F' | 'Others'
-
 export type WorldPayload = {
-    origin: string | null, // fandom.id
+    genre1: string | null,
+    genre2: string | null,
     tags: string[],
-    characters: string[],
-    relationship_types: RelationshipType[],
-    relationships: string[],
+
     images: string[],
     name: string,
     logline: string,
@@ -61,11 +55,9 @@ export type WorldPayload = {
 }
 
 export const EmptyWorldPayload: WorldPayload = {
-    origin: null,
+    genre1: null,
+    genre2: null,
     tags: [],
-    characters: [],
-    relationship_types: ['No Relationship'],
-    relationships: [],
     images: [],
     name: "",
     logline: "",
@@ -91,14 +83,7 @@ export const EmptyWorldPayload: WorldPayload = {
     }
 }
 
-// For WorldCard Display
-export interface JoinedWorldAll extends World {
-    profiles: Profile | null,
-    fandoms: Fandom | null,
-    subscriptions: any[],
-    pieces: any[],
-}
-
+//////////////////////////////////////////////////////////
 export type PieceSettings = {
     NSFW: boolean,
     allowComments: boolean;
@@ -136,26 +121,12 @@ export const EmptyPiecePayload: PiecePayload = {
     }
 }
 
-export function cast_to_piece(payload: PiecePayload) {
-    const created_at = new Date().toISOString()
-    return {
-        created_at: created_at,
-        name: payload.name,
-        tags: payload.tags,
-        content: payload.content,
-        images: payload.images,
-        folder_id: payload.folder_id,
-        nsfw: payload.settings.NSFW,
-        allow_comments: payload.settings.allowComments,
-    } as Piece
-}
-
 export function cast_to_piecepayload(piece: Piece): PiecePayload {
     return {
         name: piece.name,
         tags: piece.tags,
-        content: piece.content,
-        images: piece.images,
+        content: (piece.piece_json as GeneralJson).content,
+        images: (piece.piece_json as GeneralJson).images,
         folder_id: piece.folder_id,
         settings: {
             NSFW: piece.nsfw,
@@ -164,36 +135,40 @@ export function cast_to_piecepayload(piece: Piece): PiecePayload {
     } as PiecePayload
 }
 
-
-
-export interface JoinedWorldPiece extends Piece {
-    worlds: { name: string } | null
+export type GenPieceJson = {
+    prompt: string;
+    output: string;
+    notes: string;
 }
 
-export interface JoinedAuthorPiece extends Piece {
-    profiles: Profile | null
+export type ChatHistoryJson = {
+    userRole: string,
+    aiRole: string,
+    scenario: string,
+    output: Array<{ role: string, content: string }>
+    notes: string;
 }
 
-export interface JoinedProfile extends Profile {
-    pieces: any[],
-    worlds: any[],
-
+export type GeneralJson = {
+    content: string,
+    images: string[]
 }
+
+export type TypedPiece = {
+    name: string;
+    world_id: string;
+    type: 'gen-piece' | 'roleplay';
+    json_content: GenPieceJson | ChatHistoryJson,
+    tags: string[],
+    folder_id: string | null,
+}
+
 
 export interface DefaultFolder {
     id: string,
-    folder_name: string,
-    default: boolean
-}
-
-
-export const EmptyFandom: Fandom = {
-    name: '',
-    aliases: [],
-    media_type: '',
-    num_of_worlds: 0,
-    created_at: '',
-    id: ''
+    name: string,
+    pieces: any[],
+    created_at: string,
 }
 
 export function cast_to_profile(user: User) {
