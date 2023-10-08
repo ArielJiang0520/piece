@@ -68,7 +68,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
 
             <div id='title-group' className="flex flex-row w-full justify-between items-center">
 
-                <div className="flex flex-row text-left w-56 md:w-80 ">
+                <div className="flex flex-row text-left w-56 md:w-auto ">
                     <FieldContentDisplay textSize="text-xl" content={world.name} bold={"font-bold"} />
                 </div>
 
@@ -96,14 +96,14 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                 <FieldContentDisplay content={world.logline} textSize="text-sm" bold="font-normal" />
             </div>
 
-            {tags.length > 0 && <div className="flex flex-row justify-start items-center ">
+            {tags.length > 0 && <div className="flex flex-row justify-start items-center">
                 <TagsBarSmallDisplay tags={tags} small={true} />
 
             </div>}
 
 
             <div className="w-full">
-                <ImagesDisplayRow bucket="world" dimension={{ height: "h-64", width: "w-64" }} paths={world.images} />
+                <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={world.images} />
             </div>
 
             <div className="w-full">

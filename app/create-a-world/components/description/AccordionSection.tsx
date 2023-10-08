@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { SectionCard } from '@/components/ui/display/World/SectionCard';
+import { Bubble } from '@/components/ui/widget/bubble';
 
 
 interface AccordionSectionProps {
@@ -42,6 +43,10 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                     className="font-bold text-2xl md:text-3xl overflow-hidden max-w-xs md:max-w-lg whitespace-nowrap overflow-ellipsis"
                                 >
                                     {section.sectionTitle}
+                                </div>
+
+                                <div className='flex items-center justify-center bg-foreground/5 text-xs font-mono rounded-full w-5 h-5 p-3'>
+                                    {section.sectionCards.length}
                                 </div>
 
                                 <Disclosure.Button>

@@ -103,7 +103,7 @@ export default function WorldDisplay({ world, isOwner = false, preview = false }
             </div>}
 
             <div id='image-display' className="flex flex-row space-x-2 overflow-x-auto">
-                <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-80", width: "w-80" }} popup={true} />
+                <ImagesDisplayRow bucket="world" paths={world.images} dimension={{ height: "h-96", width: "w-96" }} popup={true} />
             </div>
 
             <div id="logline-group" className='w-full flex flex-col'>

@@ -47,12 +47,12 @@ const sortFunc: SortFunc[] = [
 
 interface WorldPiecesProps {
     world: World,
-    creator: Profile | null,
     pieces: PieceDetails[],
-    folders: FolderCount[]
+    folders: FolderCount[],
+    isOwner: boolean
 }
 
-export default function WorldPieces({ pieces, world, folders }: WorldPiecesProps) {
+export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPiecesProps) {
     const { startDrag, stopDrag, doDrag } = useHorizontalDragScroll();
 
     const [filteredPieces, setFilteredPieces] = useState<PieceDetails[]>(pieces);
@@ -104,7 +104,7 @@ export default function WorldPieces({ pieces, world, folders }: WorldPiecesProps
                         </div>
                     </div>
 
-                    {currentFolder.id !== "default" && <div className="flex flex-row items-center space-x-2 justify-end text-foreground/50">
+                    {isOwner && currentFolder.id !== "default" && <div className="flex flex-row items-center space-x-2 justify-end text-foreground/50">
                         <PencilIcon className="cursor-pointer" onClick={() => setIsRenameFolder(true)} />
                         <TrashIcon className="cursor-pointer" onClick={() => setIsDeleteFolder(true)} />
                     </div>}
@@ -131,7 +131,7 @@ export default function WorldPieces({ pieces, world, folders }: WorldPiecesProps
                             </div>
                         </Link>)}
 
-                    <div
+                    {isOwner && <div
                         className={`h-15 cursor-pointer flex flex-row items-center justify-center rounded-lg p-5 space-x-1  border  w-[100px] text-brand border-brand`}
                         onClick={() => setIsCreateFolder(true)}
                     >
@@ -139,7 +139,7 @@ export default function WorldPieces({ pieces, world, folders }: WorldPiecesProps
                         <span className={`whitespace-nowrap text-sm font-semibold`}>
                             New
                         </span>
-                    </div>
+                    </div>}
                 </div>
             </div>
 

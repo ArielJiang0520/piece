@@ -27,6 +27,10 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections, pr
                                                 {section.sectionTitle}
                                             </div>
 
+                                            <div className='flex items-center justify-center bg-foreground/5 text-xs font-mono rounded-full w-5 h-5 p-3'>
+                                                {section.sectionCards.length}
+                                            </div>
+
                                             <Disclosure.Button>
                                                 <AccordionIcon className={`${open ? 'transform rotate-90' : ''} w-5 h-5`} />
                                             </Disclosure.Button>

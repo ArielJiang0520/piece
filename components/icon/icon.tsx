@@ -39,6 +39,8 @@ import { AiOutlineSend as SendIcon } from 'react-icons/ai'
 import { HiOutlineSave as SaveIcon } from 'react-icons/hi'
 import { IoMdHelpCircle as HelpIcon } from 'react-icons/io'
 import { FaRobot as RobotIcon } from 'react-icons/fa'
+import { GiOpenBook as OpenBookIcon } from 'react-icons/gi'
+
 
 export {
     BurgerIcon,
@@ -81,5 +83,6 @@ export {
     SendIcon,
     SaveIcon,
     HelpIcon,
-    RobotIcon
+    RobotIcon,
+    OpenBookIcon
 };

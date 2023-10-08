@@ -3,8 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
     --background: 200 20% 98%;
@@ -13,8 +11,8 @@
     --foreground: 200 50% 3%;
     --brand: 330 81% 60%;
   }
-
-  @media (prefers-color-scheme: light) {
+/* 
+  @media (prefers-color-scheme: dark) {
     :root {
       --background: 200 50% 3%;
       --btn-background: 200 10% 9%;
@@ -22,7 +20,7 @@
       --foreground: 200 20% 96%;
       --brand: 330 81% 60%;
     }
-  }
+  }  */
 }
 
 @layer base {
