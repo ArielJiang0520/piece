@@ -8,6 +8,8 @@ export type Folder = Database['public']['Tables']['folders']['Row']
 export type Tag = Database['public']['Tables']['tags']['Row']
 export type TagCategory = Database['public']['Tables']['tags_categories']['Row']
 export type Subscription = Database['public']['Tables']['subscriptions']['Row']
+export type Comment = Database['public']['Tables']['comments']['Row']
+export type Like = Database['public']['Tables']['likes']['Row']
 
 export type WorldDescriptionSectionCard = {
     cardTitle: string,
@@ -121,19 +123,6 @@ export const EmptyPiecePayload: PiecePayload = {
     }
 }
 
-export function cast_to_piecepayload(piece: Piece): PiecePayload {
-    return {
-        name: piece.name,
-        tags: piece.tags,
-        content: (piece.piece_json as GeneralJson).content,
-        images: (piece.piece_json as GeneralJson).images,
-        folder_id: piece.folder_id,
-        settings: {
-            NSFW: piece.nsfw,
-            allowComments: piece.allow_comments,
-        }
-    } as PiecePayload
-}
 
 export type GenPieceJson = {
     prompt: string;
@@ -171,13 +160,3 @@ export interface DefaultFolder {
     created_at: string,
 }
 
-export function cast_to_profile(user: User) {
-    return {
-        avatar_url: user.user_metadata.avatar_url,
-        full_name: user.user_metadata.full_name,
-        id: user.id,
-        updated_at: null,
-        username: user.user_metadata.name,
-        website: null,
-    } as Profile
-}

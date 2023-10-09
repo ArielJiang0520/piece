@@ -4,7 +4,6 @@ import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import type { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
-import { Tag } from '@/types/types';
 import { fetch_all_tags } from '@/utils/data-helpers';
 
 type SupabaseContext = {
@@ -26,7 +25,7 @@ export default function SupabaseProvider({
 
     const fetchUser = async () => {
         const { data: { session } } = await supabase.auth.getSession()
-        setUser(session?.user === undefined ? null : session.user)
+        setUser(session?.user === undefined ? null : session.user);
     }
 
     const fetchTags = async () => {

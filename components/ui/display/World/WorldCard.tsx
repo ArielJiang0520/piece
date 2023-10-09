@@ -51,7 +51,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                 </div>
                 <div className="flex flex-row space-x-4">
                     <div className="flex flex-row  items-center space-x-1 ">
-                        <StarIcon />
+                        <SingleUserIcon />
                         <div className="whitespace-nowrap">
                             {`${world.subscriptions[0].count} Subs`}
                         </div>
@@ -127,7 +127,10 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                         </div>
                         <div className="flex flex-row justify-end items-center text-right  space-x-1">
                             <CalendarIcon />
-                            <span className="text-xs">{world.modified_at ? `Updated ${getDistanceToNow(world.modified_at)}` : `Created ${getDistanceToNow(world.created_at)}`}</span>
+                            <span className="text-xs">{`Created ${getDistanceToNow(world.created_at)}`}</span>
+                            <div className="mr-2" />
+                            <CalendarIcon />
+                            <span className="text-xs">{world.modified_at && `Updated ${getDistanceToNow(world.modified_at)}`}</span>
                         </div>
                     </div>
                 }

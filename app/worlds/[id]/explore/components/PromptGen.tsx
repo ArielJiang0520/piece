@@ -2,21 +2,27 @@
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
 import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
-import { EmptyPiecePayload, TypedPiece, World } from '@/types/types';
+import { TypedPiece, World } from '@/types/types';
 import useStreamText from '@/hooks/useStreamText';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import CaP from '@/app/create-a-piece/components/CaP';
 import { insert_special_piece } from '@/utils/piece-helpers';
 import { useSupabase } from '@/app/supabase-provider';
+import { useRouter } from 'next/navigation';
+import { notify_error, notify_success } from '@/components/ui/widget/toast';
+import Link from 'next/link';
+import { LoadingOverlay } from '@/components/ui/widget/loading';
 
 interface PromptPayload {
     prompt: string,
 }
 export default function PromptGen({ world }: { world: World }) {
+    const router = useRouter();
     const { user } = useSupabase()
-    const { lines, isLoading, streamText } = useStreamText();
-    const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false)
+    const { lines, isLoading, resetLines, streamText } = useStreamText();
+    const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false);
+
+    const [isPublishing, setIsPublishing] = useState(false)
 
     if (!user) {
         return <>No user found!</>
@@ -42,21 +48,16 @@ export default function PromptGen({ world }: { world: World }) {
 
     return <>
         <Formik
-            initialValues={{} as PromptPayload}
+            initialValues={{ prompt: '' } as PromptPayload}
             onSubmit={(values) => handleSubmit(values)}
         >
-            {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors }) => (
+            {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
                 <Form className='mt-4 w-full flex flex-col space-y-4 items-start' onKeyDown={handleKeyDown}>
 
                     <div id="prompt-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"prompt"} />
                         <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-lg"} multiline={3} bold={"font-semibold"} />
                     </div>
-
-                    {/* <div id="instruction-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"instruction"} />
-                        <TextInput name={"instruction"} placeholder={"Add your instruction..."} textSize={"text-sm"} multiline={4} bold={"font-normal"} />
-                    </div> */}
 
                     <div id="content-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"AI Generated Content"} />
@@ -72,8 +73,20 @@ export default function PromptGen({ world }: { world: World }) {
                     </div>
 
                     <div className="fixed bottom-7 left-1/2 transform -translate-x-1/2 flex justify-center space-x-4 z-50 text-sm">
-                        <button className="primaryButton p-2" type="submit">Generate</button>
-                        <button className="primaryButton p-2" type="button" onClick={() => setIsPublishWindowOpen(true)}>Publish as New Piece</button>
+                        <button
+                            disabled={values.prompt.length <= 0}
+                            className={`${values.prompt.length <= 0 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} `}
+                            type="submit">
+                            Generate
+                        </button>
+                        <button
+                            className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} `}
+                            type="button"
+                            disabled={lines[0].length <= 1}
+                            onClick={() => setIsPublishWindowOpen(true)}
+                        >
+                            Publish as New Piece
+                        </button>
                     </div>
 
                     <PopupDialog
@@ -89,9 +102,25 @@ export default function PromptGen({ world }: { world: World }) {
                             folder_id: null,
                             tags: []
                         } as TypedPiece}
-                        confirmAction={(inputValue: TypedPiece) => { insert_special_piece(inputValue, user.id) }}
+                        confirmAction={async (inputValue: TypedPiece) => {
+                            setIsPublishing(true)
+                            try {
+                                const new_id = await insert_special_piece(inputValue, user.id);
+                                setIsPublishing(false)
+                                router.push(`/worlds/${world.id}/pieces`)
+                                notify_success(<div>
+                                    <Link className="underline-offset-2 text-blue-500" href={`/pieces/${new_id}`}>
+                                        {new_id}
+                                    </Link> successfully posted!
+                                </div>, 10000)
+                            } catch (error) {
+                                setIsPublishing(false)
+                                notify_error(`Error posting new piece: ${JSON.stringify(error)}`)
+                            }
+                        }}
                         dialogType="publish-special-piece"
                     />
+                    {isPublishing && <LoadingOverlay />}
                 </Form>
             )}
         </Formik>

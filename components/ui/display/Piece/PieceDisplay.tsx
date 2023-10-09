@@ -1,6 +1,6 @@
 'use client'
-import type { ChatHistoryJson, TypedPiece, GenPieceJson, GeneralJson, Piece, Profile, World, Folder } from "@/types/types"
-import { EmptyHeartIcon, WorldIcon, CheckIcon, CalendarIcon, BookIcon, RobotIcon, TrashIcon, StarIcon, SingleUserIcon } from "@/components/icon/icon"
+import type { ChatHistoryJson, TypedPiece, GenPieceJson, GeneralJson, Piece, Profile, World, Folder, Comment, Like } from "@/types/types"
+import { EmptyHeartIcon, WorldIcon, CheckIcon, CalendarIcon, BookIcon, RobotIcon, TrashIcon, StarIcon, SingleUserIcon, CrownIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay, Markdown } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
@@ -19,39 +19,23 @@ import { useRouter } from "next/navigation";
 import { notify_error, notify_success } from "../../widget/toast";
 import { SparklesIcon } from "@heroicons/react/20/solid";
 import { CopyableID } from "@/components/ui/button/button-helpers";
+import { useSupabase } from "@/app/supabase-provider";
+import { LikeButton } from "../../button/LikeButton";
 
-const PieceMetadataDisplay = ({ piece, world, folder }: { piece: Piece, world: World, folder: Folder | null }) => {
-    return (
-        <div className="flex flex-row w-full  justify-start items-center text-sm text-left font-medium">
-            <span className="font-semibold text-foreground/50 mr-1">From World:</span>
-            <Link href={`/worlds/${world.id}`}>
-                <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
-                    <BookIcon className="flex-shrink-0" />
-                    <div className="overflow-hidden whitespace-nowrap overflow-ellipsis ">{world.name}</div>
-                    {/* <span className="flex flex-row"><SingleUserIcon /><PencilIcon /></span> */}
-                </div>
-            </Link>
-            {folder && <SlashIcon className="flex-shrink-0" />}
-            {folder && <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
-                <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
-                    <FolderIcon className="flex-shrink-0" />
-                    <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span>
-                </div>
-            </Link>}
-        </div>
-
-    )
-}
 
 interface PieceDisplayProps {
-    isOwner: boolean
     piece: Piece;
     world: World;
     folder: Folder | null;
     author: Profile;
+    likes: Like[];
+    comments: Comment[];
     preview?: boolean
 }
-export default function PieceDisplay({ isOwner, piece, world, folder, author, preview = false }: PieceDisplayProps) {
+export default function PieceDisplay({ piece, world, folder, author, likes, comments, preview = false }: PieceDisplayProps) {
+    const { user } = useSupabase();
+    const isOwner = user && user.id ? user.id === piece.creator_id : false
+    const isWorldOwner = user && user.id ? user.id === world.creator_id : false
     const router = useRouter();
 
     const [isMoveFolder, setIsMoveFolder] = useState(false)
@@ -69,7 +53,7 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
                 function: () => {
                     update_piece_folder(piece.id, folder.id);
                     router.refresh();
-                    notify_success("Folder successfully moved!")
+                    notify_success(`Folder successfully moved to "${folder.name}"!`)
                 }
             } as DropDownMenuOptions
         }))
@@ -93,7 +77,7 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
 
     useEffect(() => {
         fetchFolders();
-    }, [piece])
+    }, [piece, folder])
 
     return (
         <>
@@ -156,8 +140,6 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
 
             </div>
 
-
-
             <div className='flex flex-col space-y-3 items-start'>
 
                 {preview ? null : <CopyableID id_string="Piece ID" id={piece.id} />}
@@ -173,10 +155,10 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
 
 
                 {!preview && <div id="author-group" className="w-full flex flex-col max-w-2xl">
-                    <AuthorDisplay author={author} bannerContent="Author" />
+                    <AuthorDisplay author={author} bannerContent="Author" icon={isWorldOwner ? <CrownIcon className="text-brand" /> : null} />
                 </div>}
 
-                <div className="my-2 w-full rounded-xl bg-brand text-white text-sm py-2 px-4 font-mono font-medium flex flex-row space-x-2 items-center justify-center max-w-2xl">
+                {piece.piece_type !== "original" && <div className="my-2 w-full rounded-xl bg-brand text-white text-sm py-2 px-4 font-mono font-medium flex flex-row space-x-2 items-center justify-center max-w-2xl">
                     <span>The following content is generated by </span>
                     <Link href={`/worlds/${world.id}/explore`}>
                         <span className="cursor-pointer bg-white text-brand font-semibold rounded-lg p-2 flex flex-row items-center space-x-1">
@@ -184,7 +166,7 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
                             <span>Explore in AI</span>
                         </span>
                     </Link>
-                </div>
+                </div>}
 
 
 
@@ -220,9 +202,13 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
                 </div>}
 
 
-                <div className='flex flex-row text-base justify-between items-center  w-full'>
-                    <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"0"} />
-                    <div className="flex flex-row items-center space-x-2">
+                <div id="stats-group" className='flex flex-row text-base justify-between items-center  w-full'>
+
+                    {user && user.id &&
+                        <LikeButton initIsLiked={likes.some(like => user.id === like.user_id)} initLikes={likes.length} pid={piece.id} uid={user.id} />
+                    }
+
+                    <div id="date" className="flex flex-row items-center space-x-2">
                         {<div className="flex flex-row text-xs items-center space-x-1 ">
                             <CalendarIcon />
                             <span>Created {getDistanceToNow(piece.created_at)}</span>
@@ -232,17 +218,39 @@ export default function PieceDisplay({ isOwner, piece, world, folder, author, pr
                             <span>Updated {getDistanceToNow(piece.modified_at)}</span>
                         </div>}
                     </div>
+
                 </div>
-
-
-
 
                 <div className="hpx border-t w-full my-2">
 
                 </div>
 
-
             </div >
         </>
+    )
+};
+
+
+
+const PieceMetadataDisplay = ({ piece, world, folder }: { piece: Piece, world: World, folder: Folder | null }) => {
+    return (
+        <div className="flex flex-row w-full  justify-start items-center text-sm text-left font-medium">
+            <span className="font-semibold text-foreground/50 mr-1">From World:</span>
+            <Link href={`/worlds/${world.id}`}>
+                <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
+                    <BookIcon className="flex-shrink-0" />
+                    <div className="overflow-hidden whitespace-nowrap overflow-ellipsis ">{world.name}</div>
+                    {/* <span className="flex flex-row"><SingleUserIcon /><PencilIcon /></span> */}
+                </div>
+            </Link>
+            {folder && <SlashIcon className="flex-shrink-0" />}
+            {folder && <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
+                <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
+                    <FolderIcon className="flex-shrink-0" />
+                    <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span>
+                </div>
+            </Link>}
+        </div>
+
     )
 }

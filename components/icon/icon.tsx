@@ -40,7 +40,9 @@ import { HiOutlineSave as SaveIcon } from 'react-icons/hi'
 import { IoMdHelpCircle as HelpIcon } from 'react-icons/io'
 import { FaRobot as RobotIcon } from 'react-icons/fa'
 import { GiOpenBook as OpenBookIcon } from 'react-icons/gi'
-
+import { RxDividerVertical as DividerIcon } from 'react-icons/rx'
+import { IoIosCreate as CreateIcon } from 'react-icons/io'
+import { AiFillHeart as FilledHeartIcon } from 'react-icons/ai'
 
 export {
     BurgerIcon,
@@ -84,5 +86,8 @@ export {
     SaveIcon,
     HelpIcon,
     RobotIcon,
-    OpenBookIcon
+    OpenBookIcon,
+    DividerIcon,
+    CreateIcon,
+    FilledHeartIcon
 };

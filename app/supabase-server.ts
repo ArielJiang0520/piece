@@ -2,7 +2,7 @@ import type { Database } from '@/types/supabase';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-import { World, Profile, Piece, Folder } from "@/types/types"
+import { World, Profile, Piece, Folder, Like, Comment } from "@/types/types"
 
 export const createServerSupabaseClient = cache(() =>
     createServerComponentClient<Database>({ cookies })
@@ -21,19 +21,21 @@ export async function getSession() {
     }
 }
 
-export async function getUserDetails() {
-    const supabase = createServerSupabaseClient();
-    try {
-        const { data: userDetails } = await supabase
-            .from('profiles')
-            .select('*')
-            .single();
-        return userDetails;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
-    }
-}
+// export async function getUserDetails() {
+//     const supabase = createServerSupabaseClient();
+//     try {
+//         const { data: userDetails } = await supabase
+//             .from('profiles')
+//             .select('*')
+//             .single();
+//         return userDetails;
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return null;
+//     }
+// }
+
+
 
 // For worlds/[id]
 // For WorldDisplay
@@ -104,6 +106,8 @@ export async function getWorldDetails(id: string): Promise<WorldDetails> {
 // For PieceDisplay
 export interface PieceDetailsIncludeWorld extends PieceDetails {
     worlds: World | null;
+    likes: Like[];
+    comments: Comment[];
 }
 export async function getPieceDetailsIncludeWorld(
     id: string
@@ -111,7 +115,7 @@ export async function getPieceDetailsIncludeWorld(
     const supabase = createServerSupabaseClient();
     const { data, error } = await supabase
         .from('pieces')
-        .select('*, profiles(*), folders(*), worlds(*)')
+        .select('*, profiles(*), folders(*), worlds(*), likes(*), comments(*)')
         .eq('id', id)
         .limit(1)
         .single();

@@ -1,7 +1,8 @@
 'use client'
-import { Profile, World, WorldDescriptionSection, WorldPayload } from "./types";
+import { Profile, World, Piece, PiecePayload, GeneralJson, WorldDescriptionSection, WorldPayload } from "./types";
 import { WorldMetadata } from "@/app/supabase-server";
-import { get_profile } from "@/utils/user-helpers";
+import { get_profie } from "@/utils/user-helpers";
+import { User } from "@supabase/supabase-js";
 
 export function cast_to_worldpayload(world: World) {
     return {
@@ -23,7 +24,7 @@ export function cast_to_worldpayload(world: World) {
 
 export async function cast_to_world(payload: WorldPayload, uid: string) {
     const created_at = new Date().toISOString();
-    const profile: Profile = await get_profile(uid)
+    const profile: Profile = await get_profie(uid)
     const world = {
         allow_contribution: payload.settings.allowContribution,
         allow_suggestion: payload.settings.allowSuggestion,
@@ -58,4 +59,30 @@ export async function cast_to_world(payload: WorldPayload, uid: string) {
     }
 
     return { ...world, ...metadata } as WorldMetadata
+}
+
+export function cast_to_profile(user: User) {
+    return {
+        avatar_url: user.user_metadata.avatar_url,
+        full_name: user.user_metadata.full_name,
+        id: user.id,
+        updated_at: null,
+        username: user.user_metadata.name,
+        website: null,
+    } as Profile
+}
+
+
+export function cast_to_piecepayload(piece: Piece): PiecePayload {
+    return {
+        name: piece.name,
+        tags: piece.tags,
+        content: (piece.piece_json as GeneralJson).content,
+        images: (piece.piece_json as GeneralJson).images,
+        folder_id: piece.folder_id,
+        settings: {
+            NSFW: piece.nsfw,
+            allowComments: piece.allow_comments,
+        }
+    } as PiecePayload
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import MarkdownIt from 'markdown-it';
 
 interface InputTitleProps {
@@ -17,21 +17,16 @@ export const FieldTitleDisplay: React.FC<InputTitleProps> = ({ label, textSize =
 }
 
 interface FieldContentDisplayProps {
-    content: string,
+    content: string | ReactNode,
     textSize?: string,
     bold?: string,
-    truncate?: number
 }
 
-export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize = "text-base", bold = "font-normal", truncate = -1 }) => {
+export const FieldContentDisplay: React.FC<FieldContentDisplayProps> = ({ content, textSize = "text-base", bold = "font-normal" }) => {
     return (
         <div>
             <p className={`whitespace-pre-line font-serif ${textSize} ${bold}`}>
-                {truncate != -1 ?
-                    content.length > truncate ?
-                        `${content.slice(0, truncate)}...`
-                        : content
-                    : content}
+                {content}
             </p>
         </div>
     )

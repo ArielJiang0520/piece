@@ -9,11 +9,22 @@ import { PieceDetails } from "@/app/supabase-server";
 import { getDistanceToNow, getDistanceToNowAbbr } from "@/utils/helpers";
 import { Markdown } from "@/components/ui/display/display-helpers";
 
+
+interface TextSliceProps {
+    text: string;
+    limit: number;
+}
+const TextSlice: React.FC<TextSliceProps> = ({ text, limit }) => {
+    return (
+        <span>{(text.length > limit ? text.slice(0, limit) + "..." : text)}</span>
+    );
+}
+
+
 interface PieceCardProps {
     piece: PieceDetails
     isOwner: boolean;
 }
-
 export default function PieceCard({ piece, isOwner }: PieceCardProps) {
     return (
         <div className="flex flex-col">
@@ -29,7 +40,7 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                             width={20} height={20}
                             onClick={() => { }}
                         />
-                        <div className="w-auto overflow-hidden">{piece.profiles?.full_name ? piece.profiles?.full_name : "Deleted User"}</div>
+                        <div className="w-auto overflow-hidden">{piece.profiles?.full_name ? piece.profiles?.full_name : "[Deleted User]"}</div>
                         <div>{isOwner ? <CrownIcon className="block text-brand" /> : null}</div>
                         <span className="font-mono text-xs text-foreground/50 mr-1">{getDistanceToNowAbbr(piece.created_at)}</span>
                     </div>
@@ -43,7 +54,7 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                     <FieldContentDisplay content={piece.name} textSize="text-base" bold="font-bold" />
                 </div>
 
-                {piece.piece_type === "original" && (piece.piece_json as GeneralJson).images.length > 0 ?
+                {piece.piece_type === "original" && (piece.piece_json as GeneralJson).images.length > 0 &&
                     <div className="-mx-4">
                         <SingleImage
                             bucket="world"
@@ -52,12 +63,12 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                             numberIcon={(piece.piece_json as GeneralJson).images.length > 1 ? (piece.piece_json as GeneralJson).images.length : null}
                         />
                     </div>
-                    : null
                 }
 
                 {piece.piece_type === "gen-piece" && <div className="flex flex-col items-start justify-center space-y-2">
                     <div className='border-t border-b px-2 py-2 font-mono text-sm text-foreground bg-foreground/5 w-full'>
-                        <Markdown>{(piece.piece_json as GenPieceJson).output.slice(0, 200)}</Markdown>
+                        <Markdown>{(piece.piece_json as GenPieceJson).output.slice(0, 200) + "..."}</Markdown>
+                        <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
                     </div>
                 </div>}
 
@@ -66,14 +77,25 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                         {(piece.piece_json as ChatHistoryJson).output.slice(0, 2).map((msg: { role: string, content: string }, index: number) =>
                             <div key={index} className='w-full flex flex-col space-y-2'>
                                 <div className=' capitalize '>{msg.role} {index % 2 == 0 ? "(User)" : "(AI)"}</div>
-                                <div className={`border-t border-b px-4 py-2   ${index % 2 == 0 ? 'bg-foreground/10' : 'bg-foreground/5'}`}>{msg.content.slice(0, 100)}</div>
+                                <div className={`border-t border-b px-4 py-2 ${index % 2 == 0 ? 'bg-foreground/10' : 'bg-foreground/5'}`}>
+                                    <TextSlice text={msg.content} limit={200} />
+                                </div>
                             </div>
                         )}
+                        <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
                     </div>
                 </div>}
 
                 {piece.piece_type === "original" && (piece.piece_json as GeneralJson).images.length == 0 && <div id="content" className="">
-                    <FieldContentDisplay content={(piece.piece_json as GeneralJson).content.slice(0, 200)} textSize="text-xs" bold="font-normal" />
+                    <FieldContentDisplay content={
+                        <div className='border-t border-b px-2 py-2 font-mono text-sm text-foreground bg-foreground/5 w-full flex flex-col'>
+                            <TextSlice text={(piece.piece_json as GeneralJson).content} limit={200} />
+                            <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
+                        </div>
+                    }
+                        textSize="text-sm"
+                        bold="font-normal"
+                    />
                 </div>}
 
                 {piece.tags.length > 0 && <div id="tags">
@@ -90,7 +112,6 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                     </div> : <div className="block"></div>}
 
                     <div className="flex flex-row items-center font-mono text-sm space-x-2 justify-end">
-                        {/* <CalendarIcon /> */}
 
                         <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"0"} />
 

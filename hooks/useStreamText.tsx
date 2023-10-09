@@ -4,11 +4,14 @@ import { useState } from 'react';
 const useStreamText = () => {
     const [lines, setLines] = useState<string[]>(['']);
     const [isLoading, setIsLoading] = useState(false);
+    const resetLines = () => {
+        setLines([''])
+    }
 
     const streamText = (requestBody: any, endpoint: string): Promise<string[]> => {
         return new Promise(async (resolve, reject) => {
             setIsLoading(true);
-            setLines(['']);
+            resetLines();
 
             try {
                 const response = await fetch(`${window.location.origin}${endpoint}`, {
@@ -78,7 +81,7 @@ const useStreamText = () => {
         });
     };
 
-    return { lines, isLoading, streamText };
+    return { lines, isLoading, resetLines, streamText };
 };
 
 export default useStreamText;

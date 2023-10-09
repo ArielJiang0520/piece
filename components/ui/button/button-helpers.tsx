@@ -27,7 +27,7 @@ export function LogoutButton() {
 
 interface IconButtonProps {
     icon: JSX.Element,
-    title?: string | null
+    title?: string | null | number;
 }
 export function IconButtonMid({ icon, title = null }: IconButtonProps) {
     return <div className={`cursor-pointer bg-none h-8 md:h-10 flex flex-row items-center justify-center space-x-1 rounded-lg border py-1 px-2 min-w-[35px] whitespace-nowrap`}>
@@ -85,7 +85,7 @@ export function CopyableID({ id_string, id }: { id_string: string, id: string })
 
     return (<div className="relative flex flex-row font-mono text-xs space-x-1 items-center justify-start">
         <div className="font-semibold text-foreground/80">{id_string}:</div>
-        <button className="cursor-pointer rounded-2xl bg-brand text-white py-1 px-2" onClick={handleButtonClick}>
+        <button className="cursor-pointer rounded-2xl border-brand border text-brand py-1 px-2 hover:text-white hover:bg-brand" onClick={handleButtonClick}>
             {id}
         </button>
         {showWidget && <div className="absolute left-full ml-2 py-1 px-2 bg-foreground/5 rounded-2xl">Copied!</div>}
