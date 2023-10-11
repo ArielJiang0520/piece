@@ -12,17 +12,17 @@ import { Formik, Field, FormikHelpers, FormikState, FormikProps, Form, ErrorMess
 import { HelpTooltip } from '@/components/ui/widget/tooltip';
 import { TextInput } from '@/components/ui/input/InputTextField';
 import { FieldTitleDisplay } from '@/components/ui/display/display-helpers';
-import DescriptionSections from './description/DescriptionSections';
+import DescriptionSections from '../description/DescriptionSections';
 import SettingGroup from '@/components/ui/button/toggle/SettingGroup';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ImagesUpload } from '@/components/ui/image/ImagesUpload';
 import { Tab } from '@headlessui/react'
 
 // local import
-import { useDraftContext } from '../draft-provider';
-import PublishButton from './buttons/PublishButton';
-import PreviewButton from './buttons/PreviewButton';
-import SaveDraftButton from './buttons/SaveDraftButton';
+import { useDraftContext } from '../../draft-provider';
+import PublishButton from '../buttons/PublishButton';
+import PreviewButton from '../buttons/PreviewButton';
+import SaveDraftButton from '../buttons/SaveDraftButton';
 import ChooseTags from './ChooseTags';
 import ChooseGenres from './ChooseGenres';
 

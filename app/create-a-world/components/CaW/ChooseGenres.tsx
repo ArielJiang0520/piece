@@ -2,7 +2,7 @@
 import { useFormikContext } from 'formik';
 import type { WorldPayload, Tag } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
-import { useDraftContext } from '../draft-provider';
+import { useDraftContext } from '../../draft-provider';
 
 const GenreID = "21f332f3-15e0-43ab-819d-21889002a7e1"
 export default function ChooseGenres() {

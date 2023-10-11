@@ -41,7 +41,7 @@ export default function PublishButton({ uid, currentDraft, values, setSubmitting
     }
 
     return <>
-        <button className="flex items-center justify-center primaryButton text-xl w-full h-full py-3" onClick={() => { setIsPublishConfirm(true) }} type="button">
+        <button className="flex items-center justify-center primaryButton rounded-lg text-xl w-full h-full py-3" onClick={() => { setIsPublishConfirm(true) }} type="button">
             Publish
         </button>
         <PopupDialog

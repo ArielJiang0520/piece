@@ -5,7 +5,7 @@ import { CategoriesSwitchTab } from "@/components/ui/menu/switch-tab";
 import { groupByKey } from "@/utils/helpers";
 import SearchBar from "@/components/ui/input/SearchBar";
 import { TagsBar } from "@/components/ui/input/tags-helpers";
-import { useDraftContext } from '../draft-provider';
+import { useDraftContext } from '../../draft-provider';
 
 export default function ChooseTags({ }: {}) {
     const { setFieldValue, values } = useFormikContext<WorldPayload>();

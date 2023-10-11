@@ -23,7 +23,7 @@ export default function PreviewButton({ values, uid }: PreviewButtonProps) {
     }, [isReviewOpen])
 
     return <>
-        <button className="flex items-center justify-center w-full h-full p-2 primaryButton" onClick={() => setIsReviewOpen(true)} type="button">
+        <button className="flex items-center justify-center w-full h-full p-2 primaryButton rounded-lg" onClick={() => setIsReviewOpen(true)} type="button">
             <EyeIcon className="w-6 h-6" />
         </button>
         <PopupDialog

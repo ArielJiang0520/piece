@@ -45,29 +45,29 @@
 }
 
 .primaryButton {
-  @apply border-2 rounded-lg font-semibold  whitespace-nowrap
+  @apply border-2  font-semibold  whitespace-nowrap
         bg-foreground border-foreground text-background
         hover:text-foreground hover:bg-background;
 }
 
 .primaryButton-disabled {
-  @apply border-2 rounded-lg font-semibold  whitespace-nowrap
+  @apply border-2  font-semibold  whitespace-nowrap
         bg-foreground/20 border-foreground/0 text-background
 }
 
 .primaryButton-pink {
-  @apply border-2 rounded-full font-semibold  whitespace-nowrap
+  @apply border-2  font-semibold  whitespace-nowrap
         bg-brand border-brand text-background
         hover:text-brand hover:bg-background;
 }
 
 .primaryButton-pink-disabled {
-  @apply border-2 rounded-full font-semibold  whitespace-nowrap
+  @apply border-2  font-semibold  whitespace-nowrap
         bg-foreground/20 border-foreground/0 text-background
 }
 
 .secondaryButton-pink {
-  @apply border-2 rounded-full font-semibold  whitespace-nowrap
+  @apply border-2  font-semibold  whitespace-nowrap
         border-brand text-brand
 }
 

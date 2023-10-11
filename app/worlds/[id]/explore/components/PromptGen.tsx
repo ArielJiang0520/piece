@@ -75,12 +75,12 @@ export default function PromptGen({ world }: { world: World }) {
                     <div className="fixed bottom-7 left-1/2 transform -translate-x-1/2 flex justify-center space-x-4 z-50 text-sm">
                         <button
                             disabled={values.prompt.length <= 0}
-                            className={`${values.prompt.length <= 0 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} `}
+                            className={`${values.prompt.length <= 0 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="submit">
                             Generate
                         </button>
                         <button
-                            className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} `}
+                            className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="button"
                             disabled={lines[0].length <= 1}
                             onClick={() => setIsPublishWindowOpen(true)}

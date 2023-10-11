@@ -72,7 +72,7 @@ export const SectionCard = ({ card, onSave, onDel }: {
                             }
                         })}
                         textSize="font-sm"
-                        multiline={10}
+                        multiline={20}
                     />
                 </div>
                 <div className="flex flex-col">

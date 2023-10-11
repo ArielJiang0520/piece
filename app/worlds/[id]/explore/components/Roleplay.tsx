@@ -49,7 +49,7 @@ export default function Roleplay({ world }: { world: World }) {
             </div>}
 
             {!chatOpen && <button
-                className="primaryButton p-2 w-40 text-sm my-8 self-center"
+                className="primaryButton rounded-lg p-2 w-40 text-sm my-8 self-center"
                 onClick={() => setChatOpen(true)}
             >
                 Confirm

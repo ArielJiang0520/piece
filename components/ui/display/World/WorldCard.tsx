@@ -1,7 +1,7 @@
 'use client'
 import type { WorldMetadata } from "@/app/supabase-server";
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
-import { CalendarIcon, SlashIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon, StarIcon, AtomIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbOffIcon, LightBulbIcon } from "@/components/icon/icon";
+import { CalendarIcon, SlashIcon, EyeIcon, EyeOffIcon, TrashIcon, DotsVerticalIcon, BookIcon, SingleUserIcon, PencilIcon, Rating18PlusIcon, RatingGeneralIcon, StarIcon, AtomIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbOffIcon, LightBulbIcon, StarsIcon, OpenBookIcon } from "@/components/icon/icon";
 import { getDistanceToNow } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
@@ -66,17 +66,22 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             </div>
 
 
-            <div id='title-group' className="flex flex-row w-full justify-between items-center">
-
-                <div className="flex flex-row text-left w-56 md:w-auto ">
-                    <FieldContentDisplay textSize="text-xl" content={world.name} bold={"font-bold"} />
+            <div id='title-group' className="flex flex-col md:flex-row w-full md:items-center md:justify-between space-y-3">
+                <div className="flex flex-row items-center  text-left ">
+                    <FieldContentDisplay textSize="text-xl md:text-2xl" content={world.name} bold={"font-bold"} />
                 </div>
 
-                <div className="flex flex-row justify-end items-center text-right space-x-1">
-
+                <div className="flex flex-row items-center text-right space-x-1 ">
+                    <Link href={`/worlds/${world.id}/explore`}>
+                        <button className="flex flex-row items-center space-x-2 primaryButton-pink py-1 px-4 rounded-lg text-sm">
+                            <StarsIcon />
+                            <span>Explore in AI</span>
+                        </button>
+                    </Link>
                     <Link href={`/worlds/${world.id}`}>
-                        <button className="primaryButton text-sm px-4 py-1">
-                            View
+                        <button className="flex flex-row items-center space-x-2 primaryButton  py-1 px-4 rounded-lg text-sm">
+                            <OpenBookIcon />
+                            <span>View</span>
                         </button>
                     </Link>
 
@@ -89,7 +94,6 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                         {dropdownVisible && <DropDownMenu setDropdownVisible={setDropdownVisible} options={isOwner ? ownerMenu : guestMenu} />}
                     </div>}
                 </div>
-
             </div>
 
             <div className="w-full">
@@ -127,10 +131,8 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                         </div>
                         <div className="flex flex-row justify-end items-center text-right  space-x-1">
                             <CalendarIcon />
-                            <span className="text-xs">{`Created ${getDistanceToNow(world.created_at)}`}</span>
-                            <div className="mr-2" />
-                            <CalendarIcon />
-                            <span className="text-xs">{world.modified_at && `Updated ${getDistanceToNow(world.modified_at)}`}</span>
+
+                            <span className="text-xs">{world.modified_at ? `Updated ${getDistanceToNow(world.modified_at)}` : `Created ${getDistanceToNow(world.created_at)}`}</span>
                         </div>
                     </div>
                 }

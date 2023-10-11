@@ -7,7 +7,7 @@ import Link from "next/link";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
 import dynamic from 'next/dynamic';
 import { FieldTitleDisplay } from "@/components/ui/display/display-helpers";
-import { FolderIcon, PencilIcon, PlusIcon, SlashIcon, TrashIcon } from "@/components/icon/icon";
+import { AtomIcon, FolderIcon, PencilIcon, PlusIcon, SlashIcon, TrashIcon } from "@/components/icon/icon";
 import { HelpTooltip } from "@/components/ui/widget/tooltip";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { delete_folder, insert_folder, update_folder_name } from "@/utils/folder-helpers";
@@ -146,9 +146,22 @@ export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPi
             <div className="hpx border-4 rounded-full border-t my-6 px-4 border-brand"></div>
 
             <div id="search-bar" className="flex flex-col md:flex-row md:items-center  ">
-                <button className="w-full md:w-auto mb-4 md:mb-0 order-1 md:order-2 text-base px-3 py-2 primaryButton">
-                    <Link href={`/create-a-piece?world_id=${world.id}`}> Create a Piece </Link>
-                </button>
+                <div className="flex flex-row items-center space-x-2 order-1 md:order-2 ">
+
+                    <Link href={`/create-a-piece?world_id=${world.id}`}>
+                        <button className="flex flex-row items-center space-x-1 w-full md:w-auto mb-4 md:mb-0 text-base px-3 py-2 primaryButton rounded-lg">
+                            <PencilIcon />
+                            <span>Create a Piece</span>
+                        </button>
+                    </Link>
+
+                    <Link href={`/worlds/${world.id}/explore`}>
+                        <button className="flex flex-row items-center space-x-1  w-full md:w-auto mb-4 md:mb-0 text-base px-3 py-2 primaryButton-pink rounded-lg">
+                            <AtomIcon />
+                            <span>Use AI Generate</span>
+                        </button>
+                    </Link>
+                </div>
                 <div className="flex-grow w-full md:mr-4 order-2 md:order-1 z-30">
                     <SearchBar
                         candidates={[]}

@@ -113,7 +113,8 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
 
                     <div className="flex flex-row items-center font-mono text-sm space-x-2 justify-end">
 
-                        <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={"0"} />
+                        <IconButtonTiny icon={<EmptyHeartIcon className="text-foreground/50" />} title={piece.likes[0].count} />
+                        <IconButtonTiny icon={<CommentIcon className="text-foreground/50" />} title={piece.comments[0].count} />
 
                     </div>
                 </div>

@@ -30,7 +30,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
         },
 
         {
-            link: '/create-a-world',
+            link: '/create-a-world/templates',
             name: 'Create A World'
         },
     ]

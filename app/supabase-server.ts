@@ -58,7 +58,7 @@ export async function getWorldMetadata(id: string): Promise<WorldMetadata> {
 }
 // For worlds/, profiles/[id]
 // For AllWorlds, MyWorlds
-export async function getAllWorldMetadata(uid?: string) {
+export async function getAllWorldMetadata(uid?: string): Promise<WorldMetadata[]> {
     const supabase = createServerSupabaseClient();
     let query = supabase.from('worlds').select('*, profiles(*), pieces(count), subscriptions(count)')
 
@@ -78,7 +78,9 @@ export async function getAllWorldMetadata(uid?: string) {
 // For WorldPieces, PieceCard
 export interface PieceDetails extends Piece {
     profiles: Profile | null,
-    folders: Folder | null
+    folders: Folder | null,
+    likes: any[], // count
+    comments: any[] // count
 }
 export interface FolderCount extends Folder {
     pieces: any[] // count
@@ -92,7 +94,7 @@ export async function getWorldDetails(id: string): Promise<WorldDetails> {
     const supabase = createServerSupabaseClient();
     const { data, error } = await supabase
         .from('worlds')
-        .select('*, profiles(*), pieces(*, profiles(*), folders(*)), folders(*, pieces(count))')
+        .select('*, profiles(*), pieces(*, profiles(*), folders(*), likes(count), comments(count)), folders(*, pieces(count))')
         .eq('id', id)
         .limit(1)
         .single();

@@ -141,11 +141,10 @@ export function NavBarSwitchLink({ tabs, pinned = false }: NavBarSwitchLinkProps
                             <Tab key={idx} className="outline-none mb-0 pb-0">
                                 <Link href={tab.link}>
                                     <div className={`h-full flex flex-row px-5 items-center border-b-2 ui-selected:border-brand  ui-not-selected:border-transparent `} >
-                                        {tab.icon && <div className="mr-2 ui-not-selected:text-foreground/70">{tab.icon}</div>}
-                                        <div className="capitalize font-mono text-sm text-foreground/80 ui-selected:font-bold">{tab.name}</div>
-                                        {tab.bubble != null && <div className="ml-1 px-2 py-1 rounded-full bg-foreground/10 text-xs">{tab.bubble}</div>}
+                                        {tab.icon && <div className="mr-2 ui-selected:text-foreground/80 ui-not-selected:text-foreground/50">{tab.icon}</div>}
+                                        <div className="capitalize font-mono text-sm ui-selected:text-foreground/80 ui-selected:font-bold ui-not-selected:text-foreground/50">{tab.name}</div>
+                                        {tab.bubble != null && <div className="ml-2 px-2 py-1 rounded-full bg-foreground/10 text-xs">{tab.bubble}</div>}
                                     </div>
-
                                 </Link>
                             </Tab>
                         ))}

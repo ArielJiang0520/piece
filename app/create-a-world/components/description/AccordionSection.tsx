@@ -1,14 +1,11 @@
 
 import { Disclosure } from '@headlessui/react';
 import { PencilIcon, TrashIcon, PlusCircleIcon } from '@/components/icon/icon';
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { SectionCard } from '@/components/ui/display/World/SectionCard';
-import { Bubble } from '@/components/ui/widget/bubble';
-
-
+import { AccordionIcon } from '@/components/icon/icon';
 interface AccordionSectionProps {
     index: number,
     section: WorldDescriptionSection;
@@ -50,7 +47,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                                 </div>
 
                                 <Disclosure.Button>
-                                    <ChevronRightIcon className={`${open ? 'transform rotate-90' : ''} w-5 h-5`} />
+                                    <AccordionIcon className={`${open ? 'transform rotate-90' : ''} w-5 h-5`} />
                                 </Disclosure.Button>
                             </div>
 

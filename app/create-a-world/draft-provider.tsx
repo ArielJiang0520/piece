@@ -87,16 +87,14 @@ export function DraftProvider({
         setCategories(await fetch_all_tags_categories());
     }
 
-
     useEffect(() => {
-        if (edit_id) {
+        if (edit_id) { // If editing existing world with a world_id
             fetchWorld();
-        } else {
+        } else { // If starting from a blank world
             fetchDrafts();
         }
         fetchData();
     }, []);
-
 
     return (
         <DraftContext.Provider value={{ tags, categories, currentDraft, handleDraftChange, handleDraftDelete, drafts, fetchDrafts }}>
