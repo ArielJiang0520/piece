@@ -58,6 +58,7 @@ export const Markdown: React.FC<MyComponentProps> = ({ children, className }) =>
     const createMarkup = () => {
         let html = markdown.render(children);
         html = html.replace(/<p>/g, '<p class="my-2">'); // Add tailwind class here for margin
+        html = html.replace(/<a /g, '<a class="text-blue-500 underline "'); // Add tailwind classes heres
         return { __html: html };
     };
 

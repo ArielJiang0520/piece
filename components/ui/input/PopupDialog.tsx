@@ -169,7 +169,7 @@ export default function PopupDialog({
 
                         <button
                             onClick={handleButtonClick}
-                            className="px-2 py-1 text-base primaryButton"
+                            className="px-2 py-1 text-base primaryButton rounded-lg"
                         >
                             {overwriteConfirm}
                         </button>

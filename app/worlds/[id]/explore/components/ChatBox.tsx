@@ -54,7 +54,7 @@ const ChatBubble = ({ role, content, onEdit, id }: { role: string, content: stri
                 }
             </div>
             {isEditing && <div className="flex flex-row justify-end items-center space-x-3 px-2 text-sm w-full">
-                <button className="primaryButton py-1 px-3" onClick={handleEditConfirm}>Send</button>
+                <button className="primaryButton rounded-lg py-1 px-3" onClick={handleEditConfirm}>Send</button>
                 <button className="secondaryButton" onClick={handleCancelEdit}>Cancel</button>
             </div>}
         </div>

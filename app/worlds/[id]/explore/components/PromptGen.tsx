@@ -12,9 +12,11 @@ import { useRouter } from 'next/navigation';
 import { notify_error, notify_success } from '@/components/ui/widget/toast';
 import Link from 'next/link';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
+import { ToggleButton } from '@/components/ui/button/toggle/Toggle';
 
 interface PromptPayload {
     prompt: string,
+    model: string,
 }
 export default function PromptGen({ world }: { world: World }) {
     const router = useRouter();
@@ -30,7 +32,8 @@ export default function PromptGen({ world }: { world: World }) {
 
     const handleSubmit = async (values: PromptPayload) => {
         const data = {
-            prompt: values,
+            prompt: values.prompt,
+            model: values.model,
             world: world
         }
         await streamText(data, '/api/generate/piece')
@@ -48,15 +51,31 @@ export default function PromptGen({ world }: { world: World }) {
 
     return <>
         <Formik
-            initialValues={{ prompt: '' } as PromptPayload}
+            initialValues={{ prompt: '', model: "gpt-3.5-turbo-16k" } as PromptPayload}
             onSubmit={(values) => handleSubmit(values)}
         >
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
-                <Form className='mt-4 w-full flex flex-col space-y-4 items-start' onKeyDown={handleKeyDown}>
+                <Form className='mt-4 w-full flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
 
                     <div id="prompt-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"prompt"} />
                         <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-lg"} multiline={3} bold={"font-semibold"} />
+                    </div>
+
+                    <div id="prompt-group" className='w-full flex flex-col space-y-4'>
+                        <FieldTitleDisplay label={"model"} />
+                        <div className='flex flex-row space-x-2 text-base font-semibold text-foreground/80'>
+                            <div >
+                                Use GPT-4?
+                            </div>
+                            <ToggleButton handleToggle={() => {
+                                if (values.model === "gpt-4")
+                                    setFieldValue('model', 'gpt-3.5-turbo-16k')
+                                else
+                                    setFieldValue('model', 'gpt-4')
+                            }} isEnabled={values.model === "gpt-4"} />
+                        </div>
+
                     </div>
 
                     <div id="content-group" className='w-full flex flex-col'>

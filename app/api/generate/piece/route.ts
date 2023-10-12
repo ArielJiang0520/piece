@@ -11,13 +11,14 @@ const openai = new OpenAIApi(configuration)
 
 export async function POST(req: NextRequest): Promise<Response> {
     if (req.method === 'POST') {
-        const { prompt, world } = await req.json();
+        const { prompt, model, world } = await req.json();
+        console.log('using model', model)
         try {
             const response = await openai.createChatCompletion({
-                model: "gpt-3.5-turbo-16k",
+                model: model,
                 messages: [
                     { role: "system", content: storyPrompt(world) },
-                    { role: "user", content: prompt.prompt },
+                    { role: "user", content: prompt },
                 ],
                 max_tokens: 2048,
                 temperature: 1,
