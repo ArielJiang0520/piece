@@ -62,7 +62,7 @@ const ChatBubble = ({ role, content, onEdit, id }: { role: string, content: stri
 }
 
 const formatMessages = (userRole: string, aiRole: string, messages: Message[]) => {
-    console.log(messages.map(msg => { return { role: msg.role === 'user' ? userRole : aiRole, content: msg.content } }))
+    // console.log(messages.map(msg => { return { role: msg.role === 'user' ? userRole : aiRole, content: msg.content } }))
     return messages.map(msg => { return { role: msg.role === 'user' ? userRole : aiRole, content: msg.content } })
 }
 

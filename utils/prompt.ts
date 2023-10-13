@@ -1,6 +1,6 @@
 
 import { WorldDescriptionSectionCard, WorldDescriptionSection } from "@/types/types";
-import type { World } from "@/types/types";
+import type { World, Piece, GeneralJson, GenPieceJson } from "@/types/types";
 
 export function worldToString(world: World): string {
     let descriptionString = '';
@@ -23,16 +23,15 @@ export function worldToString(world: World): string {
     return `**World Name**\n${world.name}\n**Logline**\n${world.logline}\n**Tags**\n${tagsString}\n**Description**\n${descriptionString}`;
 }
 
-export function storyPrompt(world: World): string {
+export function storyPrompt(world: World, piece?: Piece | null): string {
     const worldString = worldToString(world)
+    const piece_content = piece ? piece.piece_type === "original" ? (piece.piece_json as GeneralJson).content : (piece.piece_json as GenPieceJson).output : ""
+    const prequelString = `The user has already written the following story as a context for you: ${piece_content}.`
     return `
-**Introduction**
-Hello, AI, I am the System. You are playing a story writing game with the User. 
-You will be asked to write materials involving characters and scenarios in the story. 
-When you write, you are allowed to develop characters in more depth and add new traits 
-or make decisions for them, making up things is fine.
-Below is the settings of this world:
-${worldString}`
+Below is the settings of this novel/fictional story:
+${worldString}
+${prequelString}
+`
 }
 
 export function roleplayPrompt(world: World, userRole: string, aiRole: string, scenario: string): string {

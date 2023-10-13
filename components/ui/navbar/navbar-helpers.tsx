@@ -158,8 +158,8 @@ export function NavBarSwitchLink({ tabs, pinned = false }: NavBarSwitchLinkProps
                             <Link href={pinnedTab.link}>
                                 <div className={`capitalize h-full font-mono text-sm text-white flex items-center border-b-2 ui-selected:border-brand ui-selected:font-bold ui-not-selected:border-transparent`} >
                                     <div className='flex flex-row items-center py-1 px-2 rounded-xl bg-brand'>
-                                        <StarsIcon className='mr-1' />
-                                        {pinnedTab.name}
+                                        <StarsIcon className='mr-0 md:mr-1' />
+                                        <div className="hidden md:block">{pinnedTab.name}</div>
                                     </div>
                                 </div>
                             </Link>

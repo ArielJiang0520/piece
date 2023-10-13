@@ -1,6 +1,8 @@
 import { FieldTitleDisplay, Markdown } from "../display-helpers"
 import { ChatHistoryJson, TypedPiece, GenPieceJson } from "@/types/types"
-import { RobotIcon } from "@/components/icon/icon"
+import { RobotIcon, ArrowUpRight } from "@/components/icon/icon"
+import Link from "next/link"
+import { CopyableID } from "../../button/button-helpers"
 
 export function ChatHistoryDisplay({ json_content }: { json_content: ChatHistoryJson }) {
     return <div className="flex flex-col space-y-6">
@@ -27,8 +29,17 @@ export function ChatHistoryDisplay({ json_content }: { json_content: ChatHistory
 
 export function GenPieceDisplay({ json_content }: { json_content: GenPieceJson }) {
     return <div className="flex flex-col space-y-6">
+        {json_content.prequel && <div className='w-full flex flex-col space-y-3 items-start'>
+            <FieldTitleDisplay label={"prequel"} textSize="text-base" />
+            <Link href={`/pieces/${json_content.prequel}`}>
+                <CopyableID id={json_content.prequel} id_string={"Piece ID"} />
+            </Link>
+        </div>}
         <div className='w-full flex flex-col space-y-3'>
-            <FieldTitleDisplay label={"prompt"} textSize="text-base" />
+            <div className="flex flex-row justify-start items-center space-x-2">
+                <FieldTitleDisplay label={"prompt"} textSize="text-base" />
+
+            </div>
             <div className='border-t border-b px-4 py-2 text-sm text-foreground bg-foreground/5'>
                 <Markdown>{json_content.prompt}</Markdown>
             </div>

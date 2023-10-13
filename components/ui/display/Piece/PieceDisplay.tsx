@@ -1,6 +1,6 @@
 'use client'
 import type { ChatHistoryJson, TypedPiece, GenPieceJson, GeneralJson, Piece, Profile, World, Folder, Comment, Like } from "@/types/types"
-import { EmptyHeartIcon, WorldIcon, CheckIcon, CalendarIcon, BookIcon, RobotIcon, TrashIcon, StarIcon, SingleUserIcon, CrownIcon, StarsIcon } from "@/components/icon/icon"
+import { EmptyHeartIcon, WorldIcon, CheckIcon, CalendarIcon, BookIcon, RobotIcon, TrashIcon, StarIcon, SingleUserIcon, CrownIcon, StarsIcon, ArrowUpRight } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay, Markdown } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
@@ -141,7 +141,7 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
 
             <div className='flex flex-col space-y-3 items-start'>
 
-                {preview ? null : <CopyableID id_string="Piece ID" id={piece.id} />}
+                {!preview && <CopyableID id_string="Piece ID" id={piece.id} />}
 
                 <div id="title-group" className='w-full flex flex-row items-start justify-between'>
                     <FieldContentDisplay content={piece.name} textSize="text-4xl" bold="font-semibold" />
@@ -162,13 +162,25 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                     <Link href={`/worlds/${world.id}/explore`}>
                         <span className="cursor-pointer bg-white text-brand font-semibold rounded-lg p-2 flex flex-row items-center space-x-1">
                             <StarsIcon className="w-3 h-3" />
-                            <span>Explore in AI</span>
+                            <span className="whitespace-nowrap">Explore in AI</span>
                         </span>
                     </Link>
                 </div>}
 
-
-
+                {piece.piece_type !== "original" && <div className="w-full  flex flex-row items-center justify-between max-w-2xl space-x-2">
+                    <Link href={`/worlds/${world.id}/explore?gen_type=prompt-gen&prompt_id=${piece.id}`} className="w-1/2  ">
+                        <div className="w-full cursor-pointer  text-brand border border-brand rounded-lg py-2 px-2 flex flex-row items-center justify-center space-x-2">
+                            <ArrowUpRight />
+                            <span className="whitespace-nowrap  text-sm ">Try this Prompt</span>
+                        </div>
+                    </Link>
+                    <Link href={`/worlds/${world.id}/explore?gen_type=prompt-gen&prequel=${piece.id}`} className="w-1/2 ">
+                        <div className="w-full cursor-pointer  text-brand border border-brand  rounded-lg py-2 px-2 flex flex-row items-center justify-center space-x-2">
+                            <ArrowUpRight />
+                            <span className="whitespace-nowrap text-sm ">Make Sequel</span>
+                        </div>
+                    </Link>
+                </div>}
 
                 {piece.piece_type === "original" && <div id='image-display' className="w-full max-w-lg">
                     <PieceImages bucket="world" paths={(piece.piece_json as GeneralJson).images} popup={true} />
@@ -181,7 +193,8 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                 </div> :
                     <div>
                         <div id="content-group" className='w-full max-w-2xl flex flex-row flex-wrap items-center justify-start'>
-                            {piece.piece_type == "gen-piece" ? <GenPieceDisplay json_content={piece.piece_json as GenPieceJson} />
+                            {piece.piece_type == "gen-piece" ?
+                                <GenPieceDisplay json_content={piece.piece_json as GenPieceJson} />
                                 : <ChatHistoryDisplay json_content={piece.piece_json as ChatHistoryJson} />}
                         </div>
                     </div>
@@ -202,11 +215,9 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
 
 
                 <div id="stats-group" className='flex flex-row text-base justify-between items-center  w-full'>
-
                     {user && user.id &&
                         <LikeButton initIsLiked={likes.some(like => user.id === like.user_id)} initLikes={likes.length} pid={piece.id} uid={user.id} />
                     }
-
                     <div id="date" className="flex flex-row items-center space-x-2">
                         {<div className="flex flex-row text-xs items-center space-x-1 ">
                             <CalendarIcon />
@@ -217,7 +228,6 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                             <span>Updated {getDistanceToNow(piece.modified_at)}</span>
                         </div>}
                     </div>
-
                 </div>
 
                 <div className="hpx border-t w-full my-2">

@@ -35,7 +35,7 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
 
                         <Image
                             className='block rounded-full'
-                            src={piece.profiles?.avatar_url ? piece.profiles?.avatar_url : 'logo_500px.png'}
+                            src={piece.profiles?.avatar_url ? piece.profiles?.avatar_url : '/logo_500px.png'}
                             alt={"profile picture"}
                             width={20} height={20}
                             onClick={() => { }}

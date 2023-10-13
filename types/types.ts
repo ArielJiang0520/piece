@@ -128,6 +128,7 @@ export type GenPieceJson = {
     prompt: string;
     output: string;
     notes: string;
+    prequel: string | null;
 }
 
 export type ChatHistoryJson = {

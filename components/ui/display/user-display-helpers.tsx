@@ -8,7 +8,7 @@ export const AuthorDisplay = ({ author, bannerContent, icon = null }: { author: 
         <div>
             <Image
                 className='rounded-full'
-                src={author.avatar_url ? author.avatar_url : 'logo_500px.png'}
+                src={author.avatar_url ? author.avatar_url : '/logo_500px.png'}
                 alt={"profile picture"}
                 width={40} height={40}
                 onClick={() => { }}

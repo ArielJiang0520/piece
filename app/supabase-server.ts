@@ -125,3 +125,18 @@ export async function getPieceDetailsIncludeWorld(
         throw Error(JSON.stringify(error))
     return data as PieceDetailsIncludeWorld
 }
+
+// export async function getPieceDetails(
+//     id: string
+// ): Promise<Piece> {
+//     const supabase = createServerSupabaseClient();
+//     const { data, error } = await supabase
+//         .from('pieces')
+//         .select('*')
+//         .eq('id', id)
+//         .limit(1)
+//         .single();
+//     if (!data || error)
+//         throw Error(JSON.stringify(error))
+//     return data as Piece
+// }

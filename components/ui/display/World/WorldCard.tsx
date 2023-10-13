@@ -121,7 +121,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
                         <div className="flex flex-row justify-start items-center text-right  space-x-1">
                             <Image
                                 className='block rounded-full'
-                                src={world.profiles.avatar_url ? world.profiles.avatar_url : 'logo_500px.png'}
+                                src={world.profiles.avatar_url ? world.profiles.avatar_url : '/logo_500px.png'}
                                 alt={"profile picture"}
                                 width={20} height={20}
                                 onClick={() => { }}

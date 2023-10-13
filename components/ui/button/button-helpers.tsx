@@ -63,7 +63,7 @@ export function IconButtonTiny({ icon, title }: IconButtonProps) {
     </div>
 }
 
-export function CopyableID({ id_string, id }: { id_string: string, id: string }) {
+export function CopyableID({ id_string = null, id }: { id_string?: string | null, id: string }) {
     const [showWidget, setShowWidget] = useState(false);
 
     const handleButtonClick = () => {
@@ -84,7 +84,7 @@ export function CopyableID({ id_string, id }: { id_string: string, id: string })
 
 
     return (<div className="relative flex flex-row font-mono text-xs space-x-1 items-center justify-start">
-        <div className="font-semibold text-foreground/80">{id_string}:</div>
+        {id_string && <div className="font-semibold text-foreground/80">{id_string}:</div>}
         <button className="cursor-pointer rounded-2xl border-brand border text-brand py-1 px-2 hover:text-white hover:bg-brand" onClick={handleButtonClick}>
             {id}
         </button>

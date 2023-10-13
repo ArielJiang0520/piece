@@ -43,6 +43,7 @@ import { GiOpenBook as OpenBookIcon } from 'react-icons/gi'
 import { RxDividerVertical as DividerIcon } from 'react-icons/rx'
 import { IoIosCreate as CreateIcon } from 'react-icons/io'
 import { AiFillHeart as FilledHeartIcon } from 'react-icons/ai'
+import { BsFillArrowUpRightCircleFill as ArrowUpRight } from 'react-icons/bs'
 
 export {
     BurgerIcon,
@@ -89,5 +90,6 @@ export {
     OpenBookIcon,
     DividerIcon,
     CreateIcon,
-    FilledHeartIcon
+    FilledHeartIcon,
+    ArrowUpRight
 };

@@ -218,3 +218,31 @@ export const delete_piece = async (pid: string): Promise<number> => {
     }
     return status
 }
+
+export const fetch_piece = async (pid: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('pieces')
+        .select('*')
+        .eq('id', pid)
+        .single()
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
+
+
+export const fetch_all_pieces = async (wid: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('pieces')
+        .select('*')
+        .eq('world_id', wid)
+
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
+

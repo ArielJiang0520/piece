@@ -145,7 +145,7 @@ export default function PopupDialog({
         >
             <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-            <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="fixed inset-0 flex items-center justify-center p-4 font-mono">
                 <Dialog.Panel className="w-11/12 max-h-2-3-screen max-w-lg rounded px-8 py-6 bg-background shadow-lg transform transition-transform duration-500 overflow-y-auto">
                     <Dialog.Title className="text-base font-semibold text-foreground">{dialogTitle}</Dialog.Title>
                     <Dialog.Description className="text-foreground mt-4">

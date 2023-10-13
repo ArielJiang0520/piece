@@ -77,7 +77,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
                         <div className="flex items-center">
                             <Image
                                 className='cursor-pointer rounded-full'
-                                src={user.user_metadata.picture}
+                                src={user.user_metadata && user.user_metadata.picture ? user.user_metadata.picture : '/logo_500px.png'}
                                 alt={"profile picture"}
                                 priority={true}
                                 width={32} height={32}
@@ -103,7 +103,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
             <SideBar onLeft={true} isMenuOpen={isLeftMenuOpen} setIsMenuOpen={setIsLeftMenuOpen} menuItems={menuItems} image={{ link: '/logo_500px.png', alt: "logo" }} />
 
-            <SideBar onLeft={false} isMenuOpen={isRightMenuOpen} setIsMenuOpen={setIsRightMenuOpen} menuItems={profileItems} image={{ link: user?.user_metadata.picture, alt: "profile picture" }} />
+            <SideBar onLeft={false} isMenuOpen={isRightMenuOpen} setIsMenuOpen={setIsRightMenuOpen} menuItems={profileItems} image={{ link: user && user.user_metadata && user.user_metadata.picture ? user.user_metadata.picture : '/logo_500px.png', alt: "profile picture" }} />
         </>
     )
 

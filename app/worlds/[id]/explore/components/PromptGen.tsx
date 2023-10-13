@@ -1,30 +1,84 @@
 'use client'
-import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps } from 'formik';
+import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps, setIn } from 'formik';
 import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
-import { TypedPiece, World } from '@/types/types';
+import { GenPieceJson, Piece, TypedPiece, World } from '@/types/types';
 import useStreamText from '@/hooks/useStreamText';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import { insert_special_piece } from '@/utils/piece-helpers';
+import { fetch_piece, fetch_all_pieces, insert_special_piece } from '@/utils/piece-helpers';
 import { useSupabase } from '@/app/supabase-provider';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { notify_error, notify_success } from '@/components/ui/widget/toast';
 import Link from 'next/link';
 import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ToggleButton } from '@/components/ui/button/toggle/Toggle';
+import DropDownSelector from '@/components/ui/input/DropDownSelector';
+import SearchBar from '@/components/ui/input/SearchBar';
 
 interface PromptPayload {
     prompt: string,
     model: string,
+    prequel: string | null,
 }
 export default function PromptGen({ world }: { world: World }) {
-    const router = useRouter();
-    const { user } = useSupabase()
+    const searchParams = useSearchParams();
+    const { user, supabase } = useSupabase()
     const { lines, isLoading, resetLines, streamText } = useStreamText();
-    const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false);
 
-    const [isPublishing, setIsPublishing] = useState(false)
+    const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false);
+    const [isPublishing, setIsPublishing] = useState(false);
+
+    const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
+    const [isFormikRendered, setIsFormikRendered] = useState(false);
+    const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-3.5-turbo-16k", prequel: null } as PromptPayload)
+
+    const [pieces, setPieces] = useState<Piece[]>([]);
+
+    const fetchPrompt = async (id: string) => {
+        try {
+            const piece = await fetch_piece(id);
+            const newValues = { ...initValues, prompt: (piece.piece_json as GenPieceJson).prompt };
+            setInitValues(newValues);
+        } catch (e) {
+            notify_error(`Fetching prompt_id ${id} failed: ${JSON.stringify(e)}`)
+        }
+    }
+
+    const fetchPieces = async () => {
+        const fetchedPieces = await fetch_all_pieces(world.id);
+        setPieces(fetchedPieces);
+    }
+
+    useEffect(() => {
+        fetchPieces();
+    }, [])
+
+    // Add effect to change state when Formik has been rendered
+    useEffect(() => {
+        if (formikRef.current) {
+            setIsFormikRendered(true);
+        }
+    }, [formikRef]);
+
+    useEffect(() => {
+        if (isFormikRendered) {
+            formikRef.current?.resetForm({ values: initValues })
+        }
+    }, [isFormikRendered, initValues]); // Listen to changes on initValues
+
+    useEffect(() => {
+        const prompt_id = searchParams.get('prompt_id');
+        if (prompt_id) {
+            fetchPrompt(prompt_id);
+        }
+
+        const prequel_id = searchParams.get('prequel')
+        if (prequel_id) {
+            const newValues = { ...initValues, prequel: prequel_id };
+            setInitValues(newValues)
+        }
+    }, [searchParams])
 
     if (!user) {
         return <>No user found!</>
@@ -34,6 +88,7 @@ export default function PromptGen({ world }: { world: World }) {
         const data = {
             prompt: values.prompt,
             model: values.model,
+            prequel: values.prequel,
             world: world
         }
         await streamText(data, '/api/generate/piece')
@@ -51,17 +106,12 @@ export default function PromptGen({ world }: { world: World }) {
 
     return <>
         <Formik
-            initialValues={{ prompt: '', model: "gpt-3.5-turbo-16k" } as PromptPayload}
+            initialValues={initValues}
+            innerRef={formikRef} // Attach the ref to Formik
             onSubmit={(values) => handleSubmit(values)}
         >
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
                 <Form className='mt-4 w-full flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
-
-                    <div id="prompt-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"prompt"} />
-                        <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-lg"} multiline={3} bold={"font-semibold"} />
-                    </div>
-
                     <div id="prompt-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"model"} />
                         <div className='flex flex-row space-x-2 text-base font-semibold text-foreground/80'>
@@ -77,6 +127,26 @@ export default function PromptGen({ world }: { world: World }) {
                         </div>
 
                     </div>
+
+                    <div id="link-group" className='w-full flex flex-col space-y-4'>
+                        <FieldTitleDisplay label={"prequel"} />
+                        <SearchBar
+                            candidates={pieces}
+                            nameKey='id'
+                            placeholder='Select a piece...'
+                            onSelect={(item) => { setFieldValue('prequel', item.id) }}
+                            display_func={(item) => `${item.id}: ${item.name}`}
+                            hasReset={false}
+                            defaultSelectedId={values.prequel}
+                        />
+                    </div>
+
+                    <div id="prompt-group" className='w-full flex flex-col'>
+                        <FieldTitleDisplay label={"prompt"} />
+                        <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-base"} multiline={7} bold={"font-medium"} />
+                    </div>
+
+
 
                     <div id="content-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"AI Generated Content"} />
@@ -117,16 +187,15 @@ export default function PromptGen({ world }: { world: World }) {
                             name: 'Untitled Piece',
                             world_id: world.id,
                             type: 'gen-piece',
-                            json_content: { prompt: values.prompt, output: lines.join('\n'), notes: '' },
+                            json_content: { prompt: values.prompt, output: lines.join('\n'), notes: '', prequel: values.prequel } as GenPieceJson,
                             folder_id: null,
-                            tags: []
+                            tags: [],
                         } as TypedPiece}
                         confirmAction={async (inputValue: TypedPiece) => {
                             setIsPublishing(true)
                             try {
                                 const new_id = await insert_special_piece(inputValue, user.id);
                                 setIsPublishing(false)
-                                router.push(`/worlds/${world.id}/pieces`)
                                 notify_success(<div>
                                     <Link className="underline-offset-2 text-blue-500" href={`/pieces/${new_id}`}>
                                         {new_id}

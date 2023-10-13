@@ -63,7 +63,7 @@ export default function MyWorlds({ worlds, isOwner }: MyWorldsProps) {
     }, [currentSort, currentQuery, privateOnly, nsfwOnly])
 
     return <div className="flex flex-col">
-        <div id="search-bar" className="flex flex-col md:flex-row md:items-center mb-6">
+        <div id="search-bar" className="flex flex-col md:flex-row md:items-center mb-6 md:space-x-3">
             <Link href={'/create-a-world'}>
                 <button className="w-full md:w-auto mb-4 md:mb-0 order-1 md:order-2 text-base px-3 py-2 primaryButton rounded-lg">
                     Create a World
