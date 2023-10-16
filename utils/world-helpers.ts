@@ -8,7 +8,7 @@ import { cleanTags } from "./helpers";
 // return the created world's ID
 export const insert_world = async (values: WorldPayload, uid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { images, name, tags: rawTags, genre1, genre2, logline, description, settings } = values as WorldPayload;
+    const { images, name, tags: rawTags, genre1, genre2, logline, description, settings, progress } = values as WorldPayload;
     const tags = cleanTags(rawTags)
 
     const wid = `W-${getId()}`
@@ -27,6 +27,7 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
         nsfw: settings.NSFW,
         allow_contribution: settings.allowContribution,
         allow_suggestion: settings.allowSuggestion,
+        progress: progress
     }
 
     let draft_data = {
@@ -61,7 +62,7 @@ export const insert_world = async (values: WorldPayload, uid: string, is_draft: 
 // TODO: upsert new tags/characters? 
 export const update_world = async (values: WorldPayload, wid: string, is_draft: boolean): Promise<string> => {
     const supabase = createClientSupabaseClient()
-    const { images, name, tags: rawTags, genre1, genre2, logline, description, settings } = values as WorldPayload;
+    const { images, name, tags: rawTags, genre1, genre2, logline, description, settings, progress } = values as WorldPayload;
     const tags = cleanTags(rawTags)
 
     let world_data = {
@@ -76,6 +77,7 @@ export const update_world = async (values: WorldPayload, wid: string, is_draft: 
         nsfw: settings.NSFW,
         allow_contribution: settings.allowContribution,
         allow_suggestion: settings.allowSuggestion,
+        progress: progress
     }
 
     let modified_at_data = is_draft ? {
@@ -92,7 +94,6 @@ export const update_world = async (values: WorldPayload, wid: string, is_draft: 
         .single()
 
     if (error || !data) {
-        console.error(JSON.stringify(error))
         throw Error(error.message)
     }
     return data.id
@@ -115,7 +116,6 @@ export const publish_draft = async (wid: string): Promise<string> => {
         .single()
 
     if (error || !data) {
-        console.error(JSON.stringify(error))
         throw Error(error.message)
     }
 
@@ -131,12 +131,24 @@ export const delete_world = async (wid: string, world_origin: null | string = nu
         .eq('id', wid)
 
     if (error) {
-        console.error(JSON.stringify(error))
         throw Error(error.message)
     }
     return status
 }
 
+export const fetch_all_worlds = async (uid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { error, data } = await supabase
+        .from('worlds')
+        .select('id, name, modified_at')
+        .eq('creator_id', uid)
+        .order('modified_at', { ascending: false })
+
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
 
 export function getCharDict(world: World) {
     let charList = [] as string[]
@@ -149,3 +161,4 @@ export function getCharDict(world: World) {
 
     return charList.map((char, idx) => { return { id: idx, name: char } })
 }
+

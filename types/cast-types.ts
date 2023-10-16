@@ -18,7 +18,8 @@ export function cast_to_worldpayload(world: World) {
             NSFW: world.nsfw,
             allowContribution: world.allow_contribution,
             allowSuggestion: world.allow_suggestion,
-        }
+        },
+        progress: world.progress
     } as WorldPayload;
 }
 
@@ -30,6 +31,8 @@ export async function cast_to_world(payload: WorldPayload, uid: string) {
         allow_suggestion: payload.settings.allowSuggestion,
         nsfw: payload.settings.NSFW,
         is_public: payload.settings.public,
+
+        progress: payload.progress,
 
         primary_genre: payload.genre1,
         secondary_genre: payload.genre2,

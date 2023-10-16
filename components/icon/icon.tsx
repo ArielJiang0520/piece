@@ -10,6 +10,7 @@ import { RiPencilFill as PencilIcon } from 'react-icons/ri'
 import { BsPlusCircleDotted as PlusCircleIcon } from 'react-icons/bs'
 import { AiOutlineMinus as MinusIcon } from 'react-icons/ai'
 import { AiOutlineStar as StarIcon } from 'react-icons/ai'
+import { AiFillStar as FilledStarIcon } from 'react-icons/ai'
 import { GiAtom as AtomIcon } from 'react-icons/gi'
 import { AiOutlineClose as CloseIcon } from 'react-icons/ai'
 import { RiCalendarTodoFill as CalendarIcon } from 'react-icons/ri'
@@ -44,6 +45,8 @@ import { RxDividerVertical as DividerIcon } from 'react-icons/rx'
 import { IoIosCreate as CreateIcon } from 'react-icons/io'
 import { AiFillHeart as FilledHeartIcon } from 'react-icons/ai'
 import { BsFillArrowUpRightCircleFill as ArrowUpRight } from 'react-icons/bs'
+import { TiThSmall as NineDotsIcon } from 'react-icons/ti'
+import { GoDotFill as DotIcon } from 'react-icons/go'
 
 export {
     BurgerIcon,
@@ -58,6 +61,7 @@ export {
     PlusCircleIcon,
     MinusIcon,
     StarIcon,
+    FilledStarIcon,
     AtomIcon,
     CloseIcon,
     CalendarIcon,
@@ -91,5 +95,7 @@ export {
     DividerIcon,
     CreateIcon,
     FilledHeartIcon,
-    ArrowUpRight
+    ArrowUpRight,
+    NineDotsIcon,
+    DotIcon
 };

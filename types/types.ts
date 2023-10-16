@@ -1,5 +1,4 @@
-import { User } from "@supabase/supabase-js"
-import { Database, Json } from "./supabase"
+import { Database } from "./supabase"
 
 export type World = Database['public']['Tables']['worlds']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
@@ -37,6 +36,25 @@ export const WorldSettingsAsks = {
     allowSuggestion: "Allow suggestions from other users",
 }
 
+export const WorldProgress = [
+    {
+        id: "actively updating",
+        name: "Actively Updating",
+    },
+    {
+        id: "infrequent updating",
+        name: "Infrequent/Passive Updating"
+    },
+    {
+        id: "stopped updating",
+        name: "On Hiatus (unfinished)"
+    },
+    {
+        id: "done",
+        name: "Finished"
+    },
+]
+
 
 export interface DefaultWorld {
     id: string,
@@ -53,7 +71,8 @@ export type WorldPayload = {
     name: string,
     logline: string,
     description: WorldDescriptionSection[],
-    settings: WorldSettings
+    settings: WorldSettings,
+    progress: 'actively updating' | 'stopped updating' | 'infrequent updating',
 }
 
 export const EmptyWorldPayload: WorldPayload = {
@@ -82,7 +101,8 @@ export const EmptyWorldPayload: WorldPayload = {
         NSFW: false,
         allowContribution: true,
         allowSuggestion: true,
-    }
+    },
+    progress: 'actively updating'
 }
 
 //////////////////////////////////////////////////////////

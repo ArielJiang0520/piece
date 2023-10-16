@@ -2,7 +2,7 @@ import { GeneralJson, GenPieceJson, Piece, Folder, Profile, ChatHistoryJson } fr
 import { FieldContentDisplay, FieldTitleDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarTinyDisplay, TagsBarSmallDisplay, TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { IconButtonTiny, IconButtonSmall } from "@/components/ui/button/button-helpers";
-import { EmptyHeartIcon, CommentIcon, CrownIcon, FolderIcon, SlashIcon, CalendarIcon, AIGenerateIcon, AtomIcon, RobotIcon, Rating18PlusIcon } from "@/components/icon/icon";
+import { EmptyHeartIcon, CommentIcon, CrownIcon, FolderIcon, SlashIcon, CalendarIcon, AIGenerateIcon, AtomIcon, RobotIcon, Rating18PlusIcon, FilledStarIcon } from "@/components/icon/icon";
 import SingleImage from "@/components/ui/image/SingleImage";
 import Image from "next/image";
 import { PieceDetails } from "@/app/supabase-server";
@@ -44,9 +44,10 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                         <div>{isOwner ? <CrownIcon className="block text-brand" /> : null}</div>
                         <span className="font-mono text-xs text-foreground/50 mr-1">{getDistanceToNowAbbr(piece.created_at)}</span>
                     </div>
-                    <div className="flex flex-row items-center">
-                        {piece.nsfw && <Rating18PlusIcon className="text-brand" />}
+                    <div id="icon-group" className="flex flex-row items-center space-x-1">
+
                         {piece.piece_type !== "original" && <RobotIcon className="text-brand" />}
+                        {piece.is_favorite && <FilledStarIcon className="text-yellow-400" />}
                     </div>
                 </div>
 

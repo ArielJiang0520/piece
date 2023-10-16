@@ -246,3 +246,32 @@ export const fetch_all_pieces = async (wid: string) => {
     return data
 }
 
+export const fav_piece = async (pid: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('pieces')
+        .update({ is_favorite: true })
+        .eq('id', pid)
+        .select('id')
+        .single()
+
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
+
+export const unfav_piece = async (pid: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('pieces')
+        .update({ is_favorite: false })
+        .eq('id', pid)
+        .select('id')
+        .single()
+
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}

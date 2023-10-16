@@ -7,14 +7,14 @@ import Link from "next/link";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
 import dynamic from 'next/dynamic';
 import { FieldTitleDisplay } from "@/components/ui/display/display-helpers";
-import { AtomIcon, FolderIcon, PencilIcon, PlusIcon, SlashIcon, TrashIcon } from "@/components/icon/icon";
+import { AtomIcon, FilledStarIcon, FolderIcon, NineDotsIcon, PencilIcon, PlusIcon, SlashIcon, StarIcon, TrashIcon } from "@/components/icon/icon";
 import { HelpTooltip } from "@/components/ui/widget/tooltip";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { delete_folder, insert_folder, update_folder_name } from "@/utils/folder-helpers";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import cloneDeep from 'lodash/cloneDeep';
 import { FolderCount, PieceDetails } from "@/app/supabase-server";
-import { notify_success } from "@/components/ui/widget/toast";
+import { notify_error, notify_success } from "@/components/ui/widget/toast";
 
 const PiecesMasonry = dynamic(() => import('@/components/ui/display/Piece/PiecesMasonry'), {
     ssr: false
@@ -57,13 +57,25 @@ export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPi
 
     const [filteredPieces, setFilteredPieces] = useState<PieceDetails[]>(pieces);
 
-    const defaultFolder = { id: 'default', name: 'All', pieces: [{ count: pieces.length }], created_at: Number.MAX_SAFE_INTEGER.toString() } as DefaultFolder
+    const defaultFolder = {
+        id: 'default',
+        name: 'All',
+        pieces: [{ count: pieces.length }],
+        created_at: Number.MAX_SAFE_INTEGER.toString()
+    } as DefaultFolder
+
+    const favoriteFolder = {
+        id: 'favorite',
+        name: 'Favorite',
+        pieces: [{ count: pieces.filter(piece => piece.is_favorite).length }],
+        created_at: (Number.MAX_SAFE_INTEGER - 1).toString()
+    }
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const allFolders: Array<FolderCount | DefaultFolder> = [defaultFolder, ...folders].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+    const allFolders: Array<FolderCount | DefaultFolder> = [defaultFolder, favoriteFolder, ...folders].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
     const [currentFolder, setCurrentFolder] = useState<FolderCount | DefaultFolder>(defaultFolder)
     const [isCreateFolder, setIsCreateFolder] = useState(false);
     const [isRenameFolder, setIsRenameFolder] = useState(false);
@@ -78,7 +90,13 @@ export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPi
             setCurrentFolder(defaultFolder)
             updatedPieces = updatedPieces.sort(currentSort.myFunc)
             setFilteredPieces(updatedPieces);
-        } else {
+        } else if (folder_id === "favorite") {
+            setCurrentFolder(favoriteFolder)
+            updatedPieces = updatedPieces.filter((piece) => piece.is_favorite)
+            updatedPieces = updatedPieces.sort(currentSort.myFunc)
+            setFilteredPieces(updatedPieces);
+        }
+        else {
             const folder = folders.find((folder) => folder.id === folder_id)
             if (folder) {
                 setCurrentFolder(folder)
@@ -87,7 +105,7 @@ export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPi
                 setFilteredPieces(updatedPieces);
             }
             else
-                alert('Did not find folder')
+                notify_error(`Did not find folder ${folder_id}`)
         }
     }, [searchParams, currentSort])
 
@@ -122,6 +140,8 @@ export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPi
                             <div key={idx} className={`h-15 cursor-pointer flex flex-row items-center justify-center rounded-lg p-5 space-x-2  border min-w-[100px] max-w-xl
                                         ${currentFolder.id === folder.id ? "bg-brand text-white border-brand" : "text-foreground/50"} `}
                             >
+                                {folder.id === "favorite" && <FilledStarIcon className="text-yellow-400" />}
+                                {folder.id === "default" && <NineDotsIcon className={`${currentFolder.id === folder.id ? "text-white" : "text-brand"}`} />}
                                 <span className={`text-sm font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis`}>
                                     {folder.name}
                                 </span>

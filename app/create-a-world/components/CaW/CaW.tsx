@@ -1,6 +1,6 @@
 'use client'
 // /create-a-world
-import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload } from '@/types/types';
+import { WorldPayload, WorldSettingsAsks, EmptyWorldPayload, WorldProgress } from '@/types/types';
 import { cast_to_worldpayload } from "@/types/cast-types";
 // Need to handle input error
 import { useEffect, useRef, useState } from 'react';
@@ -25,6 +25,8 @@ import PreviewButton from '../buttons/PreviewButton';
 import SaveDraftButton from '../buttons/SaveDraftButton';
 import ChooseTags from './ChooseTags';
 import ChooseGenres from './ChooseGenres';
+import DropDownSelector from '@/components/ui/input/DropDownSelector';
+import { capitalize } from '@/utils/helpers';
 
 export default function CaW() {
     const { currentDraft, fetchDrafts } = useDraftContext();
@@ -152,9 +154,21 @@ export default function CaW() {
                             </TabPanel>
 
                             <TabPanel>
-                                <div id="settings-group" className='w-full flex flex-col'>
-                                    {/* <FieldTitleDisplay label={"Privacy Settings"} /> */}
-                                    <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
+                                <div id="settings-group" className='w-full flex flex-col space-y-4'>
+                                    <div>
+                                        <FieldTitleDisplay label={"Progress"} />
+                                        <DropDownSelector
+                                            data={WorldProgress}
+                                            selected={WorldProgress.find(pro => pro.id === values.progress)!}
+                                            setSelected={(progress) => setFieldValue('progress', progress.id)}
+                                            width='w-80'
+                                            nameKey='name'
+                                        />
+                                    </div>
+                                    <div>
+                                        <FieldTitleDisplay label={"Privacy"} />
+                                        <SettingGroup settings={values.settings} asks={WorldSettingsAsks} setFieldValue={setFieldValue} />
+                                    </div>
                                 </div>
                             </TabPanel>
 

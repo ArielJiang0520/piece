@@ -1,10 +1,11 @@
 'use client'
 import Link from 'next/link'
 import { ComponentType, useEffect, useState } from 'react'
-import { BurgerIcon } from '@/components/icon/icon'
+import { BookIcon, BurgerIcon, SingleUserIcon } from '@/components/icon/icon'
 import { SideBar } from '@/components/ui/navbar/navbar-helpers'
 import Image from 'next/image'
 import { useSupabase } from './supabase-provider'
+import { fetch_all_worlds } from '@/utils/world-helpers'
 
 interface NavBarProps {
     PageTitleNavBarComponent: ComponentType<any>;
@@ -12,41 +13,78 @@ interface NavBarProps {
     [key: string]: any;
 }
 
+interface MenuItem {
+    link: string;
+    name: string;
+    level: number;
+    icon: JSX.Element | null;
+}
 export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent, ...props }: NavBarProps) {
     const { user } = useSupabase()
     const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
     const [isRightMenuOpen, setIsRightMenuOpen] = useState(false);
 
 
-    const menuItems = [
+    const menuItems: MenuItem[] = [
         {
             link: '/',
-            name: 'Feed'
+            name: 'Feed',
+            level: 0,
+            icon: null
         },
 
         {
             link: '/worlds',
-            name: 'Browse Worlds'
+            name: 'Browse Worlds',
+            level: 0,
+            icon: null
         },
 
         {
             link: '/create-a-world/templates',
-            name: 'Create A World'
+            name: 'Create A World',
+            level: 0,
+            icon: null
         },
     ]
 
-    const profileItems: any[] = [
-        {
-            link: `/profiles/${user?.id}`,
-            name: 'Profile'
-        },
+    const [profileItems, setProfileItems] = useState<MenuItem[]>([]);
+    const fetchWorlds = async (uid: string) => {
+        const worlds = await fetch_all_worlds(uid);
+        const initProfileItems: MenuItem[] = [
+            {
+                link: `/profiles/${uid}`,
+                name: 'Profile',
+                level: 0,
+                icon: <SingleUserIcon />
+            },
 
-        {
-            link: `/profiles/${user?.id}/worlds`,
-            name: 'Your worlds'
-        },
+            {
+                link: `/profiles/${uid}/worlds`,
+                name: 'Your worlds',
+                level: 0,
+                icon: <BookIcon />
+            },
 
-    ]
+        ]
+        const worldItems: MenuItem[] = worlds.slice(0, 5).map(world => {
+            return {
+                link: `/worlds/${world.id}`,
+                name: `${world.name}`,
+                level: 1,
+                icon: null
+            }
+        })
+        setProfileItems(
+            [...initProfileItems, ...worldItems]
+        )
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchWorlds(user.id);
+        }
+    }, [user])
 
 
     return (
@@ -103,7 +141,7 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
 
             <SideBar onLeft={true} isMenuOpen={isLeftMenuOpen} setIsMenuOpen={setIsLeftMenuOpen} menuItems={menuItems} image={{ link: '/logo_500px.png', alt: "logo" }} />
 
-            <SideBar onLeft={false} isMenuOpen={isRightMenuOpen} setIsMenuOpen={setIsRightMenuOpen} menuItems={profileItems} image={{ link: user && user.user_metadata && user.user_metadata.picture ? user.user_metadata.picture : '/logo_500px.png', alt: "profile picture" }} />
+            {user && <SideBar onLeft={false} isMenuOpen={isRightMenuOpen} setIsMenuOpen={setIsRightMenuOpen} menuItems={profileItems} image={{ link: user.user_metadata && user.user_metadata.picture ? user.user_metadata.picture : '/logo_500px.png', alt: "profile picture" }} />}
         </>
     )
 

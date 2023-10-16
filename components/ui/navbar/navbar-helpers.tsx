@@ -27,7 +27,7 @@ interface SideBarProps {
     onLeft: boolean,
     isMenuOpen: boolean,
     setIsMenuOpen: (isMenuOpen: boolean) => void,
-    menuItems: { link: string; name: string }[] | any[],
+    menuItems: { link: string; name: string; level: number; icon: JSX.Element | null; }[],
     image: { link: string; alt: string };
 }
 
@@ -47,19 +47,27 @@ export function SideBar({ onLeft, isMenuOpen, setIsMenuOpen, menuItems, image }:
                 >
                     <CloseIcon
                         size={14}
-                        className="text-foreground/50 absolute top-5 right-5 cursor-pointer"
+                        className="text-foreground/50 absolute top-5 right-5 cursor-pointer "
                         onClick={() => setIsMenuOpen(false)} />
-                    <div className='flex flex-col justify-start items-start px-4 py-8 font-mono font-medium h-full'>
+                    <div className='flex flex-col justify-start items-start px-4 py-8  h-full font-mono '>
                         <div id="logo" className='h-20'>
                             <Image className='rounded-full' src={image.link} alt={image.alt} width={48} height={48} />
                         </div>
 
                         <ul id="menu-items" className='space-y-2 flex-grow'>
-                            {menuItems.map(item => <li key={item.name}>
-                                <Link href={item.link} onClick={() => setIsMenuOpen(false)}>
-                                    {item.name}
-                                </Link>
-                            </li>
+                            {menuItems.map(item =>
+                                <li key={item.name}>
+                                    <div className="flex flex-row items-center space-x-2">
+                                        {item.level > 0 && <div className="block pl-4"></div>}
+                                        <div className="text-foreground">{item.icon}</div>
+                                        <Link href={item.link} onClick={() => setIsMenuOpen(false)} className="w-56 overflow-hidden overflow-ellipsis whitespace-nowrap">
+
+                                            <span className={`${item.level <= 0 ? "font-semibold text-base" : "font-normal text-sm"}`}>
+                                                {item.name}
+                                            </span>
+                                        </Link>
+                                    </div>
+                                </li>
                             )}
                         </ul>
 
@@ -140,7 +148,7 @@ export function NavBarSwitchLink({ tabs, pinned = false }: NavBarSwitchLinkProps
                         {mainTabs.map((tab, idx) => (
                             <Tab key={idx} className="outline-none mb-0 pb-0">
                                 <Link href={tab.link}>
-                                    <div className={`h-full flex flex-row px-5 items-center border-b-2 ui-selected:border-brand  ui-not-selected:border-transparent `} >
+                                    <div className={`h-full flex flex-row px-5 items-center font-mono border-b-2 ui-selected:border-brand  ui-not-selected:border-transparent `} >
                                         {tab.icon && <div className="mr-2 ui-selected:text-foreground/80 ui-not-selected:text-foreground/50">{tab.icon}</div>}
                                         <div className="capitalize font-mono text-sm ui-selected:text-foreground/80 ui-selected:font-bold ui-not-selected:text-foreground/50">{tab.name}</div>
                                         {tab.bubble != null && <div className="ml-2 px-2 py-1 rounded-full bg-foreground/10 text-xs">{tab.bubble}</div>}

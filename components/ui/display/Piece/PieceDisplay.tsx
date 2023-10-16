@@ -1,25 +1,25 @@
 'use client'
 import type { ChatHistoryJson, TypedPiece, GenPieceJson, GeneralJson, Piece, Profile, World, Folder, Comment, Like } from "@/types/types"
-import { EmptyHeartIcon, WorldIcon, CheckIcon, CalendarIcon, BookIcon, RobotIcon, TrashIcon, StarIcon, SingleUserIcon, CrownIcon, StarsIcon, ArrowUpRight } from "@/components/icon/icon"
+import { CheckIcon, CalendarIcon, BookIcon, TrashIcon, CrownIcon, StarIcon, StarsIcon, ArrowUpRight, FilledStarIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay, Markdown } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
 import { AuthorDisplay } from "@/components/ui/display/user-display-helpers";
 import PieceImages from "@/components/ui/image/PieceImages";
-import { formatTimestamp, getDistanceToNow } from "@/utils/helpers";
+import { getDistanceToNow } from "@/utils/helpers";
 import { ChatHistoryDisplay, GenPieceDisplay } from "./piece-display-helpers";
 import { BackIcon, FolderIcon, PencilIcon, SlashIcon } from "@/components/icon/icon";
 import { IconButtonMid, IconButtonTiny } from "@/components/ui/button/button-helpers";
 import { useEffect, useState } from "react";
 import PopupDialog from "@/components/ui/input/PopupDialog";
-import { delete_piece, update_special_piece } from "@/utils/piece-helpers";
+import { delete_piece, fav_piece, unfav_piece, update_special_piece } from "@/utils/piece-helpers";
 import { DropDownMenu, DropDownMenuOptions } from "@/components/ui/menu/InPlaceDropdown";
 import { fetch_all_folders, update_piece_folder } from "@/utils/folder-helpers";
 import { useRouter } from "next/navigation";
-import { notify_error, notify_success } from "../../widget/toast";
+import { notify_error, notify_success, notify_warning } from "@/components/ui/widget/toast";
 import { CopyableID } from "@/components/ui/button/button-helpers";
 import { useSupabase } from "@/app/supabase-provider";
-import { LikeButton } from "../../button/LikeButton";
+import { LikeButton } from "@/components/ui/button/LikeButton";
 
 
 interface PieceDisplayProps {
@@ -33,50 +33,11 @@ interface PieceDisplayProps {
 }
 export default function PieceDisplay({ piece, world, folder, author, likes, comments, preview = false }: PieceDisplayProps) {
     const { user } = useSupabase();
-    const isOwner = user && user.id ? user.id === piece.creator_id : false
-    const isWorldOwner = user && user.id ? user.id === world.creator_id : false
-    const router = useRouter();
+    const isWorldOwner = user && user.id ? user.id === world.creator_id : false;
+    const isOwner = user && user.id ? user.id === piece.creator_id : false;
 
-    const [isMoveFolder, setIsMoveFolder] = useState(false)
-    const [isEditingPiece, setIsEditingPiece] = useState(false)
-    const [isDeletePiece, setIsDeletePiece] = useState(false)
 
-    const [folders, setFolders] = useState<Array<DropDownMenuOptions>>([]);
 
-    const fetchFolders = async () => {
-        const fetchedFolders = await fetch_all_folders(world.id);
-        setFolders(fetchedFolders.map(folder => {
-            return {
-                name: folder.name,
-                icon: folder.id === piece.folder_id ? CheckIcon : FolderIcon,
-                function: () => {
-                    update_piece_folder(piece.id, folder.id);
-                    router.refresh();
-                    notify_success(`Folder successfully moved to "${folder.name}"!`)
-                }
-            } as DropDownMenuOptions
-        }))
-    }
-
-    const onDelPiece = async () => {
-        try {
-            await delete_piece(piece.id)
-            router.push(`/worlds/${world.id}/pieces`)
-            notify_success(`${piece.id} successfully deleted!`)
-        } catch (error) {
-            notify_error(`Error while deleting ${piece.id}: ${JSON.stringify(error)}`)
-        }
-    }
-
-    useEffect(() => {
-        if (isMoveFolder && folders.length === 0) {
-            fetchFolders();
-        }
-    }, [isMoveFolder])
-
-    useEffect(() => {
-        fetchFolders();
-    }, [piece, folder])
 
     return (
         <>
@@ -91,57 +52,18 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                     </div>
                 </Link>
 
-                <div id="button-group" className="flex flex-row items-center space-x-1">
-                    {isOwner && <div onClick={() => setIsDeletePiece(true)}>
-                        <IconButtonMid icon={<TrashIcon />} title={null} />
-                    </div>}
-                    <PopupDialog
-                        isOpen={isDeletePiece}
-                        setIsOpen={setIsDeletePiece}
-                        dialogTitle={`Delete Piece`}
-                        dialogContent={`Are you sure you want to delete "${piece.id}"?`}
-                        initInputValue={''}
-                        confirmAction={onDelPiece}
-                        dialogType='confirm'
-                    />
-
-                    {isOwner && piece.piece_type === "original" && <Link href={`/create-a-piece?edit_id=${piece.id}`}>
-                        <IconButtonMid icon={<PencilIcon />} title={null} />
-                    </Link>}
-
-                    {isOwner && piece.piece_type !== "original" && <div onClick={() => setIsEditingPiece(true)}>
-                        <IconButtonMid icon={<PencilIcon />} title={null} />
-                    </div>}
-                    <PopupDialog
-                        isOpen={isEditingPiece}
-                        setIsOpen={setIsEditingPiece}
-                        dialogTitle='Editing Piece'
-                        dialogContent=''
-                        initInputValue={{
-                            name: piece.name,
-                            world_id: world.id,
-                            type: piece.piece_type,
-                            json_content: piece.piece_json,
-                            folder_id: piece.folder_id,
-                            tags: piece.tags
-                        } as TypedPiece}
-                        confirmAction={(inputValue: TypedPiece) => { update_special_piece(inputValue, piece.id) }}
-                        dialogType="publish-special-piece"
-                    />
-
-                    {isOwner &&
-                        <div className="relative z-10" onClick={() => setIsMoveFolder(true)}>
-                            <IconButtonMid icon={<FolderIcon />} title={'Move'} />
-                            {isMoveFolder && <DropDownMenu setDropdownVisible={setIsMoveFolder} options={folders} />}
-                        </div>
-                    }
-                </div>
+                {isOwner && <PieceEditingPanel piece={piece} world={world} folder={folder} isWorldOwner={isWorldOwner} />}
 
             </div>
 
             <div className='flex flex-col space-y-3 items-start'>
 
-                {!preview && <CopyableID id_string="Piece ID" id={piece.id} />}
+                {!preview &&
+                    <div className="w-full flex flex-row justify-between items-center">
+                        <span><CopyableID id_string="Piece ID" id={piece.id} /></span>
+                        <FavPiece piece={piece} isWorldOwner={isWorldOwner} />
+                    </div>
+                }
 
                 <div id="title-group" className='w-full flex flex-row items-start justify-between'>
                     <FieldContentDisplay content={piece.name} textSize="text-4xl" bold="font-semibold" />
@@ -239,26 +161,171 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
     )
 };
 
+function FavPiece({ piece, isWorldOwner }: { piece: Piece, isWorldOwner: boolean }) {
+    const [isFav, setIsFav] = useState(piece.is_favorite);
 
+    useEffect(() => {
+        setIsFav(piece.is_favorite);
+    }, [piece.is_favorite])
+
+    const onFavPiece = async () => {
+        try {
+            await fav_piece(piece.id)
+            notify_success(`You have favorited ${piece.id}!`)
+        } catch (error) {
+            notify_error(`Error while favoriting ${piece.id}: ${JSON.stringify(error)}`)
+        }
+    }
+
+    const onUnFavPiece = async () => {
+        try {
+            await unfav_piece(piece.id)
+            notify_success(`You have unfavorited ${piece.id}!`)
+        } catch (error) {
+            notify_error(`Error while un-favoriting ${piece.id}: ${JSON.stringify(error)}`)
+        }
+    }
+
+    return <button className="text-yellow-400" onClick={
+        () => {
+            if (!isWorldOwner) {
+                notify_warning("You can not favorite this piece because you are not the world owner");
+                return;
+            }
+            if (isFav) {
+                onUnFavPiece();
+                setIsFav(false)
+            }
+            else {
+                onFavPiece();
+                setIsFav(true)
+            }
+        }}>
+        <IconButtonMid icon={isFav ? <FilledStarIcon /> : <StarIcon />} title={null} />
+    </button>
+}
+
+
+function PieceEditingPanel({ piece, world, folder, isWorldOwner }: { piece: Piece, world: World, folder: Folder | null, isWorldOwner: boolean }) {
+    const router = useRouter();
+    const [isMoveFolder, setIsMoveFolder] = useState(false)
+    const [isEditingPiece, setIsEditingPiece] = useState(false)
+    const [isDeletePiece, setIsDeletePiece] = useState(false)
+
+    const [folders, setFolders] = useState<Array<DropDownMenuOptions>>([]);
+
+    useEffect(() => {
+        fetchFolders();
+    }, [piece, folder])
+
+    const fetchFolders = async () => {
+        const fetchedFolders = await fetch_all_folders(world.id);
+        setFolders(fetchedFolders.map(folder => {
+            return {
+                name: folder.name,
+                icon: folder.id === piece.folder_id ? CheckIcon : FolderIcon,
+                function: () => {
+                    update_piece_folder(piece.id, folder.id);
+                    router.refresh();
+                    notify_success(`Folder successfully moved to "${folder.name}"!`)
+                }
+            } as DropDownMenuOptions
+        }))
+    }
+
+    const onDelPiece = async () => {
+        try {
+            await delete_piece(piece.id)
+            router.push(`/worlds/${world.id}/pieces`)
+            notify_success(`${piece.id} successfully deleted!`)
+        } catch (error) {
+            notify_error(`Error while deleting ${piece.id}: ${JSON.stringify(error)}`)
+        }
+    }
+
+
+    useEffect(() => {
+        if (isMoveFolder && folders.length === 0) {
+            fetchFolders();
+        }
+    }, [isMoveFolder])
+
+    return <div id="button-group" className="flex flex-row items-center space-x-1">
+
+
+        <div onClick={() => setIsDeletePiece(true)}>
+            <IconButtonMid icon={<TrashIcon />} title={null} />
+        </div>
+
+        <PopupDialog
+            isOpen={isDeletePiece}
+            setIsOpen={setIsDeletePiece}
+            dialogTitle={`Delete Piece`}
+            dialogContent={`Are you sure you want to delete "${piece.id}"?`}
+            initInputValue={''}
+            confirmAction={onDelPiece}
+            dialogType='confirm'
+        />
+
+        {piece.piece_type === "original" ?
+            <Link href={`/create-a-piece?edit_id=${piece.id}`}>
+                <IconButtonMid icon={<PencilIcon />} title={null} />
+            </Link> :
+            <div onClick={() => setIsEditingPiece(true)}>
+                <IconButtonMid icon={<PencilIcon />} title={null} />
+            </div>
+        }
+
+        <PopupDialog
+            isOpen={isEditingPiece}
+            setIsOpen={setIsEditingPiece}
+            dialogTitle='Editing Piece'
+            dialogContent=''
+            initInputValue={{
+                name: piece.name,
+                world_id: world.id,
+                type: piece.piece_type,
+                json_content: piece.piece_json,
+                folder_id: piece.folder_id,
+                tags: piece.tags
+            } as TypedPiece}
+            confirmAction={(inputValue: TypedPiece) => { update_special_piece(inputValue, piece.id) }}
+            dialogType="publish-special-piece"
+        />
+
+
+        <div className="relative z-10" onClick={() => setIsMoveFolder(true)}>
+            <IconButtonMid icon={<FolderIcon />} title={'Move'} />
+            {isMoveFolder && <DropDownMenu setDropdownVisible={setIsMoveFolder} options={folders} />}
+        </div>
+
+    </div>
+}
 
 const PieceMetadataDisplay = ({ piece, world, folder }: { piece: Piece, world: World, folder: Folder | null }) => {
     return (
-        <div className="flex flex-row w-full  justify-start items-center text-sm text-left font-medium">
-            <span className="font-semibold text-foreground/50 mr-1">From World:</span>
-            <Link href={`/worlds/${world.id}`}>
+        <div className="flex flex-row w-full  justify-start items-start text-sm text-left font-medium">
+            <span className="font-semibold text-foreground/50 mr-1 whitespace-nowrap">
+                From World:
+            </span>
+
+            <span className="flex flex-row flex-wrap">
                 <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
                     <BookIcon className="flex-shrink-0" />
-                    <div className="overflow-hidden whitespace-nowrap overflow-ellipsis ">{world.name}</div>
-                    {/* <span className="flex flex-row"><SingleUserIcon /><PencilIcon /></span> */}
+                    <Link href={`/worlds/${world.id}`}>
+                        <div className="overflow-hidden  whitespace-nowrap overflow-ellipsis w-56 md:w-auto">{world.name}</div>
+                    </Link>
                 </div>
-            </Link>
-            {folder && <SlashIcon className="flex-shrink-0" />}
-            {folder && <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
-                <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
-                    <FolderIcon className="flex-shrink-0" />
-                    <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span>
-                </div>
-            </Link>}
+
+                {folder && <SlashIcon className="flex-shrink-0" />}
+                {folder &&
+                    <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
+                        <FolderIcon className="flex-shrink-0" />
+                        <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
+                            <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span></Link>
+                    </div>
+                }
+            </span>
         </div>
 
     )
