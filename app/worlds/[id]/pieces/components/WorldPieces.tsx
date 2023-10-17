@@ -184,10 +184,19 @@ export default function WorldPieces({ pieces, world, folders, isOwner }: WorldPi
                 </div>
                 <div className="flex-grow w-full md:mr-4 order-2 md:order-1 z-30">
                     <SearchBar
-                        candidates={[]}
+                        candidates={filteredPieces.map(piece => {
+                            return {
+                                id: piece.id,
+                                name: piece.name
+                            }
+                        })}
                         nameKey="name"
-                        placeholder={"Filter by tag"}
-                        onSelect={() => { }}
+                        placeholder={"Filter by piece name (in this folder)"}
+                        onSelect={(item) => {
+                            const found = filteredPieces.find(piece => piece.id === item.id)
+                            if (found)
+                                setFilteredPieces([found])
+                        }}
                     />
                 </div>
             </div>

@@ -33,17 +33,14 @@ interface PieceDisplayProps {
 }
 export default function PieceDisplay({ piece, world, folder, author, likes, comments, preview = false }: PieceDisplayProps) {
     const { user } = useSupabase();
-    const isWorldOwner = user && user.id ? user.id === world.creator_id : false;
-    const isOwner = user && user.id ? user.id === piece.creator_id : false;
-
-
-
+    const isWorldOwner = (user && user.id) ? user.id === world.creator_id : false;
+    const isOwner = (user && user.id) ? user.id === piece.creator_id : false;
 
     return (
         <>
             <div className="flex flex-col md:flex-row justify-between space-y-3">
 
-                <Link id="back-button" href={`/worlds/${world.id}/pieces`}>
+                <Link id="back-button" href={`/worlds/${world.id}/pieces${piece.folder_id ? `?folder_id=${piece.folder_id}` : ""}`}>
                     <div className="flex flex-row justify-start items-center space-x-2 text-sm font-medium text-foreground/50 hover:text-foreground">
                         <BackIcon />
                         <div>
@@ -191,14 +188,15 @@ function FavPiece({ piece, isWorldOwner }: { piece: Piece, isWorldOwner: boolean
             if (!isWorldOwner) {
                 notify_warning("You can not favorite this piece because you are not the world owner");
                 return;
-            }
-            if (isFav) {
-                onUnFavPiece();
-                setIsFav(false)
-            }
-            else {
-                onFavPiece();
-                setIsFav(true)
+            } else {
+                if (isFav) {
+                    onUnFavPiece();
+                    setIsFav(false)
+                }
+                else {
+                    onFavPiece();
+                    setIsFav(true)
+                }
             }
         }}>
         <IconButtonMid icon={isFav ? <FilledStarIcon /> : <StarIcon />} title={null} />
@@ -251,7 +249,6 @@ function PieceEditingPanel({ piece, world, folder, isWorldOwner }: { piece: Piec
     }, [isMoveFolder])
 
     return <div id="button-group" className="flex flex-row items-center space-x-1">
-
 
         <div onClick={() => setIsDeletePiece(true)}>
             <IconButtonMid icon={<TrashIcon />} title={null} />
