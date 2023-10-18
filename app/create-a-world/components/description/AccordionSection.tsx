@@ -79,7 +79,7 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                         <Disclosure.Panel className="py-4 grid grid-col-1 gap-2 max-w-4xl">
                             <>
                                 {section.sectionCards.map((card, cardIndex) =>
-                                    <SectionCard key={index} card={card} onSave={(newCard: WorldDescriptionSectionCard) => editCard(index, newCard, cardIndex)} onDel={() => setDelCardIndex(cardIndex)} />
+                                    <SectionCard key={cardIndex} card={card} onSave={(newCard: WorldDescriptionSectionCard) => editCard(index, newCard, cardIndex)} onDel={() => setDelCardIndex(cardIndex)} />
                                 )}
                                 <div className='flex flex-row cursor-pointer border p-3 text-base justify-center items-center w-auto rounded-lg font-mono text-foreground/50 font-medium space-x-3'
                                     onClick={() => addCard(index, emptyCard)}>

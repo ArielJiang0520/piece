@@ -5,7 +5,7 @@ import { Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGe
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { AccordionDisplay } from './AccordionDisplay';
-import { WorldDescriptionSection } from "@/types/types";
+import { WorldDescriptionSection, WorldProgress } from "@/types/types";
 import { getDistanceToNow } from "@/utils/helpers";
 import { ImagesDisplayRow } from "@/components/ui/image/ImagesDisplayRow";
 import Link from "next/link";
@@ -16,8 +16,6 @@ import { useEffect, useState } from "react";
 import { sub_to_world, unsub_to_world, is_subbed } from "@/utils/stats-helpers";
 import PopupDialog from "@/components/ui/input/PopupDialog";
 import { notify_error, notify_success } from "@/components/ui/widget/toast";
-import DropDownSelector from "../../input/DropDownSelector";
-
 
 interface WorldDisplayProps {
     world: WorldMetadata;
@@ -36,8 +34,8 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
             <div id="title-group" className='w-full flex flex-col flex-wrap  items-start space-y-2'>
                 <div className="w-full flex flex-row justify-center items-center py-1 px-3  border-brand border-t border-b">
                     <div className="flex flex-row justify-center items-center  text-xs font-mono space-x-2">
-                        <span className="font-medium">Current Status:</span>
-                        <span className="capitalize">{world.progress}</span>
+                        <span className="font-medium">Current Status (From Owner):</span>
+                        <span className="capitalize">{WorldProgress.find(pro => pro.id === world.progress)?.name}</span>
                     </div>
                 </div>
                 <FieldContentDisplay content={world.name} textSize="text-4xl" bold="font-bold" />

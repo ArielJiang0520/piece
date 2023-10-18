@@ -302,11 +302,12 @@ function PieceEditingPanel({ piece, world, folder, isWorldOwner }: { piece: Piec
 const PieceMetadataDisplay = ({ piece, world, folder }: { piece: Piece, world: World, folder: Folder | null }) => {
     return (
         <div className="flex flex-row w-full  justify-start items-start text-sm text-left font-medium">
-            <span className="font-semibold text-foreground/50 mr-1 whitespace-nowrap">
+            {/* <span className="font-semibold text-foreground/50 mr-1 whitespace-nowrap">
                 From World:
-            </span>
+            </span> */}
 
-            <span className="flex flex-row flex-wrap">
+            <span className="flex flex-row items-center justify-start">
+
                 <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
                     <BookIcon className="flex-shrink-0" />
                     <Link href={`/worlds/${world.id}`}>
@@ -314,14 +315,16 @@ const PieceMetadataDisplay = ({ piece, world, folder }: { piece: Piece, world: W
                     </Link>
                 </div>
 
-                {folder && <SlashIcon className="flex-shrink-0" />}
-                {folder &&
-                    <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
-                        <FolderIcon className="flex-shrink-0" />
-                        <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
-                            <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span></Link>
-                    </div>
-                }
+                <div className="flex flex-row items-center justify-start">
+                    {folder && <SlashIcon className="flex-shrink-0" />}
+                    {folder &&
+                        <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
+                            <FolderIcon className="flex-shrink-0" />
+                            <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
+                                <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span></Link>
+                        </div>
+                    }
+                </div>
             </span>
         </div>
 

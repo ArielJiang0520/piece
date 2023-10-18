@@ -136,7 +136,7 @@ export default function PromptGen({ world }: { world: World }) {
                             placeholder='Select a piece...'
                             onSelect={(item) => { setFieldValue('prequel', item.id) }}
                             display_func={(item) => `${item.id}: ${item.name}`}
-                            hasReset={false}
+                            hasReset={true}
                             defaultSelectedId={values.prequel}
                         />
                     </div>
@@ -145,8 +145,6 @@ export default function PromptGen({ world }: { world: World }) {
                         <FieldTitleDisplay label={"prompt"} />
                         <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-base"} multiline={7} bold={"font-medium"} />
                     </div>
-
-
 
                     <div id="content-group" className='w-full flex flex-col'>
                         <FieldTitleDisplay label={"AI Generated Content"} />
@@ -162,12 +160,14 @@ export default function PromptGen({ world }: { world: World }) {
                     </div>
 
                     <div className="fixed bottom-7 left-1/2 transform -translate-x-1/2 flex justify-center space-x-4 z-50 text-sm">
+
                         <button
-                            disabled={values.prompt.length <= 0}
-                            className={`${values.prompt.length <= 0 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
+                            disabled={values.prompt.length <= 0 || isLoading}
+                            className={`${(values.prompt.length <= 0 || isLoading) ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="submit">
                             Generate
                         </button>
+
                         <button
                             className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="button"

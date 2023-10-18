@@ -12,6 +12,7 @@ import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { TagsBarSmallDisplay } from "@/components/ui/input/tags-helpers";
 import Image from "next/image";
 import { useSupabase } from "@/app/supabase-provider";
+import { WorldProgress } from "@/types/types";
 
 interface WorldCardProps {
     world: WorldMetadata,
@@ -40,16 +41,27 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
     return (
         <div className="flex flex-col space-y-4 rounded-lg bg-foreground/5 p-4">
 
-            <div className="flex flex-row w-full justify-between space-x-6 text-sm text-foreground/80 font-medium text-left">
-                <div className="flex flex-row items-center  space-x-1 w-40 md:w-80  ">
+            <div id="top-panel" className="flex flex-row w-full justify-between space-x-6 text-sm text-foreground/80 font-medium text-left">
+                <div id="genre" className="flex flex-row items-center justify-start space-x-1 w-40 md:w-auto  ">
                     <BookIcon className="flex-shrink-0" />
                     <div className='flex flex-row justify-start items-center capitalize font-medium whitespace-nowrap'>
-                        <span className="font-semibold">{tagMap[world.primary_genre!]}</span>
+                        <span className="font-semibold">
+                            {tagMap[world.primary_genre!]}
+                        </span>
                         <SlashIcon />
-                        <span>{tagMap[world.secondary_genre!]}</span>
+                        <span>
+                            {tagMap[world.secondary_genre!]}
+                        </span>
+                    </div>
+
+                    <div id="status" className="border rounded-2xl px-2 py-0 hidden md:block">
+                        <span className="font-mono text-xs whitespace-nowrap">
+                            {WorldProgress.find(pro => pro.id === world.progress)?.name}
+                        </span>
                     </div>
                 </div>
-                <div className="flex flex-row space-x-4">
+
+                <div id="stats" className="flex flex-row space-x-4">
                     <div className="flex flex-row  items-center space-x-1 ">
                         <SingleUserIcon />
                         <div className="whitespace-nowrap">
@@ -107,7 +119,7 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
 
 
             <div className="w-full">
-                <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={world.images} />
+                <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={world.images} blur={world.nsfw} />
             </div>
 
             <div className="w-full">

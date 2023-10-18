@@ -6,9 +6,10 @@ interface LazyImageClientProps {
     dimension: string;
     rounded?: boolean;
     popup?: boolean;
+    blur?: boolean;
 }
 
-export const LazyImage: React.FC<LazyImageClientProps> = ({ url, dimension, rounded = true, popup = false }) => {
+export const LazyImage: React.FC<LazyImageClientProps> = ({ url, dimension, rounded = true, popup = false, blur = false }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupImage, setPopupImage] = useState<string | null>(null);
 
@@ -26,8 +27,12 @@ export const LazyImage: React.FC<LazyImageClientProps> = ({ url, dimension, roun
     } else {
         return (
             <>
-                <img src={url} alt="Placeholder Image" className={`w-auto h-full ${rounded ? "rounded-lg" : ""}`}
-                    onClick={handleImageClick} />
+                <img
+                    src={url}
+                    alt="Placeholder Image"
+                    className={`w-auto h-full ${rounded ? "rounded-lg" : ""} ${blur ? "blur-lg" : ""}`}
+                    onClick={handleImageClick}
+                />
                 {popup && showPopup && (
                     <div
                         className="fixed inset-0 flex items-center justify-center z-50 bg-black/50"

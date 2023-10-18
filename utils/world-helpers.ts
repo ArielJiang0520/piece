@@ -142,6 +142,7 @@ export const fetch_all_worlds = async (uid: string) => {
         .from('worlds')
         .select('id, name, modified_at')
         .eq('creator_id', uid)
+        .eq('is_draft', false)
         .order('modified_at', { ascending: false })
 
     if (error || !data) {
