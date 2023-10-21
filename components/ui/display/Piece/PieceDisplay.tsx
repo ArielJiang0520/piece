@@ -286,7 +286,14 @@ function PieceEditingPanel({ piece, world, folder, isWorldOwner }: { piece: Piec
                 folder_id: piece.folder_id,
                 tags: piece.tags
             } as TypedPiece}
-            confirmAction={(inputValue: TypedPiece) => { update_special_piece(inputValue, piece.id) }}
+            confirmAction={(inputValue: TypedPiece) => {
+                try {
+                    update_special_piece(inputValue, piece.id);
+                    notify_success(`Successfully updated piece ${piece.id}! Refresh to see the change.`)
+                } catch (e) {
+                    notify_error(`Error in updating piece: ${JSON.stringify(e)}`)
+                }
+            }}
             dialogType="publish-special-piece"
         />
 

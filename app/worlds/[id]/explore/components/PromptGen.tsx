@@ -184,7 +184,7 @@ export default function PromptGen({ world }: { world: World }) {
                         dialogTitle='Publishing New Piece'
                         dialogContent=''
                         initInputValue={{
-                            name: 'Untitled Piece',
+                            name: '',
                             world_id: world.id,
                             type: 'gen-piece',
                             json_content: { prompt: values.prompt, output: lines.join('\n'), notes: '', prequel: values.prequel } as GenPieceJson,

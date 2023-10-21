@@ -1,3 +1,4 @@
+import { getId } from "@/utils/helpers"
 import { Database } from "./supabase"
 
 export type World = Database['public']['Tables']['worlds']['Row']
@@ -11,6 +12,7 @@ export type Comment = Database['public']['Tables']['comments']['Row']
 export type Like = Database['public']['Tables']['likes']['Row']
 
 export type WorldDescriptionSectionCard = {
+    id: string
     cardTitle: string,
     cardContent: string,
     cardImages: string[],
@@ -18,6 +20,7 @@ export type WorldDescriptionSectionCard = {
 }
 
 export type WorldDescriptionSection = {
+    id: string,
     sectionTitle: string,
     sectionCards: WorldDescriptionSectionCard[]
 }
@@ -84,14 +87,17 @@ export const EmptyWorldPayload: WorldPayload = {
     logline: "",
     description: [
         {
+            id: getId(),
             sectionTitle: "Premise",
             sectionCards: []
         },
         {
+            id: getId(),
             sectionTitle: "Characters",
             sectionCards: []
         },
         {
+            id: getId(),
             sectionTitle: "Additional Settings",
             sectionCards: []
         }

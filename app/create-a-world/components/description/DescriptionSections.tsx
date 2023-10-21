@@ -1,6 +1,7 @@
 import AccordionSection from './AccordionSection';
 import { useState, useEffect } from 'react';
 import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/types';
+import { getId } from '@/utils/helpers';
 
 interface AccordionListProps {
     formSections: WorldDescriptionSection[]
@@ -22,6 +23,7 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
     const addSection = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
             const newSection: WorldDescriptionSection = {
+                id: getId(),
                 sectionTitle: newSectionName,
                 sectionCards: []
             };
@@ -41,11 +43,10 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
         setSections(sectionsCopy);
     }
 
-    const addCard = (index: number, newCard: WorldDescriptionSectionCard) => {
+    const addCard = (index: number) => {
+        const emptyCard = { id: getId(), cardTitle: 'Untitled Card', cardContent: '', cardImages: [], isCharacterCard: false } as WorldDescriptionSectionCard
         const sectionsCopy = [...sections];
-        if (!newCard.cardTitle)
-            newCard.cardTitle = 'Untitled Card'
-        sectionsCopy[index].sectionCards.push(newCard);
+        sectionsCopy[index].sectionCards.push(emptyCard);
         setSections(sectionsCopy);
     }
 
@@ -71,7 +72,7 @@ export default function DescriptionSections({ formSections, setFieldValue }: Acc
         <div className='flex flex-col justify-start'>
             <ul className='font-serif space-y-3'>
                 {sections.map((section, index) => (
-                    <AccordionSection key={index} index={index} section={section}
+                    <AccordionSection key={section.id} index={index} section={section}
                         delSection={delSection}
                         renameSection={renameSection}
                         addCard={addCard}

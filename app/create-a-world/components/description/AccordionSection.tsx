@@ -6,17 +6,16 @@ import { WorldDescriptionSection, WorldDescriptionSectionCard } from '@/types/ty
 import PopupDialog from '@/components/ui/input/PopupDialog';
 import { SectionCard } from '@/components/ui/display/World/SectionCard';
 import { AccordionIcon } from '@/components/icon/icon';
+
 interface AccordionSectionProps {
     index: number,
     section: WorldDescriptionSection;
     delSection: (index: number) => void;
     renameSection: (index: number, newTitle: string) => void;
-    addCard: (index: number, newCard: WorldDescriptionSectionCard) => void;
+    addCard: (index: number) => void;
     editCard: (index: number, newCard: WorldDescriptionSectionCard, newCardIndex: number) => void;
     delCard: (index: number, newCardIndex: number) => void;
 }
-
-const emptyCard = { cardTitle: '', cardContent: '', cardImages: [], isCharacterCard: false } as WorldDescriptionSectionCard
 
 const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, delSection, renameSection, addCard, editCard, delCard }) => {
     const [dialogueRenameIsOpen, setDialogRenameIsOpen] = useState(false)
@@ -79,10 +78,10 @@ const AccordionSection: React.FC<AccordionSectionProps> = ({ index, section, del
                         <Disclosure.Panel className="py-4 grid grid-col-1 gap-2 max-w-4xl">
                             <>
                                 {section.sectionCards.map((card, cardIndex) =>
-                                    <SectionCard key={cardIndex} card={card} onSave={(newCard: WorldDescriptionSectionCard) => editCard(index, newCard, cardIndex)} onDel={() => setDelCardIndex(cardIndex)} />
+                                    <SectionCard key={card.id} card={card} onSave={(newCard: WorldDescriptionSectionCard) => editCard(index, newCard, cardIndex)} onDel={() => setDelCardIndex(cardIndex)} />
                                 )}
                                 <div className='flex flex-row cursor-pointer border p-3 text-base justify-center items-center w-auto rounded-lg font-mono text-foreground/50 font-medium space-x-3'
-                                    onClick={() => addCard(index, emptyCard)}>
+                                    onClick={() => addCard(index)}>
                                     <PlusCircleIcon />
                                     <span>Add New Card</span>
                                 </div>

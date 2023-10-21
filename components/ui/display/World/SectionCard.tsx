@@ -40,7 +40,7 @@ export const SectionCard = ({ card, onSave, onDel }: {
         const debouncedSave = debounce(onSave, 300);
         debouncedSave(curCard);
         return () => debouncedSave.cancel();
-    }, [curCard, onSave]);
+    }, [curCard, onSave]); new Date().toISOString()
 
     return (
         <>
@@ -114,10 +114,6 @@ export const SectionCard = ({ card, onSave, onDel }: {
                 </div>
 
                 <div className="flex flex-row justify-end items-center space-x-2">
-                    {/* <button className="primaryButton font-mono text-sm px-4 py-1" type="button" onClick={() => { onSave(curCard); notify_success(`Card "${curCard.cardTitle}" saved!`); }}>
-                        Save
-                    </button> */}
-
                     <button type="button" onClick={(event) => {
                         event.stopPropagation();
                         onDel()
@@ -125,8 +121,6 @@ export const SectionCard = ({ card, onSave, onDel }: {
                         <IconButtonTiny icon={<TrashIcon />} />
                     </button>
                 </div>
-
-
             </div>
         </>
     )
