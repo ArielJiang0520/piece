@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
         <>
-            <LocalNavBar world={world} numPieces={world.pieces[0].count} />
+            <LocalNavBar world={world} />
             <div className="w-full xl:w-4/5 2xl:w-2/3 flex flex-col gap-4 px-3 py-5 lg:py-10 text-foreground font-mono">
                 <WorldDisplay world={world} />
             </div>
