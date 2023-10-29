@@ -1,6 +1,6 @@
 import { getId } from "./helpers";
 import { createClientSupabaseClient } from './helpers'
-import { PiecePayload, Piece, TypedPiece, GeneralJson } from "@/types/types"
+import { PiecePayload, Piece, TypedPiece, GeneralJson, GenPieceJson } from "@/types/types"
 import { upsert_tags } from "./data-helpers";
 
 // create a new row in pieces table (draft)
@@ -56,6 +56,42 @@ export const insert_piece = async (values: PiecePayload, uid: string, wid: strin
 
     return data.id
 }
+const get_prompt_id = async (world_id: string, prompt: string) => {
+    const supabase = createClientSupabaseClient()
+    const promptExists = async (world_id: string, prompt: string) => {
+        const { data, error } = await supabase
+            .from('prompts')
+            .select('id')
+            .eq('world_id', world_id)
+            .eq('prompt', prompt)
+            .maybeSingle()
+        if (error)
+            throw `Error in promptExists ${JSON.stringify(error)}`
+        return data
+    }
+    const addNewPrompt = async (world_id: string, prompt: string) => {
+        const { data, error } = await supabase
+            .from('prompts')
+            .insert({
+                world_id: world_id,
+                prompt: prompt,
+                updated_at: new Date().toISOString(),
+            })
+            .select('id')
+            .single()
+        if (error || !data)
+            throw `Error in addNewPrompt ${JSON.stringify(error)}`
+        return data
+    }
+    const existedId = await promptExists(world_id, prompt)
+    let promptId: null | string = null
+    if (existedId) {
+        promptId = existedId.id
+    } else {
+        promptId = (await addNewPrompt(world_id, prompt)).id
+    }
+    return promptId
+}
 
 export const insert_special_piece = async (input: TypedPiece, uid: string) => {
     const supabase = createClientSupabaseClient()
@@ -77,10 +113,21 @@ export const insert_special_piece = async (input: TypedPiece, uid: string) => {
         piece_json: json_content,
     }
 
+    let prompt_id_data = {}
+    if (type === "gen-piece") {
+        try {
+            const prompt = (json_content as GenPieceJson).prompt!
+            const prompt_id = await get_prompt_id(world_id, prompt)
+            prompt_id_data = { prompt_id: prompt_id }
+        } catch (error) {
+            throw Error(`Error in updating prompt_id for gen-piece. ${JSON.stringify(error)}`)
+        }
+    }
+
     // upload piece
     const { data, error } = await supabase
         .from('pieces')
-        .insert(piece_data)
+        .insert({ ...piece_data, ...prompt_id_data })
         .select('id')
         .single()
 
@@ -107,7 +154,7 @@ const update_world_modified_date = async (wid: string) => {
         .single()
 
     if (error || !data) {
-        console.error('Error in modifying date' + JSON.stringify(error))
+        throw Error('Error in modifying date' + JSON.stringify(error))
     }
 }
 // Edit an existing row in the table. 
@@ -143,8 +190,7 @@ export const update_piece = async (values: PiecePayload, pid: string, is_draft: 
         .single()
 
     if (error || !data) {
-        console.error(JSON.stringify(error))
-        throw Error(error.message)
+        throw Error(JSON.stringify(error))
     }
 
     return data.id
@@ -175,8 +221,7 @@ export const update_special_piece = async (values: TypedPiece, pid: string): Pro
         .single()
 
     if (error || !data) {
-        console.error(JSON.stringify(error))
-        throw Error(error.message)
+        throw Error(JSON.stringify(error))
     }
 
     return data.id
@@ -232,18 +277,53 @@ export const fetch_piece = async (pid: string) => {
     return data
 }
 
+export const fetch_prompt = async (prompt_id: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('prompts')
+        .select('*')
+        .eq('id', prompt_id)
+        .single()
+    if (error || !data)
+        throw `Error in getPrompt ${JSON.stringify(error)}`
+    return data
+}
 
 export const fetch_all_pieces = async (wid: string) => {
     const supabase = createClientSupabaseClient();
     const { data, error } = await supabase
         .from('pieces')
-        .select('*')
+        .select('id, name')
         .eq('world_id', wid)
 
     if (error || !data) {
         throw Error(error.message)
     }
     return data
+}
+
+export const fetch_num_of_pieces = async (wid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error, status } = await supabase
+        .from('pieces')
+        .select('id', { count: 'exact' })
+        .eq('world_id', wid)
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data.length
+}
+
+export const fetch_num_of_prompts = async (wid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error, status } = await supabase
+        .from('prompts')
+        .select('id', { count: 'exact' })
+        .eq('world_id', wid)
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data.length
 }
 
 export const fav_piece = async (pid: string) => {

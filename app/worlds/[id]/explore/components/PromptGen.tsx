@@ -6,7 +6,7 @@ import { GenPieceJson, Piece, TypedPiece, World } from '@/types/types';
 import useStreamText from '@/hooks/useStreamText';
 import { useEffect, useState, useRef } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import { fetch_piece, fetch_all_pieces, insert_special_piece } from '@/utils/piece-helpers';
+import { fetch_piece, fetch_prompt, fetch_all_pieces, insert_special_piece } from '@/utils/piece-helpers';
 import { useSupabase } from '@/app/supabase-provider';
 import { useSearchParams } from 'next/navigation';
 import { notify_error, notify_success } from '@/components/ui/widget/toast';
@@ -33,15 +33,25 @@ export default function PromptGen({ world }: { world: World }) {
     const [isFormikRendered, setIsFormikRendered] = useState(false);
     const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-3.5-turbo-16k", prequel: null } as PromptPayload)
 
-    const [pieces, setPieces] = useState<Piece[]>([]);
+    const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
 
-    const fetchPrompt = async (id: string) => {
+    const fetchPromptFromPiece = async (piece_id: string) => {
         try {
-            const piece = await fetch_piece(id);
+            const piece = await fetch_piece(piece_id);
             const newValues = { ...initValues, prompt: (piece.piece_json as GenPieceJson).prompt };
             setInitValues(newValues);
         } catch (e) {
-            notify_error(`Fetching prompt_id ${id} failed: ${JSON.stringify(e)}`)
+            notify_error(`Fetching piece_id ${piece_id} for prompt failed: ${JSON.stringify(e)}`)
+        }
+    }
+
+    const fetchPromptFromId = async (prompt_id: string) => {
+        try {
+            const prompt = await fetch_prompt(prompt_id);
+            const newValues = { ...initValues, prompt: prompt.prompt };
+            setInitValues(newValues);
+        } catch (e) {
+            notify_error(`Fetching prompt_id ${prompt_id} failed: ${JSON.stringify(e)}`)
         }
     }
 
@@ -70,9 +80,12 @@ export default function PromptGen({ world }: { world: World }) {
     useEffect(() => {
         const prompt_id = searchParams.get('prompt_id');
         if (prompt_id) {
-            fetchPrompt(prompt_id);
+            if (prompt_id.startsWith('P-')) {
+                fetchPromptFromPiece(prompt_id);
+            } else {
+                fetchPromptFromId(prompt_id);
+            }
         }
-
         const prequel_id = searchParams.get('prequel')
         if (prequel_id) {
             const newValues = { ...initValues, prequel: prequel_id };

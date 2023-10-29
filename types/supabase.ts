@@ -128,6 +128,7 @@ export interface Database {
           nsfw: boolean
           piece_json: Json | null
           piece_type: string
+          prompt_id: string | null
           tags: string[]
           world_id: string | null
         }
@@ -147,6 +148,7 @@ export interface Database {
           nsfw?: boolean
           piece_json?: Json | null
           piece_type?: string
+          prompt_id?: string | null
           tags?: string[]
           world_id?: string | null
         }
@@ -166,6 +168,7 @@ export interface Database {
           nsfw?: boolean
           piece_json?: Json | null
           piece_type?: string
+          prompt_id?: string | null
           tags?: string[]
           world_id?: string | null
         }
@@ -180,6 +183,12 @@ export interface Database {
             foreignKeyName: "pieces_folder_id_fkey"
             columns: ["folder_id"]
             referencedRelation: "folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pieces_prompt_id_fkey"
+            columns: ["prompt_id"]
+            referencedRelation: "prompts"
             referencedColumns: ["id"]
           },
           {
@@ -220,6 +229,37 @@ export interface Database {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      prompts: {
+        Row: {
+          created_at: string
+          id: string
+          prompt: string
+          updated_at: string
+          world_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt: string
+          updated_at: string
+          world_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt?: string
+          updated_at?: string
+          world_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompts_world_id_fkey"
+            columns: ["world_id"]
+            referencedRelation: "worlds"
             referencedColumns: ["id"]
           }
         ]

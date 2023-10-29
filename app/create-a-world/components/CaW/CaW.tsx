@@ -108,7 +108,7 @@ export default function CaW() {
                                     </div>
                                     <TextInput name={"logline"}
                                         placeholder={"Add a few lines about your world"}
-                                        textSize={"text-md"} multiline={4}
+                                        textSize={"text-base"} multiline={4}
                                     />
                                 </div>
 

@@ -113,7 +113,7 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                     <div>
                         <div id="content-group" className='w-full max-w-2xl flex flex-row flex-wrap items-center justify-start'>
                             {piece.piece_type == "gen-piece" ?
-                                <GenPieceDisplay json_content={piece.piece_json as GenPieceJson} />
+                                <GenPieceDisplay json_content={piece.piece_json as GenPieceJson} prompt={piece.prompt_id} />
                                 : <ChatHistoryDisplay json_content={piece.piece_json as ChatHistoryJson} />}
                         </div>
                     </div>
@@ -309,29 +309,25 @@ function PieceEditingPanel({ piece, world, folder, isWorldOwner }: { piece: Piec
 const PieceMetadataDisplay = ({ piece, world, folder }: { piece: Piece, world: World, folder: Folder | null }) => {
     return (
         <div className="flex flex-row w-full  justify-start items-start text-sm text-left font-medium">
-            {/* <span className="font-semibold text-foreground/50 mr-1 whitespace-nowrap">
-                From World:
-            </span> */}
-
             <span className="flex flex-row items-center justify-start">
 
                 <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
                     <BookIcon className="flex-shrink-0" />
                     <Link href={`/worlds/${world.id}`}>
-                        <div className="overflow-hidden  whitespace-nowrap overflow-ellipsis w-56 md:w-auto">{world.name}</div>
+                        <div className=" whitespace-nowrap  w-auto">{world.name}</div>
                     </Link>
                 </div>
 
-                <div className="flex flex-row items-center justify-start">
-                    {folder && <SlashIcon className="flex-shrink-0" />}
-                    {folder &&
-                        <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
-                            <FolderIcon className="flex-shrink-0" />
-                            <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
-                                <span className="overflow-hidden  whitespace-nowrap overflow-ellipsis">{folder.name}</span></Link>
-                        </div>
-                    }
-                </div>
+                {folder && <div className="flex flex-row items-center justify-start">
+                    <SlashIcon className="flex-shrink-0" />
+
+                    <div className="cursor-pointer flex flex-row items-center justify-start space-x-1  hover:text-brand">
+                        <FolderIcon className="flex-shrink-0" />
+                        <Link href={`/worlds/${world.id}/pieces?folder_id=${folder.id}`}>
+                            <span className="  whitespace-nowrap  ">{folder.name}</span></Link>
+                    </div>
+
+                </div>}
             </span>
         </div>
 

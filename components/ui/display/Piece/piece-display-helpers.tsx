@@ -27,7 +27,7 @@ export function ChatHistoryDisplay({ json_content }: { json_content: ChatHistory
 }
 
 
-export function GenPieceDisplay({ json_content }: { json_content: GenPieceJson }) {
+export function GenPieceDisplay({ json_content, prompt = null }: { json_content: GenPieceJson, prompt?: null | string }) {
     return <div className="flex flex-col space-y-6">
         {json_content.prequel && <div className='w-full flex flex-col space-y-3 items-start'>
             <FieldTitleDisplay label={"prequel"} textSize="text-base" />
@@ -35,14 +35,22 @@ export function GenPieceDisplay({ json_content }: { json_content: GenPieceJson }
                 <CopyableID id={json_content.prequel} id_string={"Piece ID"} />
             </Link>
         </div>}
-        <div className='w-full flex flex-col space-y-3'>
-            <div className="flex flex-row justify-start items-center space-x-2">
-                <FieldTitleDisplay label={"prompt"} textSize="text-base" />
 
+        <div className='w-full flex flex-col space-y-3'>
+            <div className="flex flex-row justify-between items-center space-x-2">
+                <FieldTitleDisplay label={"prompt"} textSize="text-base" />
+                {prompt && <Link href={`/prompts/${prompt}`} className="flex flex-row justify-start ">
+                    <div className="flex flex-row items-center space-x-1 text-xs rounded-xl border px-3 py-1">
+                        <span>See other pieces with this prompt</span>
+                        <ArrowUpRight />
+                    </div>
+                </Link>}
             </div>
             <div className='border-t border-b px-4 py-2 text-sm text-foreground bg-foreground/5'>
                 <Markdown>{json_content.prompt}</Markdown>
             </div>
+
+
         </div>
 
         <div className='w-full flex flex-col space-y-3'>

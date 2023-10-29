@@ -21,6 +21,7 @@
     "encoding": "^0.1.13",
     "formik": "^2.4.2",
     "framer-motion": "^10.13.0",
+    "fuzzysort": "^2.0.4",
     "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
     "masonry-layout": "^4.2.2",
@@ -45,6 +46,6 @@
     "@types/node": "20.3.1",
     "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
-    "supabase": "^1.99.5"
+    "supabase": "^1.106.1"
   }
 }

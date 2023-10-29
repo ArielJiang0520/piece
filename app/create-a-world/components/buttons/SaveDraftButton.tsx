@@ -44,10 +44,10 @@ export default function SaveDraftButton({ uid, setSubmitting, values, currentDra
 
     return <>{
         'default' in currentDraft ?
-            <button className="p-2 secondaryButton text-md" onClick={() => handleSaveNewDraft(values, setSubmitting)} type="button">
+            <button className="p-2 secondaryButton text-base" onClick={() => handleSaveNewDraft(values, setSubmitting)} type="button">
                 Save as New Draft
             </button> :
-            <button className="p-2 secondaryButton text-md" onClick={() => handleOverwriteDraft(values, setSubmitting)} type="button">
+            <button className="p-2 secondaryButton text-base" onClick={() => handleOverwriteDraft(values, setSubmitting)} type="button">
                 Overwrite Draft
             </button>
     }</>

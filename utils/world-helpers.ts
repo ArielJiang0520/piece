@@ -136,6 +136,18 @@ export const delete_world = async (wid: string, world_origin: null | string = nu
     return status
 }
 
+export const fetch_world = async (wid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { error, data } = await supabase
+        .from('worlds')
+        .select('*')
+        .eq('id', wid)
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
+
 export const fetch_all_worlds = async (uid: string) => {
     const supabase = createClientSupabaseClient()
     const { error, data } = await supabase

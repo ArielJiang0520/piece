@@ -38,7 +38,7 @@ export default function FolderSelector({ wid }: FolderSelectorProps) {
     return (
         <DropDownSelector
             data={folders}
-            width='w-80'
+            width='w-56 md:w-80'
             nameKey="name"
             selected={selected}
             setSelected={setSelected}
