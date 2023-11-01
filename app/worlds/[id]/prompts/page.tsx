@@ -1,4 +1,4 @@
-// worlds/[id]/pieces
+// worlds/[id]/prompts
 
 import LocalNavBar from "../local-navbar";
 import { getSession, getWorldDetails, getPromptMetadata, getPiecesByPage, getWorldMetadata } from "@/app/supabase-server";

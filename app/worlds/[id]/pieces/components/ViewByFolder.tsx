@@ -2,7 +2,7 @@
 import { Piece, Profile, Folder, DefaultFolder, World } from "@/types/types";
 import SearchBar from "@/components/ui/input/SearchBar";
 import useHorizontalDragScroll from '@/hooks/useHorizontalScroll';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import Link from "next/link";
 import DropDownSelector from "@/components/ui/input/DropDownSelector";
 import dynamic from 'next/dynamic';
@@ -83,31 +83,50 @@ export default function ViewByFolder({ pieces, world, folders, isOwner }: WorldP
 
     const [currentSort, setCurrentSort] = useState<SortFunc>(sortFunc[0])
 
+    // Get a new searchParams string by merging the current
+    // searchParams with a provided key/value pair
+    const createQueryString = useCallback(
+        (name: string, value: string) => {
+            const params = new URLSearchParams(Array.from(searchParams.entries()));
+            params.set(name, value)
+
+            return params.toString()
+        },
+        [searchParams]
+    )
+
     useEffect(() => {
-        const folder_id = searchParams.get('folder_id')
         let updatedPieces = cloneDeep(pieces)
-        if (!folder_id) {
-            setCurrentFolder(defaultFolder)
-            updatedPieces = updatedPieces.sort(currentSort.myFunc)
-            setFilteredPieces(updatedPieces);
+
+        const folder_id = searchParams.get('folder_id')
+        if (!folder_id || folder_id === "default") {
+
         } else if (folder_id === "favorite") {
-            setCurrentFolder(favoriteFolder)
             updatedPieces = updatedPieces.filter((piece) => piece.is_favorite)
-            updatedPieces = updatedPieces.sort(currentSort.myFunc)
-            setFilteredPieces(updatedPieces);
         }
         else {
             const folder = folders.find((folder) => folder.id === folder_id)
             if (folder) {
-                setCurrentFolder(folder)
                 updatedPieces = updatedPieces.filter((piece) => piece.folder_id === folder_id)
-                updatedPieces = updatedPieces.sort(currentSort.myFunc)
-                setFilteredPieces(updatedPieces);
             }
-            else
+            else {
                 notify_error(`Did not find folder ${folder_id}`)
+            }
         }
-    }, [searchParams, currentSort])
+
+        const sort_by = searchParams.get('sort_by')
+        if (!sort_by) {
+            updatedPieces = updatedPieces.sort(sortFunc[0].myFunc)
+        } else {
+            const sort = sortFunc.find(item => item.name.toLocaleLowerCase() === sort_by)
+            if (sort) {
+                updatedPieces = updatedPieces.sort(sort.myFunc)
+            } else {
+                notify_error(`Did not find sort_by ${sort_by}`)
+            }
+        }
+        setFilteredPieces(updatedPieces);
+    }, [searchParams])
 
     return (
         <>
@@ -137,21 +156,24 @@ export default function ViewByFolder({ pieces, world, folders, isOwner }: WorldP
                     onMouseMove={doDrag}
                 >
                     {allFolders.map((folder, idx) =>
-                        <Link key={idx} href={folder.id === 'default' ? `${pathname}` : `${pathname}?folder_id=${folder.id}`} >
-                            <div key={idx} className={`h-15 cursor-pointer flex flex-row items-center justify-center rounded-lg p-5 space-x-2  border min-w-[100px] max-w-xl
-                                        ${currentFolder.id === folder.id ? "bg-brand text-white border-brand" : "text-foreground/50"} `}
-                            >
-                                {folder.id === "favorite" && <FilledStarIcon className="text-yellow-400" />}
-                                {folder.id === "default" && <NineDotsIcon className={`${currentFolder.id === folder.id ? "text-white" : "text-brand"}`} />}
-                                <span className={`text-sm font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis`}>
-                                    {folder.name}
-                                </span>
-                                <div className={`ml-1 px-2 py-1 rounded-full text-xs ${currentFolder.id === folder.id ? "bg-foreground/50" : "bg-foreground/10"}`}>
-                                    {folder.pieces[0].count}
-                                </div>
+                        <div key={idx}
+                            className={`h-15 cursor-pointer flex flex-row items-center justify-center rounded-lg p-5 space-x-2  border min-w-[100px] max-w-xl 
+                            ${currentFolder.id === folder.id ? "bg-brand text-white border-brand" : "text-foreground/50"} `}
+                            onClick={() => {
+                                setCurrentFolder(folder)
+                                router.push(pathname + '?' + createQueryString('folder_id', folder.id))
+                            }}
+                        >
+                            {folder.id === "favorite" && <FilledStarIcon className="text-yellow-400" />}
+                            {folder.id === "default" && <NineDotsIcon className={`${currentFolder.id === folder.id ? "text-white" : "text-brand"}`} />}
+                            <span className={`text-sm font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis`}>
+                                {folder.name}
+                            </span>
+                            <div className={`ml-1 px-2 py-1 rounded-full text-xs ${currentFolder.id === folder.id ? "bg-foreground/50" : "bg-foreground/10"}`}>
+                                {folder.pieces[0].count}
                             </div>
-                        </Link>)
-                    }
+                        </div>
+                    )}
 
                     {isOwner && <div
                         className={`h-15 cursor-pointer flex flex-row items-center justify-center rounded-lg p-5 space-x-1  border  w-[100px] text-brand border-brand`}
@@ -211,7 +233,10 @@ export default function ViewByFolder({ pieces, world, folders, isOwner }: WorldP
                             <DropDownSelector
                                 data={sortFunc}
                                 selected={currentSort}
-                                setSelected={setCurrentSort}
+                                setSelected={(sel) => {
+                                    router.push(pathname + '?' + createQueryString('sort_by', sel.name.toLocaleLowerCase()));
+                                    setCurrentSort(sel)
+                                }}
                                 width="w-40"
                                 nameKey="name"
                             />

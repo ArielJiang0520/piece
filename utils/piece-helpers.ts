@@ -355,3 +355,37 @@ export const unfav_piece = async (pid: string) => {
     }
     return data
 }
+
+
+export const fav_prompt = async (pid: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('prompts')
+        .update({ is_favorite: true })
+        .eq('id', pid)
+        .select('id')
+        .single()
+
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
+
+export const unfav_prompt = async (pid: string) => {
+    const supabase = createClientSupabaseClient();
+    const { data, error } = await supabase
+        .from('prompts')
+        .update({ is_favorite: false })
+        .eq('id', pid)
+        .select('id')
+        .single()
+
+    if (error || !data) {
+        throw Error(error.message)
+    }
+    return data
+}
+
+
+

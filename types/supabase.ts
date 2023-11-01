@@ -237,6 +237,7 @@ export interface Database {
         Row: {
           created_at: string
           id: string
+          is_favorite: boolean
           prompt: string
           updated_at: string
           world_id: string
@@ -244,6 +245,7 @@ export interface Database {
         Insert: {
           created_at?: string
           id?: string
+          is_favorite?: boolean
           prompt: string
           updated_at: string
           world_id: string
@@ -251,6 +253,7 @@ export interface Database {
         Update: {
           created_at?: string
           id?: string
+          is_favorite?: boolean
           prompt?: string
           updated_at?: string
           world_id?: string

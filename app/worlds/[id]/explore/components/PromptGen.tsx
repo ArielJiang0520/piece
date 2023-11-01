@@ -15,6 +15,7 @@ import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ToggleButton } from '@/components/ui/button/toggle/Toggle';
 import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import SearchBar from '@/components/ui/input/SearchBar';
+import { ResetIcon } from '@/components/icon/icon';
 
 interface PromptPayload {
     prompt: string,
@@ -155,7 +156,10 @@ export default function PromptGen({ world }: { world: World }) {
                     </div>
 
                     <div id="prompt-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"prompt"} />
+                        <div className='flex flex-row items-center space-x-3'>
+                            <FieldTitleDisplay label={"prompt"} />
+                            <ResetIcon className='text-foreground/50 cursor-auto' onClick={() => setFieldValue('prompt', '')} />
+                        </div>
                         <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-base"} multiline={7} bold={"font-medium"} />
                     </div>
 

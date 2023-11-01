@@ -12,7 +12,7 @@ export default async function Page({
     return (
         <>
             <LocalNavBar prompt={prompt} />
-            <div className="w-full md:w-2/3 xl:w-1/2 flex flex-col gap-4 px-5 py-5 lg:py-10 text-foreground font-mono">
+            <div className="w-full md:w-2/3  flex flex-col gap-4 px-5 py-5 lg:py-10 text-foreground font-mono">
                 <PromptDisplay prompt={prompt} world={world} />
             </div>
         </>

@@ -1,6 +1,6 @@
 'use client'
 import type { ChatHistoryJson, TypedPiece, GenPieceJson, GeneralJson, Piece, Profile, World, Folder, Comment, Like } from "@/types/types"
-import { CheckIcon, CalendarIcon, BookIcon, TrashIcon, CrownIcon, StarIcon, StarsIcon, ArrowUpRight, FilledStarIcon } from "@/components/icon/icon"
+import { CheckIcon, CalendarIcon, BookIcon, TrashIcon, CrownIcon, StarIcon, StarsIcon, ArrowUpRight, FilledStarIcon, BackIcon, FolderIcon, PencilIcon, SlashIcon } from "@/components/icon/icon"
 import { FieldContentDisplay, FieldTitleDisplay, Markdown } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
@@ -8,7 +8,6 @@ import { AuthorDisplay } from "@/components/ui/display/user-display-helpers";
 import PieceImages from "@/components/ui/image/PieceImages";
 import { getDistanceToNow } from "@/utils/helpers";
 import { ChatHistoryDisplay, GenPieceDisplay } from "./piece-display-helpers";
-import { BackIcon, FolderIcon, PencilIcon, SlashIcon } from "@/components/icon/icon";
 import { IconButtonMid, IconButtonTiny } from "@/components/ui/button/button-helpers";
 import { useEffect, useState } from "react";
 import PopupDialog from "@/components/ui/input/PopupDialog";
