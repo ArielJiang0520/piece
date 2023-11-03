@@ -57,6 +57,7 @@ export function GenPieceDisplay({ json_content, prompt = null }: { json_content:
             <div className='flex flex-row items-center space-x-2'>
                 <FieldTitleDisplay label={"content"} textSize="text-base" />
                 <RobotIcon className="text-brand" />
+                <span className="font-mono text-sm text-brand font-semibold">{json_content.model ? json_content.model : "gpt-4"}</span>
             </div>
             <div className='border-t border-b px-4 py-2 text-sm bg-foreground/5'>
                 <Markdown>{json_content.output}</Markdown>

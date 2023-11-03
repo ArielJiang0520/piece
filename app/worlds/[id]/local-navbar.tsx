@@ -7,7 +7,8 @@ import Skeleton from 'react-loading-skeleton';
 import { WorldMetadata } from '@/app/supabase-server';
 import { AtomIcon, CommentIcon, CreateIcon, OpenBookIcon, PencilIcon } from '@/components/icon/icon';
 import { useEffect, useState } from 'react';
-import { fetch_num_of_pieces, fetch_num_of_prompts } from '@/utils/piece-helpers';
+import { fetch_num_of_pieces, } from '@/utils/piece-helpers';
+import { fetch_num_of_prompts } from '@/utils/prompt-helpers';
 
 interface LocalNavBarProps {
     world: WorldMetadata | World;

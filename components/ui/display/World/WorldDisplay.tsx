@@ -80,9 +80,13 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
                 <WorldPrivacyDisplay world={world} />
             </div>
 
+
+
             <div id="description-group" className='flex flex-col'>
                 <AccordionDisplay sections={world.description as WorldDescriptionSection[]} preview={preview} />
             </div>
+
+
         </div>
     )
 }

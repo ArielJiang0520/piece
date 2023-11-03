@@ -1,7 +1,7 @@
 'use client'
 import type { ChatHistoryJson, TypedPiece, GenPieceJson, GeneralJson, Piece, Profile, World, Folder, Comment, Like } from "@/types/types"
 import { CheckIcon, CalendarIcon, BookIcon, TrashIcon, CrownIcon, StarIcon, StarsIcon, ArrowUpRight, FilledStarIcon, BackIcon, FolderIcon, PencilIcon, SlashIcon } from "@/components/icon/icon"
-import { FieldContentDisplay, FieldTitleDisplay, Markdown } from "@/components/ui/display/display-helpers";
+import { FieldContentDisplay, FieldTitleDisplay, Markdown, PiecePriceDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import Link from "next/link";
 import { AuthorDisplay } from "@/components/ui/display/user-display-helpers";
@@ -32,7 +32,7 @@ interface PieceDisplayProps {
 }
 export default function PieceDisplay({ piece, world, folder, author, likes, comments, preview = false }: PieceDisplayProps) {
     const { user } = useSupabase();
-    const isWorldOwner = (user && user.id) ? user.id === world.creator_id : false;
+    const isWorldOwner = piece.creator_id === world.creator_id;
     const isOwner = (user && user.id) ? user.id === piece.creator_id : false;
 
     return (
@@ -130,6 +130,8 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                     <FieldTitleDisplay label={"tags"} textSize="text-sm" />
                     <TagsBarDisplay tags={piece.tags} preview={preview} />
                 </div>}
+
+                <PiecePriceDisplay world={world} piece={piece} />
 
 
                 <div id="stats-group" className='flex flex-row text-base justify-between items-center  w-full'>

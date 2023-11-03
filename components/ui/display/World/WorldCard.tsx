@@ -118,9 +118,9 @@ export default function WorldCard({ world, isOwner }: WorldCardProps) {
             </div>}
 
 
-            <div className="w-full">
+            {world.images.length > 0 && <div className="w-full">
                 <ImagesDisplayRow bucket="world" dimension={{ height: "h-80", width: "w-80" }} paths={world.images} blur={world.nsfw} />
-            </div>
+            </div>}
 
             <div className="w-full">
                 <TagsBarDisplay tags={world.tags} scroll={true} />

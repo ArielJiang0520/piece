@@ -4,6 +4,9 @@ import { cache } from 'react';
 import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import moment from 'moment';
+import { World } from "@/types/types";
+import { encode } from "gpt-tokenizer";
+import { worldToString } from "@/utils/prompt";
 
 export const createClientSupabaseClient = cache(() =>
     createClientComponentClient<Database>()
@@ -175,4 +178,39 @@ export function capitalize(s: string): string {
     return s.split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
+}
+
+export function getWorldNumTokens(world: World): number {
+    return encode(worldToString(world)).length
+}
+
+export function getStringNumTokens(str: string): number {
+    return encode(str).length
+}
+
+const GPT3_INPUT = 0.003
+const GPT3_OUTPUT = 0.004
+const GPT4_INPUT = 0.06
+const GPT4_OUTPUT = 0.12
+
+export function getGeneratePrice(numTokens: number, model: number): number {
+    const totalTokens = numTokens + 100
+    const estOutput = 800
+    let price = 0
+    if (model === 3) {
+        price = (totalTokens / 1000 * GPT3_INPUT) + (estOutput / 1000 * GPT3_OUTPUT)
+    } else {
+        price = (totalTokens / 1000 * GPT4_INPUT) + (estOutput / 1000 * GPT4_OUTPUT)
+    }
+    return Number(price.toFixed(3))
+}
+
+export function getPiecePrice(numWorldTokens: number, numPieceTokens: number, model: number): number {
+    let price = 0
+    if (model === 3) {
+        price = (numWorldTokens / 1000 * GPT3_INPUT) + (numPieceTokens / 1000 * GPT3_OUTPUT)
+    } else {
+        price = (numWorldTokens / 1000 * GPT4_INPUT) + (numPieceTokens / 1000 * GPT4_OUTPUT)
+    }
+    return Number(price.toFixed(3))
 }

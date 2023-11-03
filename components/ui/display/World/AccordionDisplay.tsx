@@ -16,7 +16,7 @@ export const AccordionDisplay: React.FC<AccordionDisplayProps> = ({ sections, pr
             <ul className='my-5 font-serif space-y-2'>
                 {sections.map((section, index) => (
                     <li key={index} className="">
-                        <Disclosure>
+                        <Disclosure defaultOpen>
                             {({ open }) => (
                                 <>
                                     <div id="accordion-panel" className="flex flex-row justify-between items-center w-full ">

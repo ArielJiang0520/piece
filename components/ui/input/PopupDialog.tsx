@@ -5,7 +5,7 @@ import { ChatHistoryJson, GenPieceJson, TypedPiece } from '@/types/types';
 import { TagsBar } from './tags-helpers';
 import { Formik, Form } from 'formik';
 import { TextInput, TextInputFreeform, TextInputWithEnter } from './InputTextField';
-import { FieldTitleDisplay, Markdown } from '../display/display-helpers';
+import { FieldContentDisplay, FieldTitleDisplay, Markdown } from '../display/display-helpers';
 import SearchBar from './SearchBar';
 import { ChatHistoryDisplay, GenPieceDisplay } from '../display/Piece/piece-display-helpers';
 import FolderSelector from './FolderSelector';
@@ -54,6 +54,13 @@ function PublishSpecialPiece({ inputValue, setInputValue }: {
                             <FieldTitleDisplay label={"title"} />
                             <TextInput name={"name"} placeholder={"Add your title"} textSize={"text-base"} multiline={1} />
                         </div>
+
+                        {(values.json_content as GenPieceJson).model && <div id="model-group" className=' flex flex-col space-y-1'>
+                            <FieldTitleDisplay label={"model"} />
+                            <span className='py-1 px-3 border font-mono text-xs text-foreground/80 rounded-2xl'>
+                                {(values.json_content as GenPieceJson).model}
+                            </span>
+                        </div>}
 
                         <div id="folder-group" className='w-full flex flex-col '>
                             <FieldTitleDisplay label={"folder"} />

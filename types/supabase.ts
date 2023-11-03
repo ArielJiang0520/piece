@@ -38,12 +38,14 @@ export interface Database {
           {
             foreignKeyName: "comments_piece_id_fkey"
             columns: ["piece_id"]
+            isOneToOne: false
             referencedRelation: "pieces"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "comments_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
@@ -72,6 +74,7 @@ export interface Database {
           {
             foreignKeyName: "folders_world_id_fkey"
             columns: ["world_id"]
+            isOneToOne: false
             referencedRelation: "worlds"
             referencedColumns: ["id"]
           }
@@ -100,12 +103,14 @@ export interface Database {
           {
             foreignKeyName: "likes_piece_id_fkey"
             columns: ["piece_id"]
+            isOneToOne: false
             referencedRelation: "pieces"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "likes_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
@@ -176,24 +181,28 @@ export interface Database {
           {
             foreignKeyName: "pieces_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "pieces_folder_id_fkey"
             columns: ["folder_id"]
+            isOneToOne: false
             referencedRelation: "folders"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "pieces_prompt_id_fkey"
             columns: ["prompt_id"]
+            isOneToOne: false
             referencedRelation: "prompts"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "pieces_world_id_fkey"
             columns: ["world_id"]
+            isOneToOne: false
             referencedRelation: "worlds"
             referencedColumns: ["id"]
           }
@@ -228,7 +237,47 @@ export interface Database {
           {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
+            isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      prompt_history: {
+        Row: {
+          created_at: string
+          creator_id: string
+          id: number
+          json_content: Json | null
+          world_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          id?: number
+          json_content?: Json | null
+          world_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          id?: number
+          json_content?: Json | null
+          world_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_history_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prompt_history_world_id_fkey"
+            columns: ["world_id"]
+            isOneToOne: false
+            referencedRelation: "worlds"
             referencedColumns: ["id"]
           }
         ]
@@ -262,6 +311,7 @@ export interface Database {
           {
             foreignKeyName: "prompts_world_id_fkey"
             columns: ["world_id"]
+            isOneToOne: false
             referencedRelation: "worlds"
             referencedColumns: ["id"]
           }
@@ -290,12 +340,14 @@ export interface Database {
           {
             foreignKeyName: "subscriptions_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "subscriptions_world_id_fkey"
             columns: ["world_id"]
+            isOneToOne: false
             referencedRelation: "worlds"
             referencedColumns: ["id"]
           }
@@ -327,6 +379,7 @@ export interface Database {
           {
             foreignKeyName: "tags_category_fkey"
             columns: ["category"]
+            isOneToOne: false
             referencedRelation: "tags_categories"
             referencedColumns: ["id"]
           }
@@ -418,18 +471,21 @@ export interface Database {
           {
             foreignKeyName: "worlds_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "worlds_primary_genre_fkey"
             columns: ["primary_genre"]
+            isOneToOne: false
             referencedRelation: "tags"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "worlds_secondary_genre_fkey"
             columns: ["secondary_genre"]
+            isOneToOne: false
             referencedRelation: "tags"
             referencedColumns: ["id"]
           }

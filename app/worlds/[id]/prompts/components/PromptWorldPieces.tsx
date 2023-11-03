@@ -12,7 +12,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { notify_error, notify_success } from "@/components/ui/widget/toast";
 import useHorizontalDragScroll from "@/hooks/useHorizontalScroll";
 import { IconButtonMid } from "@/components/ui/button/button-helpers";
-import { fav_prompt, unfav_prompt } from "@/utils/piece-helpers";
+import { fav_prompt, unfav_prompt } from "@/utils/prompt-helpers";
 
 interface PromptWorldPiecesProps {
     world: World,
@@ -134,7 +134,7 @@ export function PromptWorldPieces({ world, prompts }: PromptWorldPiecesProps) {
             filteredPrompts.map(promptP => {
                 const { pieces: pieceCount, ...prompt } = promptP
                 const count = pieceCount[0].count as number
-                return <Link href={`/prompts/${prompt.id}`}><PromptCard worldId={world.id} prompt={prompt} numPieces={count} /></Link>
+                return <Link key={prompt.id} href={`/prompts/${prompt.id}`}><PromptCard worldId={world.id} prompt={prompt} numPieces={count} /></Link>
 
             })
         }
@@ -195,8 +195,12 @@ function PromptCard({ worldId, prompt, numPieces }: PromptCardProps) {
     return <div className="w-full flex flex-col space-y-4 rounded-lg bg-foreground/5 p-4 ">
         <div className="flex flex-row items-center justify-between space-x-1 font-mono text-sm text-foreground/80  ">
 
-            <button className="  bg-white text-brand border border-brand rounded-lg py-1 px-2 flex flex-row items-center justify-center space-x-1"
-                onClick={() => router.push(`/worlds/${worldId}/explore?gen_type=prompt-gen&prompt_id=${prompt.id}`)}>
+            <button className=" bg-white text-brand border border-brand rounded-lg py-1 px-2 flex flex-row items-center justify-center space-x-1"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    router.push(`/worlds/${worldId}/explore?gen_type=prompt-gen&prompt_id=${prompt.id}`)
+                }}>
                 <ArrowUpRight />
                 <span className="whitespace-nowrap  text-sm ">Try this Prompt</span>
             </button>

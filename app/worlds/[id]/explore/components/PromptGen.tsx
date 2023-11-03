@@ -1,12 +1,13 @@
 'use client'
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps, setIn } from 'formik';
-import { FieldContentDisplay, FieldTitleDisplay } from '@/components/ui/display/display-helpers';
+import { FieldContentDisplay, FieldTitleDisplay, GeneratePriceDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
 import { GenPieceJson, Piece, TypedPiece, World } from '@/types/types';
 import useStreamText from '@/hooks/useStreamText';
 import { useEffect, useState, useRef } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
-import { fetch_piece, fetch_prompt, fetch_all_pieces, insert_special_piece } from '@/utils/piece-helpers';
+import { fetch_piece, fetch_all_pieces, insert_special_piece } from '@/utils/piece-helpers';
+import { fetch_prompt, insert_prompt_history } from '@/utils/prompt-helpers';
 import { useSupabase } from '@/app/supabase-provider';
 import { useSearchParams } from 'next/navigation';
 import { notify_error, notify_success } from '@/components/ui/widget/toast';
@@ -24,8 +25,9 @@ interface PromptPayload {
 }
 export default function PromptGen({ world }: { world: World }) {
     const searchParams = useSearchParams();
-    const { user, supabase } = useSupabase()
+    const { user } = useSupabase()
     const { lines, isLoading, resetLines, streamText } = useStreamText();
+    const [saved, setSaved] = useState(false)
 
     const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -70,7 +72,7 @@ export default function PromptGen({ world }: { world: World }) {
         if (formikRef.current) {
             setIsFormikRendered(true);
         }
-    }, [formikRef]);
+    }, [formikRef.current]);
 
     useEffect(() => {
         if (isFormikRendered) {
@@ -112,17 +114,45 @@ export default function PromptGen({ world }: { world: World }) {
             });
     }
 
+    const saveHistory = async (values: PromptPayload) => {
+        try {
+            await insert_prompt_history(world.id, user.id, {
+                prompt: values.prompt,
+                model: values.model,
+                notes: '',
+                prequel: values.prequel,
+                output: lines.join('\n')
+            })
+            setSaved(true)
+        } catch {
+            notify_error("Failed to save history")
+        }
+    }
+
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
             event.preventDefault();
         }
     };
 
+    useEffect(() => {
+        if (!isLoading && lines[0].length > 1 && !saved) {
+            if (formikRef.current) {
+                const values = formikRef.current.values;
+                saveHistory(values)
+            }
+        } else if (isLoading) {
+            setSaved(false)
+        }
+    }, [isLoading])
+
     return <>
         <Formik
             initialValues={initValues}
             innerRef={formikRef} // Attach the ref to Formik
-            onSubmit={(values) => handleSubmit(values)}
+            onSubmit={(values) => {
+                handleSubmit(values);
+            }}
         >
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
                 <Form className='mt-4 w-full flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
@@ -172,6 +202,10 @@ export default function PromptGen({ world }: { world: World }) {
                         </div>
                     </div>
 
+                    {/* {finished && <div>Finished!</div>} */}
+
+                    <GeneratePriceDisplay world={world} />
+
                     <div className='block h-20'>
 
                     </div>
@@ -204,7 +238,13 @@ export default function PromptGen({ world }: { world: World }) {
                             name: '',
                             world_id: world.id,
                             type: 'gen-piece',
-                            json_content: { prompt: values.prompt, output: lines.join('\n'), notes: '', prequel: values.prequel } as GenPieceJson,
+                            json_content: {
+                                prompt: values.prompt,
+                                output: lines.join('\n'),
+                                model: values.model,
+                                notes: '',
+                                prequel: values.prequel
+                            } as GenPieceJson,
                             folder_id: null,
                             tags: [],
                         } as TypedPiece}

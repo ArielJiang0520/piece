@@ -155,6 +155,7 @@ export const EmptyPiecePayload: PiecePayload = {
 export type GenPieceJson = {
     prompt: string;
     output: string;
+    model: string | null;
     notes: string;
     prequel: string | null;
 }

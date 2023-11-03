@@ -20,7 +20,7 @@ export function worldToString(world: World): string {
 
     const tagsString = world.tags.join(', ');
 
-    return `**World Name**\n${world.name}\n**Logline**\n${world.logline}\n**Tags**\n${tagsString}\n**Description**\n${descriptionString}`;
+    return `**World Name**\n${world.name}\n**Summary**\n${world.logline}\n**Tags**\n${tagsString}\n**Description**\n${descriptionString}`;
 }
 
 export function storyPrompt(world: World, piece?: Piece | null): string {
