@@ -18,12 +18,12 @@ type Option = {
     link: string;
 };
 
-export default function ExploreWorld({ world }: { world: World }) {
+export default function ExploreWorld({ world, models }: { world: World, models: any[] }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
     const options: Option[] = [
-        { id: 'prompt-gen', name: "Write Stories", icon: <PencilIcon />, page: <PromptGen world={world} />, link: `${pathname}?gen_type=prompt-gen` },
+        { id: 'prompt-gen', name: "Write Stories", icon: <PencilIcon />, page: <PromptGen world={world} models={models} />, link: `${pathname}?gen_type=prompt-gen` },
         { id: 'roleplay', name: "Roleplay", icon: <SingleUserIcon />, page: <Roleplay world={world} />, link: `${pathname}?gen_type=roleplay` },
         { id: 'simulation', name: "Simulation", icon: <SingleUserIcon />, page: <Simulation world={world} />, link: `${pathname}?gen_type=simulation` },
     ];

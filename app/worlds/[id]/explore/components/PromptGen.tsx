@@ -23,7 +23,8 @@ interface PromptPayload {
     model: string,
     prequel: string | null,
 }
-export default function PromptGen({ world }: { world: World }) {
+export default function PromptGen({ world, models }: { world: World, models: any[] }) {
+    // const modelList = models.map((model, idx) => {return { id: idx, model: model } })
     const searchParams = useSearchParams();
     const { user } = useSupabase()
     const { lines, isLoading, resetLines, streamText } = useStreamText();
@@ -34,7 +35,7 @@ export default function PromptGen({ world }: { world: World }) {
 
     const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
     const [isFormikRendered, setIsFormikRendered] = useState(false);
-    const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-3.5-turbo-16k", prequel: null } as PromptPayload)
+    const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-4", prequel: null } as PromptPayload)
 
     const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
 
@@ -158,16 +159,15 @@ export default function PromptGen({ world }: { world: World }) {
                 <Form className='mt-4 w-full flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
                     <div id="prompt-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"model"} />
-                        <div className='flex flex-row space-x-2 text-base font-semibold text-foreground/80'>
-                            <div >
-                                Use GPT-4?
-                            </div>
-                            <ToggleButton handleToggle={() => {
-                                if (values.model === "gpt-4")
-                                    setFieldValue('model', 'gpt-3.5-turbo-16k')
-                                else
-                                    setFieldValue('model', 'gpt-4')
-                            }} isEnabled={values.model === "gpt-4"} />
+
+                        <div className='text-base'>
+                            <DropDownSelector
+                                data={models}
+                                selected={models.find(m => m.id === values.model)}
+                                setSelected={(model) => setFieldValue('model', model.id)}
+                                width='w-80'
+                                nameKey='id'
+                            />
                         </div>
 
                     </div>
