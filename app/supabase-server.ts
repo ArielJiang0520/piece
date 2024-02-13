@@ -2,7 +2,7 @@ import type { Database } from '@/types/supabase';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-import { World, Profile, Piece, Folder, Like, Comment, Prompt } from "@/types/types"
+import { World, Profile, Piece, Folder, Like, Comment, Prompt, PromptHistory } from "@/types/types"
 
 export const createServerSupabaseClient = cache(() =>
     createServerComponentClient<Database>({ cookies })
@@ -58,12 +58,16 @@ export async function getWorldMetadata(id: string): Promise<WorldMetadata> {
 }
 // For worlds/, profiles/[id]
 // For AllWorlds, MyWorlds
-export async function getAllWorldMetadata(uid?: string): Promise<WorldMetadata[]> {
+export async function getAllWorldMetadata(uid?: string, isOwner?: boolean): Promise<WorldMetadata[]> {
     const supabase = createServerSupabaseClient();
     let query = supabase.from('worlds').select('*, profiles(*), pieces(count), subscriptions(count)')
 
-    if (uid)
+    if (uid) {
         query = query.eq('creator_id', uid).eq('is_draft', false)
+        if (!isOwner) {
+            query = query.eq('is_public', true)
+        }
+    }
     else
         query = query.eq('is_public', true).eq('is_draft', false)
 
@@ -147,6 +151,25 @@ export async function getPromptDetails(prompt_id: string) {
     if (!data || error)
         throw Error(JSON.stringify(error))
     return data as PromptDetails
+}
+
+// For profiles/[id]/history
+export interface PromptHistoryMetadata extends PromptHistory {
+    worlds: World | null;
+}
+export async function getUserPromptHistory(uid: string) {
+    const supabase = createServerSupabaseClient();
+    const { data, error } = await supabase
+        .from('prompt_history')
+        .select('*, worlds(*)')
+        .order('created_at', { ascending: false })
+        .eq('creator_id', uid)
+        .limit(30)
+
+    if (error || !data) {
+        throw error
+    }
+    return data as PromptHistoryMetadata[]
 }
 
 // For pieces/[id]

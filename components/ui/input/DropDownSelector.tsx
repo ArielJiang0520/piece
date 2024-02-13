@@ -21,7 +21,7 @@ export default function DropDownSelector({ data, selected, setSelected, width, n
     return (
         <Listbox value={selected} onChange={handleChange}>
             <div className='relative'>
-                <Listbox.Button className={`my-2 border rounded-2xl text-xs py-1 px-2 focus:outline-none ${width}`}>
+                <Listbox.Button className={` border rounded-2xl text-xs py-1 px-2 focus:outline-none ${width}`}>
                     <div className='flex flex-row justify-between items-center' >
                         <div className='overflow-hidden whitespace-nowrap overflow-ellipsis'>
                             {display_func ? display_func(selected) : selected[nameKey]}

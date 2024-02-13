@@ -11,7 +11,7 @@ interface LocalNavBarProps {
 }
 export default function LocalNavBar({ piece, world }: LocalNavBarProps) {
     const PageTitleNavBarComponent = () => {
-        return <NavBarHeader title={"piece"} subtitle={piece?.name} />
+        return <NavBarHeader title={"piece"} subtitle={piece?.name === '' ? 'Untitled' : piece.name} />
     }
 
     const LocalNavBarComponent = null;

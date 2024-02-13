@@ -51,9 +51,7 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                     </div>
                 </div>
 
-                <div id="title" className="flex flex-row items-start justify-between">
-                    <FieldContentDisplay content={piece.name} textSize="text-base" bold="font-bold" />
-                </div>
+
 
                 {piece.piece_type === "original" && (piece.piece_json as GeneralJson).images.length > 0 &&
                     <div className="-mx-4">
@@ -66,38 +64,52 @@ export default function PieceCard({ piece, isOwner }: PieceCardProps) {
                     </div>
                 }
 
-                {piece.piece_type === "gen-piece" && <div className="flex flex-col items-start justify-center space-y-2">
-                    <div className='border-t border-b px-2 py-2 font-mono text-sm text-foreground bg-foreground/5 w-full'>
-                        <Markdown>{(piece.piece_json as GenPieceJson).output.slice(0, 200) + "..."}</Markdown>
-                        <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
+                {piece.piece_type === "gen-piece" && <>
+                    {piece.name && <div id="title" className="flex flex-row items-start justify-between">
+                        <FieldContentDisplay content={piece.name} textSize="text-base" bold="font-bold" />
+                    </div>}
+                    <div className="flex flex-col items-start justify-center space-y-2">
+                        <div className='border-t border-b px-2 py-2 font-mono text-sm text-foreground bg-foreground/5 w-full'>
+                            <Markdown>{(piece.piece_json as GenPieceJson).prompt.slice(0, 200)}</Markdown>
+                            {/* <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span> */}
+                        </div>
                     </div>
-                </div>}
+                </>}
 
-                {piece.piece_type === "roleplay" && <div className="flex flex-col items-start justify-center space-y-2">
-                    <div className='flex flex-col font-mono text-sm  space-y-2'>
-                        {(piece.piece_json as ChatHistoryJson).output.slice(0, 2).map((msg: { role: string, content: string }, index: number) =>
-                            <div key={index} className='w-full flex flex-col space-y-2'>
-                                <div className=' capitalize '>{msg.role} {index % 2 == 0 ? "(User)" : "(AI)"}</div>
-                                <div className={`border-t border-b px-4 py-2 ${index % 2 == 0 ? 'bg-foreground/10' : 'bg-foreground/5'}`}>
-                                    <TextSlice text={msg.content} limit={200} />
+                {piece.piece_type === "roleplay" && <>
+                    <div id="title" className="flex flex-row items-start justify-between">
+                        <FieldContentDisplay content={piece.name} textSize="text-base" bold="font-bold" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center space-y-2">
+                        <div className='flex flex-col font-mono text-sm  space-y-2'>
+                            {(piece.piece_json as ChatHistoryJson).output.slice(0, 2).map((msg: { role: string, content: string }, index: number) =>
+                                <div key={index} className='w-full flex flex-col space-y-2'>
+                                    <div className=' capitalize '>{msg.role} {index % 2 == 0 ? "(User)" : "(AI)"}</div>
+                                    <div className={`border-t border-b px-4 py-2 ${index % 2 == 0 ? 'bg-foreground/10' : 'bg-foreground/5'}`}>
+                                        <TextSlice text={msg.content} limit={200} />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                        <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
-                    </div>
-                </div>}
-
-                {piece.piece_type === "original" && (piece.piece_json as GeneralJson).images.length == 0 && <div id="content" className="">
-                    <FieldContentDisplay content={
-                        <div className='border-t border-b px-2 py-2 font-mono text-sm text-foreground bg-foreground/5 w-full flex flex-col'>
-                            <TextSlice text={(piece.piece_json as GeneralJson).content} limit={200} />
+                            )}
                             <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
                         </div>
-                    }
-                        textSize="text-sm"
-                        bold="font-normal"
-                    />
-                </div>}
+                    </div>
+                </>}
+
+                {piece.piece_type === "original" && (piece.piece_json as GeneralJson).images.length == 0 && <>
+                    <div id="title" className="flex flex-row items-start justify-between">
+                        <FieldContentDisplay content={piece.name} textSize="text-base" bold="font-bold" />
+                    </div><div id="content" className="">
+                        <FieldContentDisplay content={
+                            <div className='border-t border-b px-2 py-2 font-mono text-sm text-foreground bg-foreground/5 w-full flex flex-col'>
+                                <TextSlice text={(piece.piece_json as GeneralJson).content} limit={200} />
+                                <span className="text-blue-500 font-mono mt-2">{"[show more]"}</span>
+                            </div>
+                        }
+                            textSize="text-sm"
+                            bold="font-normal"
+                        />
+                    </div>
+                </>}
 
                 {piece.tags.length > 0 && <div id="tags">
                     <TagsBarDisplay tags={piece.tags} scroll={true} />

@@ -1,7 +1,7 @@
 'use client'
 import type { WorldMetadata } from "@/app/supabase-server";
 import { CopyableID } from "@/components/ui/button/button-helpers";
-import { Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon, PencilIcon, SlashIcon, SingleUserIcon, DividerIcon, CreateIcon, CheckIcon, CrownIcon } from "@/components/icon/icon"
+import { Rating18PlusIcon, BookIcon, CalendarIcon, EyeIcon, EyeOffIcon, RatingGeneralIcon, HandShakeIcon, HandShakeSlashIcon, LightBulbIcon, LightBulbOffIcon, PencilIcon, SlashIcon, SingleUserIcon, DividerIcon, CreateIcon, CheckIcon, CrownIcon, StarsIcon } from "@/components/icon/icon"
 import { FieldContentDisplay } from "@/components/ui/display/display-helpers";
 import { TagsBarDisplay } from "@/components/ui/input/tags-helpers";
 import { AccordionDisplay } from './AccordionDisplay';
@@ -34,7 +34,7 @@ export default function WorldDisplay({ world, preview = false }: WorldDisplayPro
             <div id="title-group" className='w-full flex flex-col flex-wrap  items-start space-y-2'>
                 <div className="w-full flex flex-row justify-center items-center py-1 px-3  border-brand border-t border-b">
                     <div className="flex flex-row justify-center items-center  text-xs font-mono space-x-2">
-                        <span className="font-medium">Current Status (From Owner):</span>
+                        <span className="font-medium">Current Status:</span>
                         <span className="capitalize">{WorldProgress.find(pro => pro.id === world.progress)?.name}</span>
                     </div>
                 </div>
@@ -158,10 +158,10 @@ function WorldEditingPanel({ world }: { world: WorldMetadata }) {
                         <span>Subscribed</span>
                     </button>
                 }
-                <Link href={{ pathname: '/create-a-piece', query: { world_id: world.id } }} >
+                <Link href={`/worlds/${world.id}/explore`} >
                     <button className="flex flex-row items-center space-x-1 primaryButton-pink py-2 px-4 rounded-full">
-                        <CreateIcon />
-                        <span>Create a Piece</span>
+                        <StarsIcon />
+                        <span>Explore in AI</span>
                     </button>
                 </Link>
             </div>

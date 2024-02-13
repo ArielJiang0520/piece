@@ -47,6 +47,8 @@ import { AiFillHeart as FilledHeartIcon } from 'react-icons/ai'
 import { BsFillArrowUpRightCircleFill as ArrowUpRight } from 'react-icons/bs'
 import { TiThSmall as NineDotsIcon } from 'react-icons/ti'
 import { GoDotFill as DotIcon } from 'react-icons/go'
+import { VscHistory as HistoryIcon } from "react-icons/vsc";
+import { TiArrowForward as ForwardIcon } from "react-icons/ti";
 
 export {
     BurgerIcon,
@@ -97,5 +99,7 @@ export {
     FilledHeartIcon,
     ArrowUpRight,
     NineDotsIcon,
-    DotIcon
+    DotIcon,
+    HistoryIcon,
+    ForwardIcon
 };

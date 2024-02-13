@@ -62,7 +62,7 @@ export default function PieceDisplay({ piece, world, folder, author, likes, comm
                 }
 
                 <div id="title-group" className='w-full flex flex-row items-start justify-between'>
-                    <FieldContentDisplay content={piece.name} textSize="text-4xl" bold="font-semibold" />
+                    <FieldContentDisplay content={piece.name === '' ? 'Untitled' : piece.name} textSize="text-4xl" bold="font-semibold" />
                 </div>
 
 

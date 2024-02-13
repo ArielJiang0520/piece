@@ -4,6 +4,7 @@ import { NavBarHeader } from '@/components/ui/navbar/navbar-helpers';
 import NavBar from '@/app/NavBar';
 import { useSupabase } from '@/app/supabase-provider';
 import { NavBarSwitchLink } from '@/components/ui/navbar/navbar-helpers';
+import { HistoryIcon } from '@/components/icon/icon';
 
 
 interface LocalNavBarProps {
@@ -16,6 +17,7 @@ export default function LocalNavBar({ profile_id }: LocalNavBarProps) {
     const tabs = [
         { name: 'Overview', link: `/profiles/${profile_id}` },
         { name: 'Worlds', link: `/profiles/${profile_id}/worlds` },
+        { name: 'Gen History', link: `/profiles/${profile_id}/history`, icon: <HistoryIcon /> },
     ];
 
     const PageTitleNavBarComponent = () => {

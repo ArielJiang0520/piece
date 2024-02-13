@@ -67,5 +67,19 @@ export const insert_prompt_history = async (wid: string, uid: string, json_conte
         throw error
     }
     return
+}
+
+
+export const fetch_prompt_history = async (uid: string) => {
+    const supabase = createClientSupabaseClient()
+    const { data, error } = await supabase
+        .from('prompt_history')
+        .select('*')
+        .eq('creator_id', uid)
+
+    if (error || !data) {
+        throw error
+    }
+    return data
 
 }

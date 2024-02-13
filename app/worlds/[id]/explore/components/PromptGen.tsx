@@ -16,7 +16,8 @@ import { LoadingOverlay } from '@/components/ui/widget/loading';
 import { ToggleButton } from '@/components/ui/button/toggle/Toggle';
 import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import SearchBar from '@/components/ui/input/SearchBar';
-import { ResetIcon } from '@/components/icon/icon';
+import { HistoryIcon, ResetIcon, StarIcon } from '@/components/icon/icon';
+import { IconButtonMid, IconButtonSmall } from '@/components/ui/button/button-helpers';
 
 interface PromptPayload {
     prompt: string,
@@ -130,6 +131,36 @@ export default function PromptGen({ world, models }: { world: World, models: any
         }
     }
 
+    const handleQuickPublish = async (values: PromptPayload) => {
+        const inputValue = {
+            name: '',
+            world_id: world.id,
+            type: 'gen-piece',
+            json_content: {
+                prompt: values.prompt,
+                output: lines.join('\n'),
+                model: values.model,
+                notes: '',
+                prequel: values.prequel
+            } as GenPieceJson,
+            folder_id: null,
+            tags: [],
+        } as TypedPiece
+
+        try {
+            const new_id = await insert_special_piece(inputValue, user.id);
+            setIsPublishing(false)
+            notify_success(<div>
+                <Link className="underline-offset-2 text-blue-500" href={`/pieces/${new_id}`}>
+                    {new_id}
+                </Link> successfully posted!
+            </div>, 10000)
+        } catch (error) {
+            setIsPublishing(false)
+            notify_error(`Error posting new piece: ${JSON.stringify(error)}`)
+        }
+    }
+
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
             event.preventDefault();
@@ -144,6 +175,8 @@ export default function PromptGen({ world, models }: { world: World, models: any
             }
         } else if (isLoading) {
             setSaved(false)
+        } else {
+            console.log(isLoading, lines, saved)
         }
     }, [isLoading])
 
@@ -156,20 +189,28 @@ export default function PromptGen({ world, models }: { world: World, models: any
             }}
         >
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
-                <Form className='mt-4 w-full flex flex-col space-y-6 items-start' onKeyDown={handleKeyDown}>
+                <Form className='mt-4 w-full flex flex-col space-y-4 items-start' onKeyDown={handleKeyDown}>
+
+                    <div className='flex flex-row w-full justify-end font-mono text-brand text-sm'>
+                        <Link
+                            href={`/profiles/${user.id}/history`}
+                            className={`cursor-pointer bg-none  flex flex-row items-center justify-center space-x-1 rounded-lg border border-brand py-1 px-2   whitespace-nowrap`}
+
+                        >
+                            <HistoryIcon />
+                            <div>View History</div>
+                        </Link>
+                    </div>
+
                     <div id="prompt-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"model"} />
-
-                        <div className='text-base'>
-                            <DropDownSelector
-                                data={models}
-                                selected={models.find(m => m.id === values.model)}
-                                setSelected={(model) => setFieldValue('model', model.id)}
-                                width='w-80'
-                                nameKey='id'
-                            />
-                        </div>
-
+                        <DropDownSelector
+                            data={models}
+                            selected={models.find(m => m.id === values.model)}
+                            setSelected={(model) => setFieldValue('model', model.id)}
+                            width='w-80'
+                            nameKey='id'
+                        />
                     </div>
 
                     <div id="link-group" className='w-full flex flex-col space-y-4'>
@@ -186,9 +227,12 @@ export default function PromptGen({ world, models }: { world: World, models: any
                     </div>
 
                     <div id="prompt-group" className='w-full flex flex-col'>
-                        <div className='flex flex-row items-center space-x-3'>
-                            <FieldTitleDisplay label={"prompt"} />
-                            <ResetIcon className='text-foreground/50 cursor-auto' onClick={() => setFieldValue('prompt', '')} />
+                        <div className='flex flex-row items-center justify-between '>
+                            <div className='flex flex-row items-center space-x-3'>
+                                <FieldTitleDisplay label={"prompt"} />
+                                <ResetIcon className='text-foreground/50 cursor-auto' onClick={() => setFieldValue('prompt', '')} />
+                            </div>
+
                         </div>
                         <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-base"} multiline={7} bold={"font-medium"} />
                     </div>
@@ -219,17 +263,26 @@ export default function PromptGen({ world, models }: { world: World, models: any
                             Generate
                         </button>
 
-                        <button
+                        {/* <button
                             className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="button"
                             disabled={lines[0].length <= 1}
                             onClick={() => setIsPublishWindowOpen(true)}
                         >
                             Publish as New Piece
+                        </button> */}
+
+                        <button
+                            className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
+                            type="button"
+                            disabled={lines[0].length <= 1}
+                            onClick={() => handleQuickPublish(values)}
+                        >
+                            Quick Publish
                         </button>
                     </div>
 
-                    <PopupDialog
+                    {/* <PopupDialog
                         isOpen={isPublishWindowOpen}
                         setIsOpen={setIsPublishWindowOpen}
                         dialogTitle='Publishing New Piece'
@@ -264,7 +317,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
                             }
                         }}
                         dialogType="publish-special-piece"
-                    />
+                    /> */}
                     {isPublishing && <LoadingOverlay />}
                 </Form>
             )}

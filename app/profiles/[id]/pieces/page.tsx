@@ -1,5 +1,5 @@
 import { getSession } from "@/app/supabase-server";
-// import MyPieces from "./components/MyPieces";
+
 import { createServerSupabaseClient } from "@/app/supabase-server";
 
 async function getPiecesByUser(id: string, isOwner: boolean) {

@@ -11,7 +11,7 @@ export type Subscription = Database['public']['Tables']['subscriptions']['Row']
 export type Comment = Database['public']['Tables']['comments']['Row']
 export type Like = Database['public']['Tables']['likes']['Row']
 export type Prompt = Database['public']['Tables']['prompts']['Row']
-
+export type PromptHistory = Database['public']['Tables']['prompt_history']['Row']
 
 export type WorldDescriptionSectionCard = {
     id: string
