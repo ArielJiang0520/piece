@@ -1,6 +1,6 @@
 
 import { WorldDescriptionSectionCard, WorldDescriptionSection } from "@/types/types";
-import type { World, Piece, GeneralJson, GenPieceJson } from "@/types/types";
+import type { World, Piece, GeneralJson, GenPieceJson, Modifier } from "@/types/types";
 
 export function worldToString(world: World): string {
     let descriptionString = '';
@@ -25,8 +25,11 @@ export function worldToString(world: World): string {
 
 export function storyPrompt(world: World, piece?: Piece | null): string {
     const worldString = worldToString(world)
-    const piece_content = piece ? piece.piece_type === "original" ? (piece.piece_json as GeneralJson).content : (piece.piece_json as GenPieceJson).output : ""
-    const prequelString = `The user has already written the following story as a context for you: ${piece_content}.`
+    let prequelString = ''
+    if (piece != null) {
+        prequelString += `The user has already written the following story as a context for you: `
+        prequelString += piece.piece_type === "original" ? (piece.piece_json as GeneralJson).content : (piece.piece_json as GenPieceJson).output
+    }
     return `
 Below is the settings of this novel/fictional story:
 ${worldString}
@@ -72,3 +75,11 @@ You should never write in third-person.
 }
 
 
+export function genPrompt(origin: string, modifiers: Modifier[]): string {
+    let res = ''
+    res += `You are writing based on the below settings:\n`
+    res += `**Origin (where this will be based on, purely fictional)**: ${origin}\n`
+    res += `**Requirements**: ${modifiers.map(mod => mod.content).join('\n\n')}\n`
+
+    return res
+}

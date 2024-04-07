@@ -2,10 +2,13 @@
 import useHorizontalDragScroll from "@/hooks/useHorizontalScroll";
 
 interface TagsBarProps {
-    values: string[];
+    values: string[] | any[];
     handleValuesChange: (values: any) => void;
+    isString?: boolean;
+    nameKey?: string;
 }
-export function TagsBar({ values, handleValuesChange }: TagsBarProps) {
+export function TagsBar({ values, handleValuesChange, isString = true, nameKey = '' }: TagsBarProps) {
+
     const handleRemoveTag = (idx: number) => {
         const newValues = values.filter((_, index) => index != idx);
         handleValuesChange(newValues)
@@ -14,14 +17,14 @@ export function TagsBar({ values, handleValuesChange }: TagsBarProps) {
     return (
         <div className='my-2 pb-5 flex flex-row w-full justify-start flex-wrap'>
             {
-                values.map((name, idx) =>
+                values.map((item, idx) =>
                     <button
                         key={idx}
                         type="button"
                         className='bg-foreground text-background text-xs font-semibold rounded-full px-3 py-2 whitespace-nowrap mr-1 mt-2'
                         onClick={() => handleRemoveTag(idx)}
                     >
-                        {name}
+                        {isString ? item : item[nameKey]}
                     </button>
                 )
             }

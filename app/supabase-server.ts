@@ -2,7 +2,7 @@ import type { Database } from '@/types/supabase';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-import { World, Profile, Piece, Folder, Like, Comment, Prompt, PromptHistory } from "@/types/types"
+import { World, Profile, Piece, Folder, Like, Comment, Prompt, PromptHistory, Modifier } from "@/types/types"
 
 export const createServerSupabaseClient = cache(() =>
     createServerComponentClient<Database>({ cookies })
@@ -193,6 +193,26 @@ export async function getPieceDetailsIncludeWorld(
         throw Error(JSON.stringify(error))
     return data as PieceDetailsIncludeWorld
 }
+
+// For /modifiers
+export interface ModifierDetails extends Modifier {
+    profiles: Profile | null;
+}
+export async function getModifierDetails(
+
+): Promise<ModifierDetails[]> {
+    const supabase = createServerSupabaseClient();
+    const { data, error } = await supabase
+        .from('modifiers')
+        .select('*, profiles(*)')
+        .order('created_at', { ascending: false })
+
+    if (!data || error)
+        throw Error(JSON.stringify(error))
+
+    return data as ModifierDetails[]
+}
+
 
 // export async function getPieceDetails(
 //     id: string

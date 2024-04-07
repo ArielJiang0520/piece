@@ -1,7 +1,7 @@
 'use client'
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
-import { ChatHistoryJson, GenPieceJson, TypedPiece } from '@/types/types';
+import { ChatHistoryJson, GenPieceJson, Modifier, TypedPiece } from '@/types/types';
 import { TagsBar } from './tags-helpers';
 import { Formik, Form } from 'formik';
 import { TextInput, TextInputFreeform, TextInputWithEnter } from './InputTextField';
@@ -98,6 +98,55 @@ function PublishSpecialPiece({ inputValue, setInputValue }: {
 
 
 
+
+
+function AddNewModifier({ inputValue, setInputValue }: {
+    inputValue: Modifier, setInputValue: (arg: Modifier) => void;
+}) {
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
+            event.preventDefault();
+        }
+        if (event.key === ' ') {
+            event.stopPropagation();
+        }
+    };
+    return (
+        <Formik
+            initialValues={inputValue}
+            onSubmit={(values) => { setInputValue(values) }}
+        >
+            {({ isSubmitting, isValid, values, setFieldValue }) => {
+                useEffect(() => {
+                    setInputValue(values);
+                }, [values]);
+
+                return (
+                    <Form className='flex flex-col space-y-3 items-start font-mono' onKeyDown={handleKeyDown}>
+
+                        <div id="title-group" className='w-full flex flex-col space-y-1'>
+                            <FieldTitleDisplay label={"Name"} />
+                            <TextInput name={"name"} placeholder={"Add name"} textSize={"text-base"} multiline={1} />
+                        </div>
+
+                        <div id="notes-group" className='w-full flex flex-col space-y-1'>
+                            <FieldTitleDisplay label={"description"} />
+                            <TextInput name={"description"} placeholder={"Add a short description"} textSize={"text-sm"} multiline={2} />
+                        </div>
+
+                        <div id="content-group" className='w-full flex flex-col space-y-1'>
+                            <FieldTitleDisplay label={"content"} />
+                            <TextInput name={"content"} placeholder={"Add content"} textSize={"text-sm"} multiline={8} />
+                        </div>
+
+
+                    </Form>
+                )
+            }}
+        </Formik>
+    )
+}
+
 interface DialogDisplayProps {
     children: React.ReactNode
 }
@@ -108,7 +157,7 @@ function DialogDisplay({ children }: DialogDisplayProps) {
 }
 
 interface DialogProps {
-    dialogType: "input" | "confirm" | "display" | "publish-special-piece";
+    dialogType: "input" | "confirm" | "display" | "publish-special-piece" | "add-modifier";
 
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
@@ -165,6 +214,8 @@ export default function PopupDialog({
                     {dialogType === "display" && <DialogDisplay children={initInputValue} />}
 
                     {dialogType === "publish-special-piece" && <PublishSpecialPiece inputValue={initInputValue} setInputValue={setInputValue} />}
+
+                    {dialogType === "add-modifier" && <AddNewModifier inputValue={initInputValue} setInputValue={setInputValue} />}
 
                     {hideActionButtons ? null : <div className="mt-8 flex flex-row justify-end items-center space-x-4">
                         {hideCancel ? null : <button

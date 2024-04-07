@@ -49,6 +49,7 @@ import { TiThSmall as NineDotsIcon } from 'react-icons/ti'
 import { GoDotFill as DotIcon } from 'react-icons/go'
 import { VscHistory as HistoryIcon } from "react-icons/vsc";
 import { TiArrowForward as ForwardIcon } from "react-icons/ti";
+import { ImFire as FireIcon } from "react-icons/im";
 
 export {
     BurgerIcon,
@@ -101,5 +102,6 @@ export {
     NineDotsIcon,
     DotIcon,
     HistoryIcon,
-    ForwardIcon
+    ForwardIcon,
+    FireIcon
 };

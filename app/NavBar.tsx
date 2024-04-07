@@ -46,6 +46,20 @@ export default function NavBar({ PageTitleNavBarComponent, LocalNavBarComponent,
             level: 0,
             icon: null
         },
+
+        {
+            link: '/modifiers',
+            name: 'Modifiers',
+            level: 0,
+            icon: null
+        },
+
+        {
+            link: '/generate',
+            name: 'Generate',
+            level: 0,
+            icon: null
+        },
     ]
 
     const [profileItems, setProfileItems] = useState<MenuItem[]>([]);

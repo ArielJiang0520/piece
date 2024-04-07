@@ -73,7 +73,7 @@ export default function SearchBar({
 
     return (
         <Combobox onChange={setSelectedItem} name="origin" value={selectedItem} >
-            <div className='flex flex-row justify-start items-center space-x-3 w-full text-foreground'>
+            <div className='flex flex-row justify-start items-center space-x-3 w-full text-foreground mt-2'>
                 <div className='relative text-sm flex-grow z-10'>
                     <div className='relative cursor-default overflow-hidden'>
                         <Combobox.Input

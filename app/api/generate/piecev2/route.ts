@@ -1,6 +1,6 @@
 import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge"
 import type { NextRequest } from 'next/server'
-import { storyPrompt } from "@/utils/prompt"
+import { genPrompt } from "@/utils/prompt"
 import { Database } from "@/types/supabase"
 import { createClient } from '@supabase/supabase-js'
 
@@ -18,26 +18,13 @@ export async function POST(req: NextRequest): Promise<Response> {
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         )
 
-        const { prompt, model, prequel, world } = await req.json();
-        let piece = null;
-        if (prequel) {
-            const { data, error } = await supabase
-                .from('pieces')
-                .select('*')
-                .eq('id', prequel)
-                .limit(1)
-                .single();
-            if (!data || error)
-                throw Error(JSON.stringify(error))
-            piece = data
-        }
+        const { prompt, model, origin, modifiers, } = await req.json();
 
         try {
-            console.log(storyPrompt(world, piece))
             const response = await openai.createChatCompletion({
                 model: model,
                 messages: [
-                    { role: "system", content: storyPrompt(world, piece) },
+                    { role: "system", content: genPrompt(origin, modifiers) },
                     { role: "user", content: prompt },
                 ],
                 max_tokens: 2048,

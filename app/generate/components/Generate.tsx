@@ -2,7 +2,7 @@
 import { Formik, Field, FormikProps, Form, ErrorMessage, FieldProps, setIn } from 'formik';
 import { FieldContentDisplay, FieldTitleDisplay, GeneratePriceDisplay } from '@/components/ui/display/display-helpers';
 import { TextInput } from '@/components/ui/input/InputTextField';
-import { GenPieceJson, Piece, TypedPiece, World } from '@/types/types';
+import { GenPieceJson, Modifier, Piece, TypedPiece, World } from '@/types/types';
 import useStreamText from '@/hooks/useStreamText';
 import { useEffect, useState, useRef } from 'react';
 import PopupDialog from '@/components/ui/input/PopupDialog';
@@ -18,15 +18,17 @@ import DropDownSelector from '@/components/ui/input/DropDownSelector';
 import SearchBar from '@/components/ui/input/SearchBar';
 import { HistoryIcon, ResetIcon, StarIcon } from '@/components/icon/icon';
 import { IconButtonMid, IconButtonSmall } from '@/components/ui/button/button-helpers';
+import ChooseModifiers from './ChooseModifiers';
 
-interface PromptPayload {
+export interface PromptPayload {
     prompt: string,
     model: string,
-    prequel: string | null,
+    origin: string,
+    modifiers: Modifier[],
 }
-export default function PromptGen({ world, models }: { world: World, models: any[] }) {
+export default function Generate({ models }: { models: any[] }) {
     // const modelList = models.map((model, idx) => {return { id: idx, model: model } })
-    const searchParams = useSearchParams();
+
     const { user } = useSupabase()
     const { lines, isLoading, resetLines, streamText } = useStreamText();
     const [saved, setSaved] = useState(false)
@@ -36,42 +38,8 @@ export default function PromptGen({ world, models }: { world: World, models: any
 
     const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
     const [isFormikRendered, setIsFormikRendered] = useState(false);
-    const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-4", prequel: null } as PromptPayload)
+    const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-4", modifiers: [], origin: '' } as PromptPayload)
 
-    const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
-
-    const fetchPromptFromPiece = async (piece_id: string) => {
-        try {
-            const piece = await fetch_piece(piece_id);
-            const newValues = {
-                ...initValues,
-                prompt: (piece.piece_json as GenPieceJson).prompt,
-                prequel: (piece.piece_json as GenPieceJson).prequel
-            };
-            setInitValues(newValues);
-        } catch (e) {
-            notify_error(`Fetching piece_id ${piece_id} for prompt failed: ${JSON.stringify(e)}`)
-        }
-    }
-
-    const fetchPromptFromId = async (prompt_id: string) => {
-        try {
-            const prompt = await fetch_prompt(prompt_id);
-            const newValues = { ...initValues, prompt: prompt.prompt };
-            setInitValues(newValues);
-        } catch (e) {
-            notify_error(`Fetching prompt_id ${prompt_id} failed: ${JSON.stringify(e)}`)
-        }
-    }
-
-    const fetchPieces = async () => {
-        const fetchedPieces = await fetch_all_pieces(world.id);
-        setPieces(fetchedPieces);
-    }
-
-    useEffect(() => {
-        fetchPieces();
-    }, [])
 
     // Add effect to change state when Formik has been rendered
     useEffect(() => {
@@ -86,21 +54,6 @@ export default function PromptGen({ world, models }: { world: World, models: any
         }
     }, [isFormikRendered, initValues]); // Listen to changes on initValues
 
-    useEffect(() => {
-        const prompt_id = searchParams.get('prompt_id');
-        if (prompt_id) {
-            if (prompt_id.startsWith('P-')) {
-                fetchPromptFromPiece(prompt_id);
-            } else {
-                fetchPromptFromId(prompt_id);
-            }
-        }
-        const prequel_id = searchParams.get('prequel')
-        if (prequel_id) {
-            const newValues = { ...initValues, prequel: prequel_id };
-            setInitValues(newValues)
-        }
-    }, [searchParams])
 
     if (!user) {
         return <>No user found!</>
@@ -110,79 +63,22 @@ export default function PromptGen({ world, models }: { world: World, models: any
         const data = {
             prompt: values.prompt,
             model: values.model,
-            prequel: values.prequel,
-            world: world
+            modifiers: values.modifiers,
+            origin: values.origin
         }
-        await streamText(data, '/api/generate/piece')
+        await streamText(data, '/api/generate/piecev2')
             .then()
             .catch((error: Error) => {
                 alert(error.message);
             });
     }
 
-    const saveHistory = async (values: PromptPayload) => {
-        try {
-            await insert_prompt_history(world.id, user.id, {
-                prompt: values.prompt,
-                model: values.model,
-                notes: '',
-                prequel: values.prequel,
-                output: lines.join('\n')
-            })
-            setSaved(true)
-        } catch {
-            notify_error("Failed to save history")
-        }
-    }
-
-    const handleQuickPublish = async (values: PromptPayload) => {
-        const inputValue = {
-            name: '',
-            world_id: world.id,
-            type: 'gen-piece',
-            json_content: {
-                prompt: values.prompt,
-                output: lines.join('\n'),
-                model: values.model,
-                notes: '',
-                prequel: values.prequel
-            } as GenPieceJson,
-            folder_id: null,
-            tags: [],
-        } as TypedPiece
-
-        try {
-            const new_id = await insert_special_piece(inputValue, user.id);
-            setIsPublishing(false)
-            notify_success(<div>
-                <Link className="underline-offset-2 text-blue-500" href={`/pieces/${new_id}`}>
-                    {new_id}
-                </Link> successfully posted!
-            </div>, 10000)
-        } catch (error) {
-            setIsPublishing(false)
-            notify_error(`Error posting new piece: ${JSON.stringify(error)}`)
-        }
-    }
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && (event.target as HTMLElement).nodeName !== 'TEXTAREA') {
             event.preventDefault();
         }
     };
-
-    useEffect(() => {
-        if (!isLoading && lines[0].length > 1 && !saved) {
-            if (formikRef.current) {
-                const values = formikRef.current.values;
-                saveHistory(values)
-            }
-        } else if (isLoading) {
-            setSaved(false)
-        } else {
-            console.log(isLoading, lines, saved)
-        }
-    }, [isLoading])
 
     return <>
         <Formik
@@ -195,18 +91,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
                 <Form className='mt-4 w-full flex flex-col space-y-4 items-start' onKeyDown={handleKeyDown}>
 
-                    <div className='flex flex-row w-full justify-end font-mono text-brand text-sm'>
-                        <Link
-                            href={`/profiles/${user.id}/history`}
-                            className={`cursor-pointer bg-none  flex flex-row items-center justify-center space-x-1 rounded-lg border border-brand py-1 px-2   whitespace-nowrap`}
-
-                        >
-                            <HistoryIcon />
-                            <div>View History</div>
-                        </Link>
-                    </div>
-
-                    <div id="prompt-group" className='w-full flex flex-col space-y-4'>
+                    <div id="model-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"model"} />
                         <DropDownSelector
                             data={models}
@@ -217,17 +102,18 @@ export default function PromptGen({ world, models }: { world: World, models: any
                         />
                     </div>
 
-                    <div id="link-group" className='w-full flex flex-col space-y-4'>
-                        <FieldTitleDisplay label={"prequel"} />
-                        <SearchBar
-                            candidates={pieces}
-                            nameKey='id'
-                            placeholder='Select a piece...'
-                            onSelect={(item) => { setFieldValue('prequel', item.id) }}
-                            display_func={(item) => `${item.id}: ${item.name}`}
-                            hasReset={true}
-                            defaultSelectedId={values.prequel}
-                        />
+                    <div id="origin-group" className='w-full flex flex-col'>
+                        <div className='flex flex-row items-center justify-between '>
+                            <FieldTitleDisplay label={"origin"} />
+                        </div>
+                        <TextInput name={"origin"} placeholder={"Add your origin..."} textSize={"text-base"} multiline={1} bold={"font-medium"} />
+                    </div>
+
+                    <div id="modifier-group" className='w-full flex flex-col'>
+                        <div className='flex flex-row items-center justify-between '>
+                            <FieldTitleDisplay label={"modifiers"} />
+                        </div>
+                        <ChooseModifiers />
                     </div>
 
                     <div id="prompt-group" className='w-full flex flex-col'>
@@ -236,7 +122,6 @@ export default function PromptGen({ world, models }: { world: World, models: any
                                 <FieldTitleDisplay label={"prompt"} />
                                 <ResetIcon className='text-foreground/50 cursor-auto' onClick={() => setFieldValue('prompt', '')} />
                             </div>
-
                         </div>
                         <TextInput name={"prompt"} placeholder={"Add your prompt..."} textSize={"text-base"} multiline={7} bold={"font-medium"} />
                     </div>
@@ -250,9 +135,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
                         </div>
                     </div>
 
-                    {/* {finished && <div>Finished!</div>} */}
 
-                    <GeneratePriceDisplay world={world} />
 
                     <div className='block h-20'>
 
@@ -267,26 +150,19 @@ export default function PromptGen({ world, models }: { world: World, models: any
                             Generate
                         </button>
 
-                        {/* <button
+                        <button
                             className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="button"
                             disabled={lines[0].length <= 1}
                             onClick={() => setIsPublishWindowOpen(true)}
                         >
                             Publish as New Piece
-                        </button> */}
-
-                        <button
-                            className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
-                            type="button"
-                            disabled={lines[0].length <= 1}
-                            onClick={() => handleQuickPublish(values)}
-                        >
-                            Quick Publish
                         </button>
-                    </div>
 
-                    {/* <PopupDialog
+
+                    </div>
+                    {/* 
+                    <PopupDialog
                         isOpen={isPublishWindowOpen}
                         setIsOpen={setIsPublishWindowOpen}
                         dialogTitle='Publishing New Piece'
@@ -321,8 +197,8 @@ export default function PromptGen({ world, models }: { world: World, models: any
                             }
                         }}
                         dialogType="publish-special-piece"
-                    /> */}
-                    {isPublishing && <LoadingOverlay />}
+                    />
+                    {isPublishing && <LoadingOverlay />} */}
                 </Form>
             )}
         </Formik>
