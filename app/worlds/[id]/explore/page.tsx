@@ -7,20 +7,22 @@ const openai = new OpenAI();
 
 export default async function Page({ params }: { params: { id: string } }) {
     const world = await getWorldMetadata(params.id)
-    const model_list = await openai.models.list()
-    let models = []
-    for await (const model of model_list) {
-        models.push(model)
-    }
+    const models = [{ "id": "gpt-4" }, { "id": "deepseek-r1" }]
+    // const model_list = await openai.models.list()
+    // let models = []
+    // for await (const model of model_list) {
+    //     models.push(model)
+    // }
+    // models = models.filter(m => m.id.includes('gpt') && (!m.id.includes('vision'))).sort((a, b) => b.id.localeCompare(a.id))
 
-    if (!world) {
-        return <></>
-    }
+    // if (!world) {
+    //     return <></>
+    // }
 
     return <>
         <LocalNavBar world={world} />
         <div className="w-full md:w-2/3 xl:w-1/2 flex flex-col gap-20 px-5 py-5 lg:py-5 text-foreground font-mono">
-            <ExploreWorld world={world} models={models.filter(m => m.id.includes('gpt') && (!m.id.includes('vision'))).sort((a, b) => b.id.localeCompare(a.id))} />
+            <ExploreWorld world={world} models={models} />
         </div>
     </>
 }

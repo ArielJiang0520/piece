@@ -28,8 +28,8 @@ export default function PromptGen({ world, models }: { world: World, models: any
     // const modelList = models.map((model, idx) => {return { id: idx, model: model } })
     const searchParams = useSearchParams();
     const { user } = useSupabase()
-    const { lines, isLoading, resetLines, streamText } = useStreamText();
-    const [saved, setSaved] = useState(false)
+    const { lines, isLoading, resetLines, streamText, isThinking } = useStreamText();
+    // const [saved, setSaved] = useState(false)
 
     const [isPublishWindowOpen, setIsPublishWindowOpen] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -102,6 +102,10 @@ export default function PromptGen({ world, models }: { world: World, models: any
         }
     }, [searchParams])
 
+    useEffect(() => {
+        console.log(lines)
+    }, [lines])
+
     if (!user) {
         return <>No user found!</>
     }
@@ -113,27 +117,36 @@ export default function PromptGen({ world, models }: { world: World, models: any
             prequel: values.prequel,
             world: world
         }
-        await streamText(data, '/api/generate/piece')
-            .then()
-            .catch((error: Error) => {
-                alert(error.message);
-            });
-    }
 
-    const saveHistory = async (values: PromptPayload) => {
-        try {
-            await insert_prompt_history(world.id, user.id, {
-                prompt: values.prompt,
-                model: values.model,
-                notes: '',
-                prequel: values.prequel,
-                output: lines.join('\n')
-            })
-            setSaved(true)
-        } catch {
-            notify_error("Failed to save history")
+        if (values.model == "gpt-4") {
+            await streamText(data, '/api/generate/piece')
+                .then()
+                .catch((error: Error) => {
+                    alert(error.message);
+                });
+        } else if (values.model == "deepseek-r1") {
+            await streamText(data, '/api/generate/deepseek')
+                .then()
+                .catch((error: Error) => {
+                    alert(error.message);
+                });
         }
     }
+
+    // const saveHistory = async (values: PromptPayload) => {
+    //     try {
+    //         await insert_prompt_history(world.id, user.id, {
+    //             prompt: values.prompt,
+    //             model: values.model,
+    //             notes: '',
+    //             prequel: values.prequel,
+    //             output: lines.join('\n')
+    //         })
+    //         setSaved(true)
+    //     } catch {
+    //         notify_error("Failed to save history")
+    //     }
+    // }
 
     const handleQuickPublish = async (values: PromptPayload) => {
         const inputValue = {
@@ -171,18 +184,18 @@ export default function PromptGen({ world, models }: { world: World, models: any
         }
     };
 
-    useEffect(() => {
-        if (!isLoading && lines[0].length > 1 && !saved) {
-            if (formikRef.current) {
-                const values = formikRef.current.values;
-                saveHistory(values)
-            }
-        } else if (isLoading) {
-            setSaved(false)
-        } else {
-            console.log(isLoading, lines, saved)
-        }
-    }, [isLoading])
+    // useEffect(() => {
+    //     if (!isLoading && lines[0].length > 1 && !saved) {
+    //         if (formikRef.current) {
+    //             const values = formikRef.current.values;
+    //             saveHistory(values)
+    //         }
+    //     } else if (isLoading) {
+    //         setSaved(false)
+    //     } else {
+    //         console.log(isLoading, lines, saved)
+    //     }
+    // }, [isLoading])
 
     return <>
         <Formik
@@ -206,7 +219,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
                         </Link>
                     </div>
 
-                    <div id="prompt-group" className='w-full flex flex-col space-y-4'>
+                    <div id="model-selection-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"model"} />
                         <DropDownSelector
                             data={models}
@@ -242,7 +255,15 @@ export default function PromptGen({ world, models }: { world: World, models: any
                     </div>
 
                     <div id="content-group" className='w-full flex flex-col'>
-                        <FieldTitleDisplay label={"AI Generated Content"} />
+                        <div className='w-full flex flex-row space-x-3'>
+                            <div>
+                                <FieldTitleDisplay label={"AI Generated Content"} />
+                            </div>
+                            <div>
+                                {/* loading icon for isThinking */}
+                                {isThinking && <div className='animate-pulse text-foreground/50'>{"(thinking...)"}</div>}
+                            </div>
+                        </div>
                         <div className='px-4 py-2 my-2 rounded-lg bg-foreground/5 overflow-y-auto cursor-not-allowed' style={{ height: '700px' }}>
                             {lines.map((line, index) => (
                                 <p key={index} className='leading-loose font-mono text-sm'>{line}</p>
@@ -277,9 +298,9 @@ export default function PromptGen({ world, models }: { world: World, models: any
                         </button> */}
 
                         <button
-                            className={`${lines[0].length <= 1 ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
+                            className={`${lines.every(line => line.length <= 1) ? "primaryButton-disabled p-2 cursor-not-allowed" : "primaryButton p-2"} rounded-lg`}
                             type="button"
-                            disabled={lines[0].length <= 1}
+                            disabled={lines.every(line => line.length <= 1)}
                             onClick={() => handleQuickPublish(values)}
                         >
                             Quick Publish

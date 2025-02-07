@@ -4,6 +4,7 @@ import { useState } from 'react';
 const useStreamText = () => {
     const [lines, setLines] = useState<string[]>(['']);
     const [isLoading, setIsLoading] = useState(false);
+    const [isThinking, setIsThinking] = useState(false);
     const resetLines = () => {
         setLines([''])
     }
@@ -11,6 +12,7 @@ const useStreamText = () => {
     const streamText = (requestBody: any, endpoint: string): Promise<string[]> => {
         return new Promise(async (resolve, reject) => {
             setIsLoading(true);
+            setIsThinking(false);
             resetLines();
 
             try {
@@ -25,6 +27,7 @@ const useStreamText = () => {
                 const reader = response.body!.getReader();
 
                 let text = '';
+                let isThinkingLocal = false
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) {
@@ -56,16 +59,40 @@ const useStreamText = () => {
                         const messageContent = event.choices?.[0]?.delta?.content || "";
                         const finishReason = event.choices?.[0]?.finish_reason;
 
-                        if (messageContent.includes('\n')) {
-                            const [lastLinePart, ...newLines] = messageContent.split('\n');
-                            setLines(lines => [...lines.slice(0, -1), lines[lines.length - 1] + lastLinePart, ...newLines]);
-                        } else {
-                            setLines(lines => [...lines.slice(0, -1), lines[lines.length - 1] + messageContent]);
-                        }
-
                         if (finishReason === 'stop') {
                             break;
                         }
+
+
+                        if (!isThinkingLocal && messageContent.includes('<think>')) {
+                            isThinkingLocal = true
+                            setIsThinking(isThinkingLocal);
+                            continue;
+                        } else if (isThinkingLocal && messageContent.includes('</think>')) {
+                            isThinkingLocal = false
+                            setIsThinking(isThinkingLocal);
+                            continue;
+                        }
+
+                        // console.log(`(${isThinkingLocal ? "is thinking" : "is not thinking"}) ${messageContent}`);
+
+                        // Only update lines if not thinking
+                        if (!isThinkingLocal) {
+                            if (messageContent.includes('\n')) {
+                                const [lastLinePart, ...newLines] = messageContent.split('\n');
+                                setLines(lines => [
+                                    ...lines.slice(0, -1),
+                                    lines[lines.length - 1] + lastLinePart,
+                                    ...newLines
+                                ]);
+                            } else {
+                                setLines(lines => [
+                                    ...lines.slice(0, -1),
+                                    lines[lines.length - 1] + messageContent
+                                ]);
+                            }
+                        }
+
                     }
 
                     if (text.endsWith('stop') || text.endsWith('[DONE]')) {
@@ -77,11 +104,12 @@ const useStreamText = () => {
                 throw new Error(`Error in streamText: ${error}`);
             } finally {
                 setIsLoading(false);
+                setIsThinking(false);
             }
         });
     };
 
-    return { lines, isLoading, resetLines, streamText };
+    return { lines, isLoading, resetLines, streamText, isThinking };
 };
 
 export default useStreamText;
