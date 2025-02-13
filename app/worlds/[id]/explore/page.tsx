@@ -7,7 +7,7 @@ const openai = new OpenAI();
 
 export default async function Page({ params }: { params: { id: string } }) {
     const world = await getWorldMetadata(params.id)
-    const models = [{ "id": "gpt-4" }, { "id": "deepseek-r1" }]
+    const models = [{ "id": "deepseek-r1" }, { "id": "gpt-4" },]
     // const model_list = await openai.models.list()
     // let models = []
     // for await (const model of model_list) {

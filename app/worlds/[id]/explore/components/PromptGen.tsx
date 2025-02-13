@@ -22,6 +22,7 @@ import { IconButtonMid, IconButtonSmall } from '@/components/ui/button/button-he
 interface PromptPayload {
     prompt: string,
     model: string,
+    temperature: number,
     prequel: string | null,
 }
 export default function PromptGen({ world, models }: { world: World, models: any[] }) {
@@ -36,7 +37,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
 
     const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
     const [isFormikRendered, setIsFormikRendered] = useState(false);
-    const [initValues, setInitValues] = useState({ prompt: '', model: "gpt-4", prequel: null } as PromptPayload)
+    const [initValues, setInitValues] = useState({ prompt: '', model: "deepseek-r1", prequel: null, temperature: 1.0 } as PromptPayload)
 
     const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
 
@@ -115,7 +116,8 @@ export default function PromptGen({ world, models }: { world: World, models: any
             prompt: values.prompt,
             model: values.model,
             prequel: values.prequel,
-            world: world
+            world: world,
+            temperature: values.temperature
         }
 
         if (values.model == "gpt-4") {
@@ -208,7 +210,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
             {({ isSubmitting, isValid, values, errors, touched, setFieldValue, setSubmitting, setErrors, resetForm }) => (
                 <Form className='mt-4 w-full flex flex-col space-y-4 items-start' onKeyDown={handleKeyDown}>
 
-                    <div className='flex flex-row w-full justify-end font-mono text-brand text-sm'>
+                    {/* <div className='flex flex-row w-full justify-end font-mono text-brand text-sm'>
                         <Link
                             href={`/profiles/${user.id}/history`}
                             className={`cursor-pointer bg-none  flex flex-row items-center justify-center space-x-1 rounded-lg border border-brand py-1 px-2   whitespace-nowrap`}
@@ -217,7 +219,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
                             <HistoryIcon />
                             <div>View History</div>
                         </Link>
-                    </div>
+                    </div> */}
 
                     <div id="model-selection-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"model"} />
@@ -229,6 +231,12 @@ export default function PromptGen({ world, models }: { world: World, models: any
                             nameKey='id'
                         />
                     </div>
+
+                    <div id="temp-group" className='w-full flex flex-col space-y-4'>
+                        <FieldTitleDisplay label={"temperature"} />
+                        <TextInput name={"temperature"} placeholder={"1.0"} textSize={"text-base"} multiline={1} />
+                    </div>
+
 
                     <div id="link-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"prequel"} />

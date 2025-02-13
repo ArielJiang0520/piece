@@ -12,7 +12,8 @@ export async function POST(req: NextRequest): Promise<Response> {
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         )
         const FIREWORKS_API = process.env.FIREWORKS_AI_API_KEY
-        const { prompt, model, prequel, world } = await req.json();
+        const { prompt, model, prequel, world, temperature } = await req.json();
+        // console.log("temperature", temperature)
         let piece = null;
         if (prequel) {
             const { data, error } = await supabase
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         }
 
         try {
-            console.log(storyPrompt(world, piece))
+            // console.log(storyPrompt(world, piece))
             const response = await fetch("https://api.fireworks.ai/inference/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest): Promise<Response> {
                     top_k: 40,
                     presence_penalty: 0,
                     frequency_penalty: 0,
-                    temperature: 0.6,
+                    temperature: temperature,
                     messages: [
                         {
                             role: "system",
