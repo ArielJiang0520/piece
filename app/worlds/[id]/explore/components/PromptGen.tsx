@@ -37,7 +37,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
 
     const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
     const [isFormikRendered, setIsFormikRendered] = useState(false);
-    const [initValues, setInitValues] = useState({ prompt: '', model: "deepseek-r1", prequel: null, temperature: 1.0 } as PromptPayload)
+    const [initValues, setInitValues] = useState({ prompt: '', model: "deepseek", prequel: null, temperature: 0.6 } as PromptPayload)
 
     const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
 
@@ -126,7 +126,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
                 .catch((error: Error) => {
                     alert(error.message);
                 });
-        } else if (values.model == "deepseek-r1") {
+        } else if (values.model == "deepseek") {
             await streamText(data, '/api/generate/deepseek')
                 .then()
                 .catch((error: Error) => {
@@ -234,7 +234,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
 
                     <div id="temp-group" className='w-full flex flex-col space-y-4'>
                         <FieldTitleDisplay label={"temperature"} />
-                        <TextInput name={"temperature"} placeholder={"1.0"} textSize={"text-base"} multiline={1} />
+                        <TextInput name={"temperature"} placeholder={"0.6"} textSize={"text-base"} multiline={1} />
                     </div>
 
 

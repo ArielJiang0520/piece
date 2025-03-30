@@ -37,7 +37,7 @@ export async function POST(req: NextRequest): Promise<Response> {
                     "Authorization": "Bearer " + FIREWORKS_API
                 },
                 body: JSON.stringify({
-                    model: "accounts/fireworks/models/deepseek-r1",
+                    model: "accounts/fireworks/models/deepseek-v3-0324",
                     max_tokens: 4096,
                     top_p: 1,
                     top_k: 40,
