@@ -27,7 +27,16 @@ export async function POST(req: NextRequest): Promise<Response> {
             piece = data
         }
 
+        const model_name_map: { [key: string]: string } = {
+            "deepseek-v3": "deepseek-v3-0324",
+            "deepseek-v3.1": "deepseek-v3p1"
+        }
+
         try {
+            let model_name = model_name_map[model]
+            if (model_name === undefined) {
+                throw new Error(`No model named ${model} found!`);
+            }
             // console.log(storyPrompt(world, piece))
             const response = await fetch("https://api.fireworks.ai/inference/v1/chat/completions", {
                 method: "POST",
@@ -37,7 +46,7 @@ export async function POST(req: NextRequest): Promise<Response> {
                     "Authorization": "Bearer " + FIREWORKS_API
                 },
                 body: JSON.stringify({
-                    model: "accounts/fireworks/models/deepseek-v3-0324",
+                    model: `accounts/fireworks/models/${model_name}`,
                     max_tokens: 4096,
                     top_p: 1,
                     top_k: 40,

@@ -37,7 +37,8 @@ export default function PromptGen({ world, models }: { world: World, models: any
 
     const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
     const [isFormikRendered, setIsFormikRendered] = useState(false);
-    const [initValues, setInitValues] = useState({ prompt: '', model: "deepseek", prequel: null, temperature: 0.6 } as PromptPayload)
+    const defaultModel = models[0]["id"]
+    const [initValues, setInitValues] = useState({ prompt: '', model: defaultModel, prequel: null, temperature: 0.6 } as PromptPayload)
 
     const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
 
@@ -120,13 +121,13 @@ export default function PromptGen({ world, models }: { world: World, models: any
             temperature: values.temperature
         }
 
-        if (values.model == "gpt-4") {
+        if (values.model.includes("gpt-4")) {
             await streamText(data, '/api/generate/piece')
                 .then()
                 .catch((error: Error) => {
                     alert(error.message);
                 });
-        } else if (values.model == "deepseek") {
+        } else if (values.model.includes("deepseek")) {
             await streamText(data, '/api/generate/deepseek')
                 .then()
                 .catch((error: Error) => {
