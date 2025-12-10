@@ -29,7 +29,9 @@ export async function POST(req: NextRequest): Promise<Response> {
 
         const model_name_map: { [key: string]: string } = {
             "deepseek-v3": "deepseek-v3-0324",
-            "deepseek-v3.1": "deepseek-v3p1"
+            "deepseek-v3.1": "deepseek-v3p1",
+            "deepseek-v3.1-terminus": "deepseek-v3p1-terminus",
+            "deepseek-v3.2": "deepseek-v3p2"
         }
 
         try {
@@ -47,7 +49,7 @@ export async function POST(req: NextRequest): Promise<Response> {
                 },
                 body: JSON.stringify({
                     model: `accounts/fireworks/models/${model_name}`,
-                    max_tokens: 4096,
+                    max_tokens: 100000,
                     top_p: 1,
                     top_k: 40,
                     presence_penalty: 0,

@@ -38,7 +38,7 @@ export default function PromptGen({ world, models }: { world: World, models: any
     const formikRef = useRef<FormikProps<PromptPayload> | null>(null);
     const [isFormikRendered, setIsFormikRendered] = useState(false);
     const defaultModel = models[0]["id"]
-    const [initValues, setInitValues] = useState({ prompt: '', model: defaultModel, prequel: null, temperature: 0.6 } as PromptPayload)
+    const [initValues, setInitValues] = useState({ prompt: '', model: defaultModel, prequel: null, temperature: 1.0 } as PromptPayload)
 
     const [pieces, setPieces] = useState<{ id: string, name: string }[]>([]);
 

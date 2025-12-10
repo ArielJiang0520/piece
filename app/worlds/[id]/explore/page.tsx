@@ -1,23 +1,10 @@
 import { getWorldMetadata } from "@/app/supabase-server";
 import ExploreWorld from "./components/ExploreWorld";
 import LocalNavBar from "../local-navbar";
-import OpenAI from "openai";
-
-const openai = new OpenAI();
 
 export default async function Page({ params }: { params: { id: string } }) {
     const world = await getWorldMetadata(params.id)
-    const models = [{ "id": "deepseek-v3.1" }, { "id": "deepseek-v3" }, { "id": "gpt-4" },]
-    // const model_list = await openai.models.list()
-    // let models = []
-    // for await (const model of model_list) {
-    //     models.push(model)
-    // }
-    // models = models.filter(m => m.id.includes('gpt') && (!m.id.includes('vision'))).sort((a, b) => b.id.localeCompare(a.id))
-
-    // if (!world) {
-    //     return <></>
-    // }
+    const models = [{ "id": "deepseek-v3.2" }, { "id": "deepseek-v3.1-terminus" }, { "id": "deepseek-v3.1" }, { "id": "deepseek-v3" }, { "id": "gpt-4" },]
 
     return <>
         <LocalNavBar world={world} />
