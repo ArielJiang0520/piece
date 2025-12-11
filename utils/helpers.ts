@@ -214,3 +214,10 @@ export function getPiecePrice(numWorldTokens: number, numPieceTokens: number, mo
     }
     return Number(price.toFixed(3))
 }
+
+export const MODELS: { [key: string]: string } = {
+    "deepseek-v3.2": "deepseek-v3p2",
+    "deepseek-v3.1-terminus": "deepseek-v3p1-terminus",
+    "deepseek-v3.1": "deepseek-v3p1",
+    "deepseek-v3": "deepseek-v3-0324",
+}

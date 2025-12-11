@@ -104,9 +104,9 @@ export default function PromptGen({ world, models }: { world: World, models: any
         }
     }, [searchParams])
 
-    useEffect(() => {
-        console.log(lines)
-    }, [lines])
+    // useEffect(() => {
+    //     console.log(lines)
+    // }, [lines])
 
     if (!user) {
         return <>No user found!</>
@@ -121,19 +121,12 @@ export default function PromptGen({ world, models }: { world: World, models: any
             temperature: values.temperature
         }
 
-        if (values.model.includes("gpt-4")) {
-            await streamText(data, '/api/generate/piece')
-                .then()
-                .catch((error: Error) => {
-                    alert(error.message);
-                });
-        } else if (values.model.includes("deepseek")) {
-            await streamText(data, '/api/generate/deepseek')
-                .then()
-                .catch((error: Error) => {
-                    alert(error.message);
-                });
-        }
+        await streamText(data, '/api/generate/models')
+            .then()
+            .catch((error: Error) => {
+                alert(error.message);
+            });
+
     }
 
     // const saveHistory = async (values: PromptPayload) => {

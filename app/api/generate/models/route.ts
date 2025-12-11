@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { storyPrompt } from "@/utils/prompt"
 import { Database } from "@/types/supabase"
 import { createClient } from '@supabase/supabase-js'
-
+import { MODELS } from '@/utils/helpers'
 export const runtime = 'edge'
 
 export async function POST(req: NextRequest): Promise<Response> {
@@ -27,15 +27,8 @@ export async function POST(req: NextRequest): Promise<Response> {
             piece = data
         }
 
-        const model_name_map: { [key: string]: string } = {
-            "deepseek-v3": "deepseek-v3-0324",
-            "deepseek-v3.1": "deepseek-v3p1",
-            "deepseek-v3.1-terminus": "deepseek-v3p1-terminus",
-            "deepseek-v3.2": "deepseek-v3p2"
-        }
-
         try {
-            let model_name = model_name_map[model]
+            let model_name = MODELS[model]
             if (model_name === undefined) {
                 throw new Error(`No model named ${model} found!`);
             }

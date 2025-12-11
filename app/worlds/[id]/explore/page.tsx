@@ -1,10 +1,21 @@
 import { getWorldMetadata } from "@/app/supabase-server";
 import ExploreWorld from "./components/ExploreWorld";
 import LocalNavBar from "../local-navbar";
+import { MODELS } from "@/utils/helpers";
+
+type ModelMap = {
+    id: string;
+};
 
 export default async function Page({ params }: { params: { id: string } }) {
     const world = await getWorldMetadata(params.id)
-    const models = [{ "id": "deepseek-v3.2" }, { "id": "deepseek-v3.1-terminus" }, { "id": "deepseek-v3.1" }, { "id": "deepseek-v3" }, { "id": "gpt-4" },]
+    const keys = Object.keys(MODELS);
+
+    const models: ModelMap[] = keys.map((key) => {
+        return {
+            id: key,
+        };
+    });
 
     return <>
         <LocalNavBar world={world} />
