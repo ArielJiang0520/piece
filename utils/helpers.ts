@@ -217,7 +217,7 @@ export function getPiecePrice(numWorldTokens: number, numPieceTokens: number, mo
 
 export const MODELS: { [key: string]: string } = {
     "deepseek-v3.2": "deepseek-v3p2",
-    "deepseek-v3.1-terminus": "deepseek-v3p1-terminus",
     "deepseek-v3.1": "deepseek-v3p1",
-    "deepseek-v3": "deepseek-v3-0324",
+    "Kimi 2.5": "kimi-k2p5",
+    "GLM 4.7": "glm-4p7"
 }
