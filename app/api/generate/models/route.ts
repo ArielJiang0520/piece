@@ -11,7 +11,7 @@ export async function POST(req: NextRequest): Promise<Response> {
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         )
-        const FIREWORKS_API = process.env.FIREWORKS_AI_API_KEY
+        const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY
         const { prompt, model, prequel, world, temperature } = await req.json();
         // console.log("temperature", temperature)
         let piece = null;
@@ -33,20 +33,23 @@ export async function POST(req: NextRequest): Promise<Response> {
                 throw new Error(`No model named ${model} found!`);
             }
             // console.log(storyPrompt(world, piece))
-            const response = await fetch("https://api.fireworks.ai/inference/v1/chat/completions", {
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + FIREWORKS_API
+                    "Authorization": "Bearer " + OPENROUTER_API_KEY
                 },
                 body: JSON.stringify({
-                    model: `accounts/fireworks/models/${model_name}`,
-                    max_tokens: 100000,
-                    top_p: 1,
-                    top_k: 40,
-                    presence_penalty: 0,
-                    frequency_penalty: 0,
+                    model: `${model_name}`,
+                    reasoning: {
+                        effort: "high"
+                    },
+                    provider: {
+                        sort: "throughput",
+                        data_collection: "deny"
+                    },
+                    max_tokens: 10000,
                     temperature: temperature,
                     messages: [
                         {

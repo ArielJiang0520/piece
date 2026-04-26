@@ -216,8 +216,10 @@ export function getPiecePrice(numWorldTokens: number, numPieceTokens: number, mo
 }
 
 export const MODELS: { [key: string]: string } = {
-    "deepseek-v3.2": "deepseek-v3p2",
-    "Kimi 2.6": "kimi-k2p6",
-    "Kimi 2.5": "kimi-k2p5",
-    "deepseek-v3.1": "deepseek-v3p1",
+    "deepseek-v4-flash": "deepseek/deepseek-v4-flash",
+    "deepseek-v4-pro": "deepseek/deepseek-v4-pro",
+    "deepseek-v3.2": "deepseek/deepseek-v3.2",
+    "GLM 5.1": "z-ai/glm-5.1",
+    "GLM 5": "z-ai/glm-5",
+    "Kimi 2.5": "moonshotai/kimi-k2.5"
 }
